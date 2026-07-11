@@ -220,11 +220,9 @@ export default function ServiceDetail() {
             </div>
           </div>
 
-          {/* Right Column — Sticky Sidebar */}
+          {/* Right Column */}
           <div className="lg:w-1/3">
-            <div className="sticky top-32">
-              <EstimateWizard variant="sidebar" />
-            </div>
+            <EstimateWizard variant="sidebar" />
           </div>
         </div>
       </section>

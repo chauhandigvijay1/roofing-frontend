@@ -23,10 +23,10 @@ export default function EstimateWizard({ variant = "full" }: Props) {
   };
 
   const wizardCard = (
-    <div id="estimate-wizard" className="bg-slate-900 rounded-2xl shadow-2xl p-8">
-      <div className="flex gap-2 mb-8">
+    <div id="estimate-wizard" className="bg-slate-900 rounded-xl shadow-xl p-6">
+      <div className="flex gap-2 mb-6">
         {[0, 1, 2].map((s) => (
-          <div key={s} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${step >= s ? "bg-blue-500" : "bg-slate-700"}`} />
+          <div key={s} className={`h-1 flex-1 rounded-full transition-colors duration-300 ${step >= s ? "bg-blue-500" : "bg-slate-700"}`} />
         ))}
       </div>
       <AnimatePresence mode="wait">
@@ -38,14 +38,14 @@ export default function EstimateWizard({ variant = "full" }: Props) {
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
           {step === 0 && (
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-white mb-6">What type of service do you need?</h3>
-              <div className="grid gap-4">
+            <div className="space-y-3">
+              <h3 className="text-lg font-bold text-white mb-4">What type of service do you need?</h3>
+              <div className="grid gap-3">
                 {(["Repair", "Full Replacement", "Inspection"] as const).map((opt) => (
                   <button
                     key={opt}
                     onClick={() => { setServiceType(opt); setStep(1); }}
-                    className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
+                    className={`w-full py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
                       serviceType === opt
                         ? "bg-blue-600 text-white"
                         : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
@@ -58,14 +58,14 @@ export default function EstimateWizard({ variant = "full" }: Props) {
             </div>
           )}
           {step === 1 && (
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-white mb-6">What type of property?</h3>
-              <div className="grid gap-4">
+            <div className="space-y-3">
+              <h3 className="text-lg font-bold text-white mb-4">What type of property?</h3>
+              <div className="grid gap-3">
                 {(["Residential", "Commercial"] as const).map((opt) => (
                   <button
                     key={opt}
                     onClick={() => { setPropertyType(opt); setStep(2); }}
-                    className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
+                    className={`w-full py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
                       propertyType === opt
                         ? "bg-blue-600 text-white"
                         : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
@@ -75,28 +75,28 @@ export default function EstimateWizard({ variant = "full" }: Props) {
                   </button>
                 ))}
               </div>
-              <button onClick={() => setStep(0)} className="text-sm text-slate-500 hover:text-slate-300 transition-colors">← Back</button>
+              <button onClick={() => setStep(0)} className="text-xs text-slate-500 hover:text-slate-300 transition-colors">← Back</button>
             </div>
           )}
           {step === 2 && (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <h3 className="text-xl font-bold text-white mb-6">Where should we send your free estimate?</h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <h3 className="text-lg font-bold text-white mb-4">Where should we send your free estimate?</h3>
               {(["name", "phone", "email", "address"] as const).map((field) => (
                 <div key={field}>
-                  <label className="block text-sm text-slate-400 mb-1.5 capitalize">{field}</label>
+                  <label className="block text-xs text-slate-400 mb-1 capitalize">{field}</label>
                   <input
                     type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
                     required
                     value={form[field]}
                     onChange={(e) => setForm({ ...form, [field]: e.target.value })}
                     placeholder={field === "phone" ? phone : `Your ${field}`}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-5 py-3.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
                   />
                 </div>
               ))}
-              <div className="flex gap-3 pt-2">
-                <button onClick={() => setStep(1)} type="button" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">← Back</button>
-                <button type="submit" className="flex-1 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-orange-500/25 text-lg hover:scale-[1.02] active:scale-[0.98]">
+              <div className="flex gap-2 pt-1">
+                <button onClick={() => setStep(1)} type="button" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">← Back</button>
+                <button type="submit" className="flex-1 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-orange-500/25 text-sm hover:scale-[1.02] active:scale-[0.98]">
                   Submit Estimate Request
                 </button>
               </div>
@@ -127,10 +127,10 @@ export default function EstimateWizard({ variant = "full" }: Props) {
 
   if (variant === "sidebar") {
     return (
-      <div id="estimate" className="rounded-2xl shadow-2xl">
-        <div className="text-center mb-6">
-          <h3 className="text-xl font-bold text-slate-900">Free Estimate</h3>
-          <p className="text-sm text-slate-500 mt-1">Serving {city}</p>
+      <div id="estimate" className="max-w-sm w-full mx-auto">
+        <div className="text-center mb-4">
+          <h3 className="text-lg font-bold text-slate-900">Free Estimate</h3>
+          <p className="text-xs text-slate-500 mt-0.5">Serving {city}</p>
         </div>
         {wizardCard}
       </div>
