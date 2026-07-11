@@ -11,10 +11,17 @@ export default function Hero({ name }: HeroProps) {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900 to-[#121212]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(245,158,11,0.08)_0%,_transparent_70%)]" />
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage:
+            'url("https://images.unsplash.com/photo-1632759145355-6677c77c68b6?q=80&w=2070")',
+        }}
+      />
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#121212]" />
 
-      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto pt-20">
         <motion.h1
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
@@ -27,7 +34,7 @@ export default function Hero({ name }: HeroProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-          className="mt-6 text-lg md:text-xl text-slate-400 max-w-2xl mx-auto"
+          className="mt-6 text-lg md:text-xl text-slate-300 max-w-2xl mx-auto"
         >
           Uncompromising quality. Expert craftsmanship. Your roof deserves nothing less.
         </motion.p>

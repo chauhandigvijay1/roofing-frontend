@@ -1,6 +1,9 @@
 import { useMemo } from "react";
+import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
+import Reviews from "./components/Reviews";
+import ContactForm from "./components/ContactForm";
 import Chatbot from "./components/Chatbot";
 
 function App() {
@@ -22,8 +25,11 @@ function App() {
 
   return (
     <div className="bg-[#121212] min-h-screen font-sans antialiased">
+      <Navbar />
       <Hero name={name} />
       <Services />
+      <Reviews />
+      <ContactForm />
       <Chatbot />
     </div>
   );
