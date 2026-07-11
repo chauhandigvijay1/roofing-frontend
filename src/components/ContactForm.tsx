@@ -76,7 +76,7 @@ export default function ContactForm() {
               </div>
               <button
                 type="submit"
-                className="w-full py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-orange-500/25 text-lg"
+                className="w-full py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-orange-500/25 text-lg hover:scale-[1.02] active:scale-[0.98]"
               >
                 Request Free Inspection
               </button>

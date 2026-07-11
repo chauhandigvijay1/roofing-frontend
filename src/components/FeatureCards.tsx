@@ -43,7 +43,7 @@ export default function FeatureCards() {
           <motion.div
             key={f.title}
             variants={item}
-            className="bg-white rounded-2xl p-8 shadow-2xl border border-slate-100 hover:shadow-3xl transition-shadow duration-300"
+            className="bg-white rounded-2xl p-8 shadow-2xl border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
           >
             <div className="w-14 h-14 rounded-xl bg-blue-600/10 flex items-center justify-center mb-6">
               <f.icon className="w-7 h-7 text-blue-600" />

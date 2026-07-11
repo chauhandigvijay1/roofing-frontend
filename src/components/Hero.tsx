@@ -10,9 +10,9 @@ export default function Hero({ name }: HeroProps) {
     : "Premium Roofing Services";
 
   return (
-    <section className="relative min-h-[80vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[80vh] flex items-center overflow-hidden pb-48">
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage:
             'url("https://placehold.co/1920x1080/1e293b/ffffff?text=Beautiful+Roofing+Background+Image")',
@@ -46,13 +46,13 @@ export default function Hero({ name }: HeroProps) {
         >
           <a
             href="#contact"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-orange-500/30 text-lg"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-orange-500/30 text-lg hover:scale-105 active:scale-95"
           >
             Get a Free Estimate
           </a>
           <a
             href="#services"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 text-white font-semibold rounded-lg transition-all duration-300"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105 active:scale-95"
           >
             Our Services
           </a>

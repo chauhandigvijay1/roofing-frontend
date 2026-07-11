@@ -61,7 +61,7 @@ export default function Services() {
             <motion.div
               key={s.title}
               variants={item}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 hover:shadow-xl transition-shadow duration-300"
+              className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
             >
               <img
                 src={s.img}

@@ -28,7 +28,7 @@ export default function Navbar() {
 
         <a
           href="tel:+15551234567"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg transition-all duration-300 shadow-md"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg transition-all duration-300 shadow-md hover:scale-105 active:scale-95"
         >
           <Phone className="w-4 h-4" />
           Call Now: (555) 123-4567
