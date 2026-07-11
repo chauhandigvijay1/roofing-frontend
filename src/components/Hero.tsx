@@ -16,7 +16,7 @@ export default function Hero() {
       />
       <div className="absolute inset-0 bg-black/60" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-24">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-24 pb-40">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -32,7 +32,7 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-5xl md:text-7xl font-oswald uppercase tracking-wider font-bold text-white leading-tight max-w-4xl"
         >
-          Premium Roofing Solutions by {name}
+          Expert Roofing Solutions by {name}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 30 }}
@@ -47,7 +47,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-          className="mt-10 flex gap-4"
+          className="mt-10 flex gap-4 relative z-30"
         >
           <a
             href="#estimate"

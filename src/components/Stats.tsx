@@ -1,11 +1,35 @@
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, animate, useInView } from "framer-motion";
 
 const stats = [
-  { value: "500+", label: "Projects Completed" },
-  { value: "10+", label: "Years of Excellence" },
-  { value: "5.0", label: "Average Rating" },
-  { value: "100%", label: "Satisfaction Rate" },
+  { value: 500, suffix: "+", label: "Projects Completed" },
+  { value: 10, suffix: "+", label: "Years of Excellence" },
+  { value: 5.0, suffix: "", label: "Average Rating", decimals: 1 },
+  { value: 100, suffix: "%", label: "Satisfaction Rate" },
 ];
+
+function CountUp({ value, suffix, decimals = 0 }: { value: number; suffix: string; decimals?: number }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const inView = useInView(ref, { once: true });
+  const [display, setDisplay] = useState("0");
+
+  useEffect(() => {
+    if (inView) {
+      const controls = animate(0, value, {
+        duration: 2,
+        ease: "easeOut",
+        onUpdate: (v) => setDisplay(v.toFixed(decimals)),
+      });
+      return controls.stop;
+    }
+  }, [inView, value, decimals]);
+
+  return (
+    <p ref={ref} className="text-4xl md:text-5xl font-oswald font-bold uppercase tracking-wider">
+      {display}{suffix}
+    </p>
+  );
+}
 
 const container = {
   hidden: {},
@@ -19,7 +43,7 @@ const item = {
 
 export default function Stats() {
   return (
-    <section className="bg-crimson text-white py-16 px-6">
+    <section className="bg-crimson text-white py-12 px-6">
       <motion.div
         variants={container}
         initial="hidden"
@@ -28,8 +52,12 @@ export default function Stats() {
         className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
       >
         {stats.map((s) => (
-          <motion.div key={s.label} variants={item}>
-            <p className="text-4xl md:text-5xl font-oswald font-bold uppercase tracking-wider">{s.value}</p>
+          <motion.div
+            key={s.label}
+            variants={item}
+            className="group transition-transform duration-300 hover:scale-110"
+          >
+            <CountUp value={s.value} suffix={s.suffix} decimals={s.decimals ?? 0} />
             <p className="text-sm text-white/80 mt-2 font-serif">{s.label}</p>
           </motion.div>
         ))}
