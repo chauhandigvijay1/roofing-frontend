@@ -30,6 +30,9 @@ function DynamicTitle() {
 }
 
 export default function Layout() {
+  const { pathname } = useLocation();
+  const isServicePage = pathname.startsWith("/services");
+
   return (
     <>
       <ScrollToTop />
@@ -39,7 +42,7 @@ export default function Layout() {
       <main className="min-h-screen bg-white font-sans antialiased">
         <Outlet />
       </main>
-      <EstimateWizard />
+      {!isServicePage && <EstimateWizard />}
       <MegaFooter />
       <Chatbot />
     </>

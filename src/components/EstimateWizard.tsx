@@ -5,7 +5,11 @@ import { useBrand } from "../BrandContext";
 type ServiceType = "Repair" | "Full Replacement" | "Inspection" | null;
 type PropertyType = "Residential" | "Commercial" | null;
 
-export default function EstimateWizard() {
+interface Props {
+  variant?: "full" | "sidebar";
+}
+
+export default function EstimateWizard({ variant = "full" }: Props) {
   const { name, phone, city } = useBrand();
   const [step, setStep] = useState(0);
   const [serviceType, setServiceType] = useState<ServiceType>(null);
@@ -17,6 +21,91 @@ export default function EstimateWizard() {
     e.preventDefault();
     setDone(true);
   };
+
+  const wizardCard = (
+    <div id="estimate-wizard" className="bg-slate-900 rounded-2xl shadow-2xl p-8">
+      <div className="flex gap-2 mb-8">
+        {[0, 1, 2].map((s) => (
+          <div key={s} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${step >= s ? "bg-blue-500" : "bg-slate-700"}`} />
+        ))}
+      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -30 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          {step === 0 && (
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white mb-6">What type of service do you need?</h3>
+              <div className="grid gap-4">
+                {(["Repair", "Full Replacement", "Inspection"] as const).map((opt) => (
+                  <button
+                    key={opt}
+                    onClick={() => { setServiceType(opt); setStep(1); }}
+                    className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
+                      serviceType === opt
+                        ? "bg-blue-600 text-white"
+                        : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          {step === 1 && (
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white mb-6">What type of property?</h3>
+              <div className="grid gap-4">
+                {(["Residential", "Commercial"] as const).map((opt) => (
+                  <button
+                    key={opt}
+                    onClick={() => { setPropertyType(opt); setStep(2); }}
+                    className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
+                      propertyType === opt
+                        ? "bg-blue-600 text-white"
+                        : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+              <button onClick={() => setStep(0)} className="text-sm text-slate-500 hover:text-slate-300 transition-colors">← Back</button>
+            </div>
+          )}
+          {step === 2 && (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <h3 className="text-xl font-bold text-white mb-6">Where should we send your free estimate?</h3>
+              {(["name", "phone", "email", "address"] as const).map((field) => (
+                <div key={field}>
+                  <label className="block text-sm text-slate-400 mb-1.5 capitalize">{field}</label>
+                  <input
+                    type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
+                    required
+                    value={form[field]}
+                    onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+                    placeholder={field === "phone" ? phone : `Your ${field}`}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-5 py-3.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
+                  />
+                </div>
+              ))}
+              <div className="flex gap-3 pt-2">
+                <button onClick={() => setStep(1)} type="button" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">← Back</button>
+                <button type="submit" className="flex-1 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-orange-500/25 text-lg hover:scale-[1.02] active:scale-[0.98]">
+                  Submit Estimate Request
+                </button>
+              </div>
+            </form>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
 
   if (done) {
     return (
@@ -36,79 +125,17 @@ export default function EstimateWizard() {
     );
   }
 
-  const steps = [
-    // Step 0: Service type
-    <div key="step0" className="space-y-4">
-      <h3 className="text-xl font-bold text-white mb-6">What type of service do you need?</h3>
-      <div className="grid gap-4">
-        {(["Repair", "Full Replacement", "Inspection"] as const).map((opt) => (
-          <button
-            key={opt}
-            onClick={() => { setServiceType(opt); setStep(1); }}
-            className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
-              serviceType === opt
-                ? "bg-blue-600 text-white"
-                : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
-            }`}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-    </div>,
-
-    // Step 1: Property type
-    <div key="step1" className="space-y-4">
-      <h3 className="text-xl font-bold text-white mb-6">What type of property?</h3>
-      <div className="grid gap-4">
-        {(["Residential", "Commercial"] as const).map((opt) => (
-          <button
-            key={opt}
-            onClick={() => { setPropertyType(opt); setStep(2); }}
-            className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
-              propertyType === opt
-                ? "bg-blue-600 text-white"
-                : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
-            }`}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-      <button onClick={() => setStep(0)} className="text-sm text-slate-500 hover:text-slate-300 transition-colors">
-        ← Back
-      </button>
-    </div>,
-
-    // Step 2: Contact form
-    <form key="step2" onSubmit={handleSubmit} className="space-y-5">
-      <h3 className="text-xl font-bold text-white mb-6">Where should we send your free estimate?</h3>
-      {(["name", "phone", "email", "address"] as const).map((field) => (
-        <div key={field}>
-          <label className="block text-sm text-slate-400 mb-1.5 capitalize">{field}</label>
-          <input
-            type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
-            required
-            value={form[field]}
-            onChange={(e) => setForm({ ...form, [field]: e.target.value })}
-            placeholder={field === "phone" ? phone : `Your ${field}`}
-            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-5 py-3.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
-          />
+  if (variant === "sidebar") {
+    return (
+      <div id="estimate" className="rounded-2xl shadow-2xl">
+        <div className="text-center mb-6">
+          <h3 className="text-xl font-bold text-slate-900">Free Estimate</h3>
+          <p className="text-sm text-slate-500 mt-1">Serving {city}</p>
         </div>
-      ))}
-      <div className="flex gap-3 pt-2">
-        <button onClick={() => setStep(1)} type="button" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">
-          ← Back
-        </button>
-        <button
-          type="submit"
-          className="flex-1 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-orange-500/25 text-lg hover:scale-[1.02] active:scale-[0.98]"
-        >
-          Submit Estimate Request
-        </button>
+        {wizardCard}
       </div>
-    </form>,
-  ];
+    );
+  }
 
   return (
     <section id="estimate" className="py-24 px-6 bg-slate-50">
@@ -121,34 +148,10 @@ export default function EstimateWizard() {
           className="text-center mb-10"
         >
           <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">Free Estimate</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
-            Get Your Free Estimate in Under 60 Seconds
-          </h2>
-          <p className="mt-4 text-slate-600 text-lg max-w-xl mx-auto">
-            Serving {city} and all surrounding areas.
-          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900">Get Your Free Estimate in Under 60 Seconds</h2>
+          <p className="mt-4 text-slate-600 text-lg max-w-xl mx-auto">Serving {city} and all surrounding areas.</p>
         </motion.div>
-
-        <div className="bg-slate-900 rounded-2xl shadow-2xl p-8">
-          {/* Step indicators */}
-          <div className="flex gap-2 mb-8">
-            {[0, 1, 2].map((s) => (
-              <div key={s} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${step >= s ? "bg-blue-500" : "bg-slate-700"}`} />
-            ))}
-          </div>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              {steps[step]}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        {wizardCard}
       </div>
     </section>
   );

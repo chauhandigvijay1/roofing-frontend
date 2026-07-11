@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle, ArrowLeft } from "lucide-react";
-import { useBrand } from "../BrandContext";
+import EstimateWizard from "../components/EstimateWizard";
 
 const serviceData: Record<string, {
   title: string;
@@ -118,7 +118,6 @@ const serviceData: Record<string, {
 
 export default function ServiceDetail() {
   const { serviceId } = useParams<{ serviceId: string }>();
-  const { name } = useBrand();
   const data = serviceData[serviceId || ""];
 
   if (!data) {
@@ -159,90 +158,75 @@ export default function ServiceDetail() {
         </div>
       </section>
 
-      {/* Description */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-              Why choose our {data.title}?
-            </h2>
-            <p className="text-slate-600 text-lg leading-relaxed mb-10">{data.description}</p>
-          </motion.div>
+      {/* Split Content + Sticky Sidebar */}
+      <section className="py-12 px-6 bg-white">
+        <div className="flex flex-col lg:flex-row gap-12 max-w-7xl mx-auto">
+          {/* Left Column — Content */}
+          <div className="lg:w-2/3 space-y-16">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+                Why choose our {data.title}?
+              </h2>
+              <p className="text-slate-600 text-lg leading-relaxed mb-10">{data.description}</p>
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-slate-50 rounded-2xl p-8 border border-slate-200"
-          >
-            <h3 className="text-xl font-bold text-slate-900 mb-6">What&apos;s Included</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              {data.highlights.map((h) => (
-                <div key={h} className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                  <span className="text-slate-700">{h}</span>
-                </div>
-              ))}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-slate-50 rounded-2xl p-8 border border-slate-200"
+            >
+              <h3 className="text-xl font-bold text-slate-900 mb-6">What&apos;s Included</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                {data.highlights.map((h) => (
+                  <div key={h} className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span className="text-slate-700">{h}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Service FAQs */}
+            <div>
+              <motion.h3
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="text-2xl md:text-3xl font-bold text-slate-900 mb-8"
+              >
+                FAQs About {data.title}
+              </motion.h3>
+              <div className="space-y-4">
+                {data.faqs.map((f, i) => (
+                  <details key={i} className="bg-white rounded-xl border border-slate-200 group">
+                    <summary className="px-6 py-5 font-semibold text-slate-900 cursor-pointer list-none flex items-center justify-between">
+                      {f.q}
+                      <span className="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div className="px-6 pb-5">
+                      <p className="text-slate-600 leading-relaxed">{f.a}</p>
+                    </div>
+                  </details>
+                ))}
+              </div>
             </div>
-          </motion.div>
-        </div>
-      </section>
+          </div>
 
-      {/* Service FAQs */}
-      <section className="py-20 px-6 bg-slate-50">
-        <div className="max-w-3xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold text-slate-900 mb-10 text-center"
-          >
-            FAQs About {data.title}
-          </motion.h2>
-          <div className="space-y-4">
-            {data.faqs.map((f, i) => (
-              <details key={i} className="bg-white rounded-xl border border-slate-200 group">
-                <summary className="px-6 py-5 font-semibold text-slate-900 cursor-pointer list-none flex items-center justify-between">
-                  {f.q}
-                  <span className="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
-                </summary>
-                <div className="px-6 pb-5">
-                  <p className="text-slate-600 leading-relaxed">{f.a}</p>
-                </div>
-              </details>
-            ))}
+          {/* Right Column — Sticky Sidebar */}
+          <div className="lg:w-1/3">
+            <div className="sticky top-32">
+              <EstimateWizard variant="sidebar" />
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-16 px-6 bg-white text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">
-            Ready to get started with {name}?
-          </h2>
-          <p className="text-slate-600 mb-8 max-w-xl mx-auto">
-            Click below to request your free, no-obligation estimate.
-          </p>
-          <a
-            href="#estimate"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-orange-500/30 text-lg hover:scale-105"
-          >
-            Get a Free Estimate
-          </a>
-        </motion.div>
       </section>
     </>
   );
