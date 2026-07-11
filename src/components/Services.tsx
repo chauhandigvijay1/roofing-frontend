@@ -42,7 +42,7 @@ export default function Services() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" style={{ contentVisibility: "auto" }}
         >
           {services.map((s) => (
             <Link key={s.slug} to={`/services/${s.slug}`}>
@@ -50,7 +50,7 @@ export default function Services() {
                 variants={item}
                 className="bg-white overflow-hidden shadow-lg border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer"
               >
-                <img src={s.img} alt={s.title} className="w-full h-48 object-cover" />
+                <img loading="lazy" decoding="async" src={s.img} alt={s.title} className="w-full h-48 object-cover" />
                 <div className="p-8">
                   <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-2">{s.title}</h3>
                   <p className="text-zinc-600 text-sm leading-relaxed font-serif">{s.desc}</p>

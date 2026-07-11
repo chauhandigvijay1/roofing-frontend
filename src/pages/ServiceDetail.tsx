@@ -136,7 +136,7 @@ export default function ServiceDetail() {
     <>
       {/* Hero */}
       <section className="relative min-h-[50vh] flex items-center overflow-hidden">
-        <img src={data.img} alt={data.title} className="absolute inset-0 w-full h-full object-cover" />
+        <img loading="lazy" decoding="async" src={data.img} alt={data.title} className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-24">
           <motion.h1

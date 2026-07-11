@@ -20,6 +20,8 @@ export default function WhyChooseUs() {
           className="overflow-hidden shadow-xl shadow-stone-200/50"
         >
           <img
+            loading="lazy"
+            decoding="async"
             src="/why-choose-us.jpg"
             alt="Why Choose Us"
             className="w-full h-80 md:h-full object-cover"

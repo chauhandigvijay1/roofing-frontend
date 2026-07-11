@@ -23,7 +23,7 @@ export default function Gallery() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8" style={{ contentVisibility: "auto" }}>
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -33,6 +33,8 @@ export default function Gallery() {
           >
             <div className="relative overflow-hidden shadow-xl shadow-stone-200/50">
               <img
+                loading="lazy"
+                decoding="async"
                 src="/before-roof.jpg"
                 alt="Before"
                 className="w-full h-80 md:h-96 object-cover transition-transform duration-500 group-hover:scale-110"
@@ -52,6 +54,8 @@ export default function Gallery() {
           >
             <div className="relative overflow-hidden shadow-xl shadow-stone-200/50">
               <img
+                loading="lazy"
+                decoding="async"
                 src="/after-roof.jpg"
                 alt="After"
                 className="w-full h-80 md:h-96 object-cover transition-transform duration-500 group-hover:scale-110"

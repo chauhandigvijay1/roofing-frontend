@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send } from "lucide-react";
 
@@ -9,12 +9,27 @@ interface Message {
 
 const INITIAL_MESSAGE = "Do you need a free roof inspection?";
 
+function BouncingDots() {
+  return (
+    <span className="inline-flex items-center gap-1">
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce"
+          style={{ animationDelay: `${i * 0.15}s` }}
+        />
+      ))}
+    </span>
+  );
+}
+
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
   const [showDot, setShowDot] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const warmedUp = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,7 +43,17 @@ export default function Chatbot() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, loading]);
+
+  const prewarm = useCallback(() => {
+    if (warmedUp.current) return;
+    warmedUp.current = true;
+    fetch("https://roofing-backend-n688.onrender.com/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: "ping", history: [] }),
+    }).catch(() => {});
+  }, []);
 
   const sendMessage = async () => {
     const text = input.trim();
@@ -66,6 +91,11 @@ export default function Chatbot() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleToggle = () => {
+    setOpen(!open);
+    if (!open) prewarm();
   };
 
   return (
@@ -119,7 +149,7 @@ export default function Chatbot() {
               {loading && (
                 <div className="flex justify-start">
                   <div className="bg-white/80 backdrop-blur-sm border border-gray-200 px-4 py-3 text-sm text-zinc-500 font-serif">
-                    <span className="animate-pulse">Typing...</span>
+                    <BouncingDots />
                   </div>
                 </div>
               )}
@@ -148,7 +178,7 @@ export default function Chatbot() {
       </AnimatePresence>
 
       <button
-        onClick={() => setOpen(!open)}
+        onClick={handleToggle}
         className="relative w-14 h-14 bg-crimson text-white shadow-lg shadow-crimson/30 flex items-center justify-center transition-all duration-300 hover:scale-105"
       >
         {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}

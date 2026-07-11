@@ -29,7 +29,7 @@ export default function Portfolio() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" style={{ contentVisibility: "auto" }}>
           {projects.map((p, i) => (
             <motion.div
               key={p.title}
@@ -38,7 +38,7 @@ export default function Portfolio() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="bg-white overflow-hidden shadow-lg border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
             >
-              <img src={p.img} alt={p.title} className="w-full h-56 object-cover" />
+              <img loading="lazy" decoding="async" src={p.img} alt={p.title} className="w-full h-56 object-cover" />
               <div className="p-8">
                 <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900">{p.title}</h3>
                 <p className="text-sm text-zinc-500 font-serif">{p.location}</p>

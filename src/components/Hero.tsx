@@ -5,12 +5,14 @@ export default function Hero() {
   const { name } = useBrand();
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-zinc-950">
       <video
         autoPlay
         loop
         muted
         playsInline
+        preload="auto"
+        poster="/before-roof.jpg"
         className="absolute inset-0 w-full h-full object-cover"
         src="/hero-video.mp4"
       />
