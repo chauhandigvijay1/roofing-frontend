@@ -1,5 +1,6 @@
 import Hero from "../components/Hero";
 import TrustRibbon from "../components/TrustRibbon";
+import Stats from "../components/Stats";
 import Services from "../components/Services";
 import WhyChooseUs from "../components/WhyChooseUs";
 import Process from "../components/Process";
@@ -14,6 +15,7 @@ export default function Home() {
     <>
       <Hero />
       <TrustRibbon />
+      <Stats />
       <Services />
       <WhyChooseUs />
       <Process />

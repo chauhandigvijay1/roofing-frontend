@@ -7,7 +7,7 @@ interface Message {
   content: string;
 }
 
-const INITIAL_MESSAGE = "Hi! 👋 Do you need a free roof inspection?";
+const INITIAL_MESSAGE = "Do you need a free roof inspection?";
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
@@ -77,14 +77,14 @@ export default function Chatbot() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="w-80 sm:w-96 bg-white/90 backdrop-blur-xl rounded-sm shadow-xl shadow-stone-200/50 border border-stone-200 overflow-hidden"
+            className="w-80 sm:w-96 bg-white/90 backdrop-blur-xl shadow-xl shadow-stone-200/50 border border-stone-200 overflow-hidden"
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50/80">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-amber-600 flex items-center justify-center shadow-md">
+                <div className="w-9 h-9 bg-crimson flex items-center justify-center shadow-md">
                   <MessageCircle className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-zinc-900 font-semibold text-sm">Roofing Assistant</span>
+                <span className="text-zinc-900 font-oswald uppercase tracking-wider font-bold text-sm">Roofing Assistant</span>
               </div>
               <button
                 onClick={() => setOpen(false)}
@@ -96,7 +96,7 @@ export default function Chatbot() {
 
             <div className="h-80 overflow-y-auto px-5 py-4 space-y-3">
               {messages.length === 0 && (
-                <div className="bg-amber-50/80 backdrop-blur-sm border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-700">
+                <div className="bg-crimson/5 backdrop-blur-sm border border-crimson/20 px-4 py-3 text-sm text-crimson font-serif">
                   {INITIAL_MESSAGE}
                 </div>
               )}
@@ -106,9 +106,9 @@ export default function Chatbot() {
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-xl px-4 py-3 text-sm leading-relaxed ${
+                    className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed font-serif ${
                       msg.role === "user"
-                        ? "bg-amber-600 text-white shadow-md"
+                        ? "bg-crimson text-white shadow-md"
                         : "bg-white/80 backdrop-blur-sm text-zinc-800 border border-gray-200"
                     }`}
                   >
@@ -118,7 +118,7 @@ export default function Chatbot() {
               ))}
               {loading && (
                 <div className="flex justify-start">
-                  <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 text-sm text-zinc-500">
+                  <div className="bg-white/80 backdrop-blur-sm border border-gray-200 px-4 py-3 text-sm text-zinc-500 font-serif">
                     <span className="animate-pulse">Typing...</span>
                   </div>
                 </div>
@@ -133,12 +133,12 @@ export default function Chatbot() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 placeholder="Type your message..."
-                className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-amber-500 transition-colors"
+                className="flex-1 bg-white border border-gray-300 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-crimson transition-colors font-serif"
               />
               <button
                 onClick={sendMessage}
                 disabled={loading || !input.trim()}
-                className="p-3 rounded-lg bg-amber-600 hover:bg-amber-700 text-white disabled:opacity-40 transition-all shadow-md"
+                className="p-3 bg-crimson hover:bg-crimson-dark text-white disabled:opacity-40 transition-all shadow-md"
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -149,7 +149,7 @@ export default function Chatbot() {
 
       <button
         onClick={() => setOpen(!open)}
-        className="relative w-14 h-14 rounded-sm bg-amber-600 text-white shadow-lg shadow-amber-600/30 flex items-center justify-center transition-all duration-300 hover:scale-105"
+        className="relative w-14 h-14 bg-crimson text-white shadow-lg shadow-crimson/30 flex items-center justify-center transition-all duration-300 hover:scale-105"
       >
         {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
         {showDot && !open && (

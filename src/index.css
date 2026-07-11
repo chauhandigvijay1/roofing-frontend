@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@theme {
+  --color-crimson: #8B1A1A;
+  --color-crimson-dark: #6e1414;
+  --color-crimson-light: #a52a2a;
+  --font-oswald: "Oswald", sans-serif;
+  --font-family-serif: "Merriweather", Georgia, serif;
+}

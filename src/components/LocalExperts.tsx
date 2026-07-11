@@ -20,11 +20,11 @@ export default function LocalExperts() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">Your Local Experts</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-4">
             Meet the {name} Crew
           </h2>
-          <p className="text-zinc-600 text-lg max-w-2xl mx-auto mb-16">
+          <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
+          <p className="text-zinc-600 text-lg max-w-2xl mx-auto mb-16 font-serif">
             We&apos;re not just contractors — we&apos;re your neighbors in {city}. Every roof we build
             strengthens the community we call home.
           </p>
@@ -38,13 +38,13 @@ export default function LocalExperts() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5 }}
-              className="bg-stone-50 rounded-sm p-8 border border-stone-200 hover:shadow-xl hover:shadow-stone-200/50 transition-shadow"
+              className="bg-stone-50 p-8 border border-stone-200 border-t-4 border-t-crimson hover:shadow-xl hover:shadow-stone-200/50 transition-shadow"
             >
-              <div className="w-14 h-14 rounded-sm bg-amber-600/10 flex items-center justify-center mx-auto mb-5">
-                <v.icon className="w-7 h-7 text-amber-600" />
+              <div className="w-14 h-14 bg-crimson/10 flex items-center justify-center mx-auto mb-5">
+                <v.icon className="w-7 h-7 text-crimson" />
               </div>
-              <h3 className="text-lg font-bold text-zinc-900 mb-2">{v.label}</h3>
-              <p className="text-zinc-600 text-sm">{v.desc}</p>
+              <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-2">{v.label}</h3>
+              <p className="text-zinc-600 text-sm font-serif">{v.desc}</p>
             </motion.div>
           ))}
         </div>

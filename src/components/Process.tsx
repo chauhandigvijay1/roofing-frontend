@@ -29,9 +29,9 @@ export default function Process() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">How It Works</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900">4 Simple Steps</h2>
-          <p className="mt-4 text-zinc-600 text-lg max-w-xl mx-auto">From inspection to completion — we make it effortless.</p>
+          <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900">4 Simple Steps</h2>
+          <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
+          <p className="text-zinc-600 text-lg max-w-xl mx-auto font-serif">From inspection to completion — we make it effortless.</p>
         </motion.div>
 
         <motion.div
@@ -43,16 +43,16 @@ export default function Process() {
         >
           {steps.map((s, i) => (
             <motion.div key={s.title} variants={item} className="text-center relative">
-              <div className="w-16 h-16 rounded-sm bg-amber-600 flex items-center justify-center mx-auto mb-5 shadow-lg shadow-amber-600/20">
+              <div className="w-16 h-16 bg-crimson flex items-center justify-center mx-auto mb-5 shadow-lg">
                 <s.icon className="w-7 h-7 text-white" />
               </div>
               <div className="absolute top-0 left-[60%] w-full hidden md:block">
                 {i < steps.length - 1 && (
-                  <div className="h-0.5 bg-amber-200 mt-8 -ml-4" />
+                  <div className="h-0.5 bg-crimson/20 mt-8 -ml-4" />
                 )}
               </div>
-              <h3 className="text-lg font-bold text-zinc-900 mb-2">{s.title}</h3>
-              <p className="text-zinc-600 text-sm leading-relaxed">{s.desc}</p>
+              <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-2">{s.title}</h3>
+              <p className="text-zinc-600 text-sm leading-relaxed font-serif">{s.desc}</p>
             </motion.div>
           ))}
         </motion.div>

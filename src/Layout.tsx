@@ -31,15 +31,20 @@ function DynamicTitle() {
 
 export default function Layout() {
   const { pathname } = useLocation();
+  const { city, phone } = useBrand();
   const isServicePage = pathname.startsWith("/services");
 
   return (
     <>
       <ScrollToTop />
       <DynamicTitle />
+      <div className="bg-crimson text-white text-xs py-2 px-4 flex justify-between items-center">
+        <span className="font-oswald uppercase tracking-wider text-xs">Serving {city} and surrounding areas</span>
+        <a href={`tel:${phone}`} className="font-oswald uppercase tracking-wider text-xs hover:underline">Call: {phone}</a>
+      </div>
       <EmergencyBanner />
       <Navbar />
-      <main className="min-h-screen bg-white font-sans antialiased">
+      <main className="min-h-screen bg-white font-serif antialiased">
         <Outlet />
       </main>
       {!isServicePage && <EstimateWizard />}

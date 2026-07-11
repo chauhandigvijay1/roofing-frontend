@@ -15,7 +15,7 @@ export default function Locations() {
   const { name } = useBrand();
 
   return (
-    <section className="pt-36 pb-24 px-6 bg-stone-50 min-h-screen">
+    <section className="pt-36 pb-24 px-6 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -23,9 +23,9 @@ export default function Locations() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">Locations</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-zinc-900">Areas We Serve</h1>
-          <p className="mt-4 text-zinc-600 text-lg max-w-xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900">Areas We Serve</h1>
+          <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
+          <p className="text-zinc-600 text-lg max-w-xl mx-auto font-serif">
             {name} is proud to serve homeowners and businesses across Texas.
           </p>
         </motion.div>
@@ -37,13 +37,13 @@ export default function Locations() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="bg-white rounded-sm p-8 border border-stone-100 shadow-xl shadow-stone-200/50 hover:shadow-xl hover:shadow-stone-200/50 transition-shadow"
+              className="bg-white p-8 border border-stone-100 border-t-4 border-t-crimson shadow-lg hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-3 mb-4">
-                <MapPin className="w-6 h-6 text-amber-600 shrink-0" />
-                <h3 className="text-xl font-bold text-zinc-900">{c.name}</h3>
+                <MapPin className="w-6 h-6 text-crimson shrink-0" />
+                <h3 className="text-xl font-oswald uppercase tracking-wider font-bold text-zinc-900">{c.name}</h3>
               </div>
-              <a href={`tel:${c.phone}`} className="flex items-center gap-2 text-zinc-600 hover:text-amber-600 transition-colors">
+              <a href={`tel:${c.phone}`} className="flex items-center gap-2 text-zinc-600 hover:text-crimson transition-colors font-serif">
                 <Phone className="w-4 h-4" />
                 <span>{c.phone}</span>
               </a>

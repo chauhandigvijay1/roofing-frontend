@@ -30,18 +30,18 @@ export default function FAQ() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">FAQ</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900">Frequently Asked Questions</h2>
+          <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900">Frequently Asked Questions</h2>
+          <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
         </motion.div>
 
         <div className="space-y-4">
           {faqs.map((f, i) => (
-            <div key={i} className="bg-stone-50 rounded-sm border border-stone-200 overflow-hidden">
+            <div key={i} className="bg-stone-50 border border-stone-200 overflow-hidden">
               <button
                 onClick={() => setOpen(open === i ? null : i)}
                 className="w-full flex items-center justify-between px-6 py-5 text-left"
               >
-                <span className="font-semibold text-zinc-900">{f.q}</span>
+                <span className="font-oswald uppercase tracking-wider font-bold text-zinc-900">{f.q}</span>
                 <ChevronDown
                   className={`w-5 h-5 text-zinc-500 shrink-0 transition-transform duration-300 ${open === i ? "rotate-180" : ""}`}
                 />
@@ -55,7 +55,7 @@ export default function FAQ() {
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <p className="px-6 pb-5 text-zinc-600 leading-relaxed">{f.a}</p>
+                    <p className="px-6 pb-5 text-zinc-600 leading-relaxed font-serif">{f.a}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

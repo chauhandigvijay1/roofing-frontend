@@ -35,16 +35,16 @@ export default function Testimonials() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">Testimonials</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-4">
             Trusted by Homeowners in {city}
           </h2>
+          <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
         </motion.div>
 
-        <div className="relative bg-white rounded-sm shadow-xl shadow-stone-200/50 border border-stone-200 p-10 mt-10">
+        <div className="relative bg-white shadow-xl shadow-stone-200/50 border border-stone-200 p-10 mt-10">
           <div className="flex justify-center gap-1 mb-6">
             {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} className="w-6 h-6 fill-amber-400 text-amber-400" />
+              <Star key={i} className="w-6 h-6 fill-crimson text-crimson" />
             ))}
           </div>
 
@@ -55,18 +55,18 @@ export default function Testimonials() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="text-zinc-700 text-lg leading-relaxed mb-6"
+              className="text-zinc-700 text-lg leading-relaxed mb-6 font-serif"
             >
               &ldquo;{r.text}&rdquo;
             </motion.p>
           </AnimatePresence>
 
-          <p className="text-zinc-900 font-semibold">{r.name}</p>
+          <p className="text-zinc-900 font-oswald uppercase tracking-wider font-bold">{r.name}</p>
 
-          <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-amber-600 transition-colors">
+          <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-crimson transition-colors">
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-amber-600 transition-colors">
+          <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-crimson transition-colors">
             <ChevronRight className="w-6 h-6" />
           </button>
         </div>

@@ -11,7 +11,7 @@ export default function Location() {
   }, [city]);
 
   return (
-    <section id="location" className="py-24 px-6 bg-stone-50">
+    <section id="location" className="py-24 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -20,14 +20,12 @@ export default function Location() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">
-            Service Area
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900">
+          <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900">
             Proudly Serving{" "}
-            <span className="text-amber-600">{city}</span> and Surrounding Areas
+            <span className="text-crimson">{city}</span> and Surrounding Areas
           </h2>
-          <p className="mt-4 text-zinc-600 text-lg max-w-2xl mx-auto">
+          <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
+          <p className="text-zinc-600 text-lg max-w-2xl mx-auto font-serif">
             We bring premium roofing to your neighborhood. Contact us today for
             a free onsite estimate.
           </p>
@@ -38,7 +36,7 @@ export default function Location() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="rounded-sm overflow-hidden shadow-xl shadow-stone-200/50 border-4 border-white"
+          className="overflow-hidden shadow-xl shadow-stone-200/50 border-4 border-white"
         >
           <iframe
             title={`Service Area — ${city}`}
