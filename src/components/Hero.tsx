@@ -14,16 +14,16 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full object-cover"
         src="/hero-video.mp4"
       />
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-black/60" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-24">
         <motion.h1
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-6xl font-extrabold text-white leading-tight max-w-4xl"
+          className="text-5xl md:text-7xl font-extrabold text-white leading-tight max-w-4xl"
         >
-          Expert Roofing Solutions by {name}
+          Premium Roofing Solutions by {name}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 30 }}
@@ -41,7 +41,7 @@ export default function Hero() {
           className="mt-10 flex gap-4"
         >
           <a
-            href="#contact"
+            href="#estimate"
             className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-orange-500/30 text-lg hover:scale-105 active:scale-95"
           >
             Get a Free Estimate
