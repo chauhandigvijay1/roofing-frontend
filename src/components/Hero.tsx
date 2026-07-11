@@ -1,33 +1,29 @@
 import { motion } from "framer-motion";
+import { useBrand } from "../BrandContext";
 
-interface HeroProps {
-  name: string | null;
-}
-
-export default function Hero({ name }: HeroProps) {
-  const headline = name
-    ? `Premium Roofing by ${name}`
-    : "Premium Roofing Services";
+export default function Hero() {
+  const { name } = useBrand();
 
   return (
-    <section className="relative min-h-[80vh] flex items-center overflow-hidden pb-48">
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage:
-            'url("https://placehold.co/1920x1080/1e293b/ffffff?text=Beautiful+Roofing+Background+Image")',
-        }}
+    <section className="relative min-h-screen flex items-center overflow-hidden">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+        src="/hero-video.mp4"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+      <div className="absolute inset-0 bg-black/50" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-24">
         <motion.h1
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-5xl md:text-7xl font-extrabold text-white leading-tight max-w-3xl"
+          className="text-6xl font-extrabold text-white leading-tight max-w-4xl"
         >
-          {headline}
+          Expert Roofing Solutions by {name}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 30 }}
@@ -35,8 +31,8 @@ export default function Hero({ name }: HeroProps) {
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
           className="mt-6 text-lg md:text-xl text-slate-200 max-w-2xl"
         >
-          Expert craftsmanship, premium materials, and unbeatable service.
-          Your home deserves the best roof in the neighborhood.
+          Premium craftsmanship, trusted materials, and a 100% satisfaction
+          guarantee. Your home is in expert hands.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

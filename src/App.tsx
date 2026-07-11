@@ -1,26 +1,29 @@
-import { useMemo } from "react";
+import { BrandProvider } from "./BrandContext";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import FeatureCards from "./components/FeatureCards";
+import Stats from "./components/Stats";
+import Gallery from "./components/Gallery";
 import Services from "./components/Services";
 import Reviews from "./components/Reviews";
+import Location from "./components/Location";
 import ContactForm from "./components/ContactForm";
 import Chatbot from "./components/Chatbot";
 
 function App() {
-  const params = useMemo(() => new URLSearchParams(window.location.search), []);
-  const name = params.get("name");
-
   return (
-    <div className="min-h-screen bg-white font-sans antialiased">
-      <Navbar />
-      <Hero name={name} />
-      <FeatureCards />
-      <Services />
-      <Reviews />
-      <ContactForm />
-      <Chatbot />
-    </div>
+    <BrandProvider>
+      <div className="min-h-screen bg-white font-sans antialiased">
+        <Navbar />
+        <Hero />
+        <Stats />
+        <Services />
+        <Gallery />
+        <Reviews />
+        <Location />
+        <ContactForm />
+        <Chatbot />
+      </div>
+    </BrandProvider>
   );
 }
 

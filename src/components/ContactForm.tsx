@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Phone, User, ClipboardCheck, Mail, MapPin } from "lucide-react";
+import { useBrand } from "../BrandContext";
 
 export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
+  const { name, phone, email, city } = useBrand();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,22 +19,22 @@ export default function ContactForm() {
             Get Your <span className="text-blue-400">Free Quote</span>
           </h2>
           <p className="text-slate-400 mb-8 max-w-md">
-            Fill out the form and we&apos;ll call you within 30 minutes for a
-            free, no-obligation inspection.
+            Fill out the form and the {name} team will call you within 30
+            minutes for a free, no-obligation inspection in {city}.
           </p>
 
           <div className="space-y-4">
             <div className="flex items-center gap-3 text-slate-300">
               <Phone className="w-5 h-5 text-blue-400" />
-              <span>(555) 123-4567</span>
+              <span>{phone}</span>
             </div>
             <div className="flex items-center gap-3 text-slate-300">
               <Mail className="w-5 h-5 text-blue-400" />
-              <span>info@roofingpro.com</span>
+              <span>Email the {name} team at {email}</span>
             </div>
             <div className="flex items-center gap-3 text-slate-300">
               <MapPin className="w-5 h-5 text-blue-400" />
-              <span>123 Main St, Anytown, USA</span>
+              <span>Proudly serving {city}</span>
             </div>
           </div>
         </div>
@@ -45,7 +47,7 @@ export default function ContactForm() {
               </div>
               <p className="text-2xl font-bold text-white mb-2">Request Received!</p>
               <p className="text-slate-400">
-                We&apos;ll reach out shortly to schedule your free inspection.
+                The {name} team will reach out shortly.
               </p>
             </div>
           ) : (
@@ -69,7 +71,7 @@ export default function ContactForm() {
                   <input
                     type="tel"
                     required
-                    placeholder="(555) 123-4567"
+                    placeholder={phone}
                     className="w-full bg-slate-700/50 border border-slate-600 rounded-lg pl-12 pr-4 py-3.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
                   />
                 </div>
@@ -87,7 +89,7 @@ export default function ContactForm() {
 
       <div className="border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-slate-500">
-          &copy; {new Date().getFullYear()} RoofingPro. All rights reserved.
+          &copy; {new Date().getFullYear()} {name}. All rights reserved. | The #1 roofers in {city}
         </div>
       </div>
     </footer>

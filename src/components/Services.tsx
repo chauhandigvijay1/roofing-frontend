@@ -2,19 +2,19 @@ import { motion } from "framer-motion";
 
 const services = [
   {
-    title: "Asphalt Shingles",
-    desc: "Classic, durable, and affordable. We install architectural shingles with 30-year warranties for lasting curb appeal.",
-    img: "https://placehold.co/600x400/f8fafc/334155?text=Asphalt+Shingles",
+    title: "Metal Roofing",
+    desc: "Premium standing seam and corrugated metal roofs that last 50+ years. Energy-efficient, fire-resistant, and beautiful.",
+    img: "/service-metal.jpg",
   },
   {
-    title: "Metal Roofing",
-    desc: "Premium standing seam and corrugated metal roofs that last 50+ years. Energy-efficient and fire-resistant.",
-    img: "https://placehold.co/600x400/f8fafc/334155?text=Metal+Roofing",
+    title: "Asphalt Shingles",
+    desc: "Classic architectural shingles with 30-year warranties. Durable, affordable, and available in dozens of styles.",
+    img: "/service-shingle.jpg",
   },
   {
     title: "Roof Repair",
-    desc: "Fast, reliable emergency repairs for leaks, storm damage, and missing shingles. Same-day service available.",
-    img: "https://placehold.co/600x400/f8fafc/334155?text=Roof+Repair",
+    desc: "Emergency repairs, leak detection, and storm damage restoration. Same-day service available for urgent issues.",
+    img: "/service-repair.jpg",
   },
 ];
 
@@ -30,7 +30,7 @@ const item = {
 
 export default function Services() {
   return (
-    <section id="services" className="py-32 px-6 bg-slate-50">
+    <section id="services" className="py-24 px-6 bg-slate-50">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
