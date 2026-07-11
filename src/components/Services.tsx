@@ -14,7 +14,7 @@ const services = [
   {
     title: "Roof Repair",
     desc: "Emergency repairs, leak detection, and storm damage restoration. Same-day service available for urgent issues.",
-    img: "https://placehold.co/600x400/f8fafc/334155?text=Roof+Repair",
+    img: "/service-repair.jpg",
   },
 ];
 
