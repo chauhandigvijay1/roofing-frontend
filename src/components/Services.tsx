@@ -1,12 +1,13 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const services = [
-  { title: "Residential Replacement", desc: "Full tear-off and replacement with premium architectural shingles or metal panels.", img: "/service-metal.jpg" },
-  { title: "Emergency Repair", desc: "24/7 emergency tarping, leak stops, and storm damage mitigation to protect your home.", img: "/service-repair.jpg" },
-  { title: "Storm Damage", desc: "Complete insurance claim assistance and restoration after hail, wind, or tornado damage.", img: "https://placehold.co/600x400/1e293b/ffffff?text=Storm+Damage" },
-  { title: "Commercial Roofing", desc: "TPO, PVC, and modified bitumen systems for flat and low-slope commercial buildings.", img: "https://placehold.co/600x400/1e293b/ffffff?text=Commercial+Roofing" },
-  { title: "Maintenance", desc: "Bi-annual inspections, gutter cleaning, sealant checks, and minor repairs to extend roof life.", img: "https://placehold.co/600x400/1e293b/ffffff?text=Maintenance" },
-  { title: "Gutters", desc: "Custom seamless gutter installation, gutter guards, and downspout repairs in matching colors.", img: "https://placehold.co/600x400/1e293b/ffffff?text=Gutters" },
+  { slug: "residential", title: "Residential Replacement", desc: "Full tear-off and replacement with premium architectural shingles or metal panels.", img: "/service-metal.jpg" },
+  { slug: "repair", title: "Emergency Repair", desc: "24/7 emergency tarping, leak stops, and storm damage mitigation to protect your home.", img: "/service-repair.jpg" },
+  { slug: "storm-damage", title: "Storm Damage", desc: "Complete insurance claim assistance and restoration after hail, wind, or tornado damage.", img: "/service-storm.jpg" },
+  { slug: "commercial", title: "Commercial Roofing", desc: "TPO, PVC, and modified bitumen systems for flat and low-slope commercial buildings.", img: "/service-commercial.jpg" },
+  { slug: "maintenance", title: "Maintenance", desc: "Bi-annual inspections, gutter cleaning, sealant checks, and minor repairs to extend roof life.", img: "/service-shingle.jpg" },
+  { slug: "gutters", title: "Gutters", desc: "Custom seamless gutter installation, gutter guards, and downspout repairs in matching colors.", img: "/service-gutters.jpg" },
 ];
 
 const container = {
@@ -43,17 +44,18 @@ export default function Services() {
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {services.map((s) => (
-            <motion.div
-              key={s.title}
-              variants={item}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
-            >
-              <img src={s.img} alt={s.title} className="w-full h-48 object-cover" />
-              <div className="p-6">
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{s.title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">{s.desc}</p>
-              </div>
-            </motion.div>
+            <Link key={s.slug} to={`/services/${s.slug}`}>
+              <motion.div
+                variants={item}
+                className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
+              >
+                <img src={s.img} alt={s.title} className="w-full h-48 object-cover" />
+                <div className="p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">{s.title}</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">{s.desc}</p>
+                </div>
+              </motion.div>
+            </Link>
           ))}
         </motion.div>
       </div>

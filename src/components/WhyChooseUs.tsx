@@ -23,7 +23,7 @@ export default function WhyChooseUs() {
           className="rounded-2xl overflow-hidden shadow-2xl"
         >
           <img
-            src="https://placehold.co/800x600/1e293b/ffffff?text=Why+Choose+Us"
+            src="/why-choose-us.jpg"
             alt="Why Choose Us"
             className="w-full h-80 md:h-full object-cover"
           />
