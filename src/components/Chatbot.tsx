@@ -50,7 +50,14 @@ export default function Chatbot() {
         }),
       });
       const data = await res.json();
-      setMessages([...updated, { role: "assistant", content: data.reply }]);
+      if (!res.ok) {
+        setMessages([
+          ...updated,
+          { role: "assistant", content: data.error || "Sorry, I'm having trouble connecting. Please try again." },
+        ]);
+      } else {
+        setMessages([...updated, { role: "assistant", content: data.reply }]);
+      }
     } catch {
       setMessages([
         ...updated,
