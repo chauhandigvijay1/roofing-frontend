@@ -1,8 +1,14 @@
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { useBrand } from "../BrandContext";
 
 export default function Location() {
   const { city } = useBrand();
+
+  const mapSrc = useMemo(() => {
+    const encoded = encodeURIComponent(city);
+    return `https://maps.google.com/maps?q=${encoded}&t=m&z=10&output=embed`;
+  }, [city]);
 
   return (
     <section id="location" className="py-24 px-6 bg-slate-50">
@@ -35,8 +41,8 @@ export default function Location() {
           className="rounded-2xl overflow-hidden shadow-xl border-4 border-white"
         >
           <iframe
-            title="Service Area"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3387751.9197551715!2d-100.074161812083!3d31.99734517898663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864070360b823869%3A0x1e7a0d1c7a0e0c1!2sTexas%2C+USA!5e0!3m2!1sen!2s!4v1"
+            title={`Service Area — ${city}`}
+            src={mapSrc}
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
