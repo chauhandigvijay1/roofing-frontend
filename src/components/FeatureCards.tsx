@@ -43,13 +43,13 @@ export default function FeatureCards() {
           <motion.div
             key={f.title}
             variants={item}
-            className="bg-white rounded-2xl p-8 shadow-2xl border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
+            className="bg-white rounded-sm p-8 shadow-xl shadow-stone-200/50 border border-stone-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-stone-200/50 cursor-pointer"
           >
-            <div className="w-14 h-14 rounded-xl bg-blue-600/10 flex items-center justify-center mb-6">
-              <f.icon className="w-7 h-7 text-blue-600" />
+            <div className="w-14 h-14 rounded-sm bg-amber-600/10 flex items-center justify-center mb-6">
+              <f.icon className="w-7 h-7 text-amber-600" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-3">{f.title}</h3>
-            <p className="text-slate-600 leading-relaxed">{f.desc}</p>
+            <h3 className="text-xl font-bold text-zinc-900 mb-3">{f.title}</h3>
+            <p className="text-zinc-600 leading-relaxed">{f.desc}</p>
           </motion.div>
         ))}
       </motion.div>

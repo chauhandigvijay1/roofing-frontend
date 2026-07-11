@@ -77,18 +77,18 @@ export default function Chatbot() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="w-80 sm:w-96 bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
+            className="w-80 sm:w-96 bg-white/90 backdrop-blur-xl rounded-sm shadow-xl shadow-stone-200/50 border border-stone-200 overflow-hidden"
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50/80">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 flex items-center justify-center shadow-md">
+                <div className="w-9 h-9 rounded-full bg-amber-600 flex items-center justify-center shadow-md">
                   <MessageCircle className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-slate-900 font-semibold text-sm">Roofing Assistant</span>
+                <span className="text-zinc-900 font-semibold text-sm">Roofing Assistant</span>
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+                className="text-zinc-400 hover:text-zinc-600 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -96,7 +96,7 @@ export default function Chatbot() {
 
             <div className="h-80 overflow-y-auto px-5 py-4 space-y-3">
               {messages.length === 0 && (
-                <div className="bg-blue-50/80 backdrop-blur-sm border border-blue-200 rounded-xl px-4 py-3 text-sm text-blue-700">
+                <div className="bg-amber-50/80 backdrop-blur-sm border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-700">
                   {INITIAL_MESSAGE}
                 </div>
               )}
@@ -108,8 +108,8 @@ export default function Chatbot() {
                   <div
                     className={`max-w-[80%] rounded-xl px-4 py-3 text-sm leading-relaxed ${
                       msg.role === "user"
-                        ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md"
-                        : "bg-white/80 backdrop-blur-sm text-slate-800 border border-gray-200"
+                        ? "bg-amber-600 text-white shadow-md"
+                        : "bg-white/80 backdrop-blur-sm text-zinc-800 border border-gray-200"
                     }`}
                   >
                     {msg.content}
@@ -118,7 +118,7 @@ export default function Chatbot() {
               ))}
               {loading && (
                 <div className="flex justify-start">
-                  <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 text-sm text-slate-500">
+                  <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 text-sm text-zinc-500">
                     <span className="animate-pulse">Typing...</span>
                   </div>
                 </div>
@@ -133,12 +133,12 @@ export default function Chatbot() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 placeholder="Type your message..."
-                className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-blue-500 transition-colors"
+                className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-amber-500 transition-colors"
               />
               <button
                 onClick={sendMessage}
                 disabled={loading || !input.trim()}
-                className="p-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white disabled:opacity-40 transition-all shadow-md"
+                className="p-3 rounded-lg bg-amber-600 hover:bg-amber-700 text-white disabled:opacity-40 transition-all shadow-md"
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -149,7 +149,7 @@ export default function Chatbot() {
 
       <button
         onClick={() => setOpen(!open)}
-        className="relative w-14 h-14 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-600/30 flex items-center justify-center transition-all duration-300 hover:scale-105"
+        className="relative w-14 h-14 rounded-sm bg-amber-600 text-white shadow-lg shadow-amber-600/30 flex items-center justify-center transition-all duration-300 hover:scale-105"
       >
         {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
         {showDot && !open && (

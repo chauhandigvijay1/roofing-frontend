@@ -20,7 +20,7 @@ export default function WhyChooseUs() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="rounded-2xl overflow-hidden shadow-2xl"
+          className="rounded-sm overflow-hidden shadow-xl shadow-stone-200/50"
         >
           <img
             src="/why-choose-us.jpg"
@@ -35,15 +35,15 @@ export default function WhyChooseUs() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">Why {name}</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">Why {name}</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-6">
             Built on Trust, Driven by Quality
           </h2>
           <div className="space-y-4">
             {points.map((p) => (
               <div key={p} className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-blue-600 shrink-0 mt-0.5" />
-                <span className="text-slate-700 text-lg">{p}</span>
+                <CheckCircle className="w-6 h-6 text-amber-600 shrink-0 mt-0.5" />
+                <span className="text-zinc-700 text-lg">{p}</span>
               </div>
             ))}
           </div>

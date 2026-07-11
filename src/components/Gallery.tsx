@@ -14,13 +14,13 @@ export default function Gallery() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">
+          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">
             Before & After
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
-            See the <span className="text-blue-600">Transformation</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900">
+            See the <span className="text-amber-600">Transformation</span>
           </h2>
-          <p className="mt-4 text-slate-600 text-lg max-w-xl mx-auto">
+          <p className="mt-4 text-zinc-600 text-lg max-w-xl mx-auto">
             Real results from real projects in your community.
           </p>
         </motion.div>
@@ -33,7 +33,7 @@ export default function Gallery() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="group"
           >
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+            <div className="relative overflow-hidden rounded-sm shadow-xl shadow-stone-200/50">
               <img
                 src="/before-roof.jpg"
                 alt="Before"
@@ -52,7 +52,7 @@ export default function Gallery() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="group"
           >
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+            <div className="relative overflow-hidden rounded-sm shadow-xl shadow-stone-200/50">
               <img
                 src="/after-roof.jpg"
                 alt="After"

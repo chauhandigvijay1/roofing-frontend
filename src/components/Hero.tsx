@@ -29,7 +29,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-          className="mt-6 text-lg md:text-xl text-slate-200 max-w-2xl"
+          className="mt-6 text-lg md:text-xl text-zinc-200 max-w-2xl"
         >
           Premium craftsmanship, trusted materials, and a 100% satisfaction
           guarantee. Your home is in expert hands.
@@ -42,7 +42,7 @@ export default function Hero() {
         >
           <a
             href="#estimate"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-orange-500/30 text-lg hover:scale-105 active:scale-95"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-amber-600/30 text-lg hover:scale-105 active:scale-95"
           >
             Get a Free Estimate
           </a>

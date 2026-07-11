@@ -27,7 +27,7 @@ export default function Testimonials() {
   const r = allReviews[index];
 
   return (
-    <section id="testimonials" className="py-24 px-6 bg-slate-50">
+    <section id="testimonials" className="py-24 px-6 bg-stone-50">
       <div className="max-w-3xl mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -35,13 +35,13 @@ export default function Testimonials() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">Testimonials</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">Testimonials</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-4">
             Trusted by Homeowners in {city}
           </h2>
         </motion.div>
 
-        <div className="relative bg-white rounded-2xl shadow-xl border border-gray-100 p-10 mt-10">
+        <div className="relative bg-white rounded-sm shadow-xl shadow-stone-200/50 border border-stone-200 p-10 mt-10">
           <div className="flex justify-center gap-1 mb-6">
             {Array.from({ length: 5 }).map((_, i) => (
               <Star key={i} className="w-6 h-6 fill-amber-400 text-amber-400" />
@@ -55,18 +55,18 @@ export default function Testimonials() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="text-slate-700 text-lg leading-relaxed mb-6"
+              className="text-zinc-700 text-lg leading-relaxed mb-6"
             >
               &ldquo;{r.text}&rdquo;
             </motion.p>
           </AnimatePresence>
 
-          <p className="text-slate-900 font-semibold">{r.name}</p>
+          <p className="text-zinc-900 font-semibold">{r.name}</p>
 
-          <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors">
+          <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-amber-600 transition-colors">
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors">
+          <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-amber-600 transition-colors">
             <ChevronRight className="w-6 h-6" />
           </button>
         </div>

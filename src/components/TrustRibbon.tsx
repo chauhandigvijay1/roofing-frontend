@@ -26,7 +26,7 @@ export default function TrustRibbon() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-50px" }}
-        className="grid grid-cols-2 md:grid-cols-4 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+        className="grid grid-cols-2 md:grid-cols-4 bg-white rounded-sm shadow-xl shadow-stone-200/50 border border-stone-200 overflow-hidden"
       >
         {items.map((i) => (
           <motion.div
@@ -34,8 +34,8 @@ export default function TrustRibbon() {
             variants={item}
             className="flex items-center justify-center gap-3 py-6 px-4 border-r border-gray-100 last:border-r-0"
           >
-            <i.icon className="w-6 h-6 text-blue-600 shrink-0" />
-            <span className="text-sm font-semibold text-slate-700">{i.label}</span>
+            <i.icon className="w-6 h-6 text-amber-600 shrink-0" />
+            <span className="text-sm font-semibold text-zinc-700">{i.label}</span>
           </motion.div>
         ))}
       </motion.div>

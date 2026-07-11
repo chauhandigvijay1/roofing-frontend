@@ -40,13 +40,13 @@ export default function Reviews() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">
+          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">
             Social Proof
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
+          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900">
             Trusted by 500+ Homeowners
           </h2>
-          <p className="mt-4 text-slate-600 text-lg max-w-xl mx-auto">
+          <p className="mt-4 text-zinc-600 text-lg max-w-xl mx-auto">
             See why locals choose us to protect what matters most.
           </p>
         </motion.div>
@@ -62,15 +62,15 @@ export default function Reviews() {
             <motion.div
               key={r.name}
               variants={item}
-              className="bg-slate-50 rounded-2xl p-8 border border-slate-200 hover:shadow-lg transition-shadow duration-300"
+              className="bg-stone-50 rounded-sm p-8 border border-stone-200 hover:shadow-xl hover:shadow-stone-200/50 transition-shadow duration-300"
             >
               <div className="flex gap-1 mb-5">
                 {Array.from({ length: r.rating }).map((_, i) => (
                   <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <p className="text-slate-700 leading-relaxed mb-6">&ldquo;{r.text}&rdquo;</p>
-              <p className="text-slate-900 font-semibold text-sm">{r.name}</p>
+              <p className="text-zinc-700 leading-relaxed mb-6">&ldquo;{r.text}&rdquo;</p>
+              <p className="text-zinc-900 font-semibold text-sm">{r.name}</p>
             </motion.div>
           ))}
         </motion.div>

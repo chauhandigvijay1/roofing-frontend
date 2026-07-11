@@ -123,9 +123,9 @@ export default function ServiceDetail() {
   if (!data) {
     return (
       <section className="py-32 px-6 text-center">
-        <h1 className="text-4xl font-bold text-slate-900 mb-4">Service Not Found</h1>
-        <p className="text-slate-600 mb-8">The page you're looking for doesn't exist.</p>
-        <Link to="/" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold">
+        <h1 className="text-4xl font-bold text-zinc-900 mb-4">Service Not Found</h1>
+        <p className="text-zinc-600 mb-8">The page you're looking for doesn't exist.</p>
+        <Link to="/" className="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-semibold">
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
       </section>
@@ -151,7 +151,7 @@ export default function ServiceDetail() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-            className="mt-4 text-lg md:text-xl text-slate-200 max-w-2xl"
+            className="mt-4 text-lg md:text-xl text-zinc-200 max-w-2xl"
           >
             {data.subtitle}
           </motion.p>
@@ -169,10 +169,10 @@ export default function ServiceDetail() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-6">
                 Why choose our {data.title}?
               </h2>
-              <p className="text-slate-600 text-lg leading-relaxed mb-10">{data.description}</p>
+              <p className="text-zinc-600 text-lg leading-relaxed mb-10">{data.description}</p>
             </motion.div>
 
             <motion.div
@@ -180,14 +180,14 @@ export default function ServiceDetail() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-slate-50 rounded-2xl p-8 border border-slate-200"
+              className="bg-stone-50 rounded-sm p-8 border border-stone-200"
             >
-              <h3 className="text-xl font-bold text-slate-900 mb-6">What&apos;s Included</h3>
+              <h3 className="text-xl font-bold text-zinc-900 mb-6">What&apos;s Included</h3>
               <div className="grid md:grid-cols-2 gap-4">
                 {data.highlights.map((h) => (
                   <div key={h} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                    <span className="text-slate-700">{h}</span>
+                    <CheckCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <span className="text-zinc-700">{h}</span>
                   </div>
                 ))}
               </div>
@@ -200,19 +200,19 @@ export default function ServiceDetail() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="text-2xl md:text-3xl font-bold text-slate-900 mb-8"
+                className="text-2xl md:text-3xl font-bold text-zinc-900 mb-8"
               >
                 FAQs About {data.title}
               </motion.h3>
               <div className="space-y-4">
                 {data.faqs.map((f, i) => (
-                  <details key={i} className="bg-white rounded-xl border border-slate-200 group">
-                    <summary className="px-6 py-5 font-semibold text-slate-900 cursor-pointer list-none flex items-center justify-between">
+                  <details key={i} className="bg-white rounded-sm border border-stone-200 group">
+                    <summary className="px-6 py-5 font-semibold text-zinc-900 cursor-pointer list-none flex items-center justify-between">
                       {f.q}
-                      <span className="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+                      <span className="text-zinc-400 group-open:rotate-180 transition-transform">▼</span>
                     </summary>
                     <div className="px-6 pb-5">
-                      <p className="text-slate-600 leading-relaxed">{f.a}</p>
+                      <p className="text-zinc-600 leading-relaxed">{f.a}</p>
                     </div>
                   </details>
                 ))}

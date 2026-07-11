@@ -20,11 +20,11 @@ export default function LocalExperts() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">Your Local Experts</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">Your Local Experts</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-4">
             Meet the {name} Crew
           </h2>
-          <p className="text-slate-600 text-lg max-w-2xl mx-auto mb-16">
+          <p className="text-zinc-600 text-lg max-w-2xl mx-auto mb-16">
             We&apos;re not just contractors — we&apos;re your neighbors in {city}. Every roof we build
             strengthens the community we call home.
           </p>
@@ -38,13 +38,13 @@ export default function LocalExperts() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5 }}
-              className="bg-slate-50 rounded-2xl p-8 border border-slate-200 hover:shadow-lg transition-shadow"
+              className="bg-stone-50 rounded-sm p-8 border border-stone-200 hover:shadow-xl hover:shadow-stone-200/50 transition-shadow"
             >
-              <div className="w-14 h-14 rounded-xl bg-blue-600/10 flex items-center justify-center mx-auto mb-5">
-                <v.icon className="w-7 h-7 text-blue-600" />
+              <div className="w-14 h-14 rounded-sm bg-amber-600/10 flex items-center justify-center mx-auto mb-5">
+                <v.icon className="w-7 h-7 text-amber-600" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{v.label}</h3>
-              <p className="text-slate-600 text-sm">{v.desc}</p>
+              <h3 className="text-lg font-bold text-zinc-900 mb-2">{v.label}</h3>
+              <p className="text-zinc-600 text-sm">{v.desc}</p>
             </motion.div>
           ))}
         </div>

@@ -29,9 +29,9 @@ export default function Process() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">How It Works</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900">4 Simple Steps</h2>
-          <p className="mt-4 text-slate-600 text-lg max-w-xl mx-auto">From inspection to completion — we make it effortless.</p>
+          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">How It Works</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900">4 Simple Steps</h2>
+          <p className="mt-4 text-zinc-600 text-lg max-w-xl mx-auto">From inspection to completion — we make it effortless.</p>
         </motion.div>
 
         <motion.div
@@ -43,16 +43,16 @@ export default function Process() {
         >
           {steps.map((s, i) => (
             <motion.div key={s.title} variants={item} className="text-center relative">
-              <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center mx-auto mb-5 shadow-lg shadow-blue-600/20">
+              <div className="w-16 h-16 rounded-sm bg-amber-600 flex items-center justify-center mx-auto mb-5 shadow-lg shadow-amber-600/20">
                 <s.icon className="w-7 h-7 text-white" />
               </div>
               <div className="absolute top-0 left-[60%] w-full hidden md:block">
                 {i < steps.length - 1 && (
-                  <div className="h-0.5 bg-blue-200 mt-8 -ml-4" />
+                  <div className="h-0.5 bg-amber-200 mt-8 -ml-4" />
                 )}
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{s.title}</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">{s.desc}</p>
+              <h3 className="text-lg font-bold text-zinc-900 mb-2">{s.title}</h3>
+              <p className="text-zinc-600 text-sm leading-relaxed">{s.desc}</p>
             </motion.div>
           ))}
         </motion.div>

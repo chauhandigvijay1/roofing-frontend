@@ -5,7 +5,7 @@ export default function MegaFooter() {
   const { name, phone, email, city } = useBrand();
 
   return (
-    <footer className="bg-slate-900 text-slate-400">
+    <footer className="bg-zinc-900 text-zinc-400">
       <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-4 gap-12">
         {/* Brand */}
         <div>
@@ -33,15 +33,15 @@ export default function MegaFooter() {
           <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Contact</h4>
           <div className="space-y-3 text-sm">
             <div className="flex items-center gap-3">
-              <Phone className="w-4 h-4 text-blue-400 shrink-0" />
+              <Phone className="w-4 h-4 text-amber-400 shrink-0" />
               <span>{phone}</span>
             </div>
             <div className="flex items-center gap-3">
-              <Mail className="w-4 h-4 text-blue-400 shrink-0" />
+              <Mail className="w-4 h-4 text-amber-400 shrink-0" />
               <span>{email}</span>
             </div>
             <div className="flex items-center gap-3">
-              <MapPin className="w-4 h-4 text-blue-400 shrink-0" />
+              <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
               <span>Serving {city} & Surrounding Areas</span>
             </div>
           </div>
@@ -52,7 +52,7 @@ export default function MegaFooter() {
           <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Hours</h4>
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-3">
-              <Clock className="w-4 h-4 text-blue-400 shrink-0" />
+              <Clock className="w-4 h-4 text-amber-400 shrink-0" />
               <div>
                 <p>Mon – Fri: 7 AM – 7 PM</p>
                 <p>Sat: 8 AM – 4 PM</p>
@@ -63,8 +63,8 @@ export default function MegaFooter() {
         </div>
       </div>
 
-      <div className="border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-slate-500">
+      <div className="border-t border-stone-800">
+        <div className="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-zinc-500">
           &copy; {new Date().getFullYear()} {name}. All rights reserved. | The #1 roofers in {city}
         </div>
       </div>
