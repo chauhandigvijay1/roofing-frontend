@@ -1,29 +1,26 @@
 import { motion } from "framer-motion";
-import { Shield, RotateCw, CloudLightning } from "lucide-react";
 
 const services = [
   {
-    icon: Shield,
+    title: "Asphalt Shingles",
+    desc: "Classic, durable, and affordable. We install architectural shingles with 30-year warranties for lasting curb appeal.",
+    img: "https://placehold.co/600x400/f8fafc/334155?text=Asphalt+Shingles",
+  },
+  {
+    title: "Metal Roofing",
+    desc: "Premium standing seam and corrugated metal roofs that last 50+ years. Energy-efficient and fire-resistant.",
+    img: "https://placehold.co/600x400/f8fafc/334155?text=Metal+Roofing",
+  },
+  {
     title: "Roof Repair",
-    desc: "Fast, reliable repairs for leaks, missing shingles, and storm damage. We restore the integrity of your roof with precision.",
-  },
-  {
-    icon: RotateCw,
-    title: "Roof Replacement",
-    desc: "Full tear-off and replacement using premium materials. Transform your home with a durable, beautiful new roof.",
-  },
-  {
-    icon: CloudLightning,
-    title: "Storm Damage",
-    desc: "Emergency inspection and restoration after severe weather. We work directly with your insurance for a seamless claim process.",
+    desc: "Fast, reliable emergency repairs for leaks, storm damage, and missing shingles. Same-day service available.",
+    img: "https://placehold.co/600x400/f8fafc/334155?text=Roof+Repair",
   },
 ];
 
 const container = {
   hidden: {},
-  show: {
-    transition: { staggerChildren: 0.25 },
-  },
+  show: { transition: { staggerChildren: 0.25 } },
 };
 
 const item = {
@@ -33,10 +30,8 @@ const item = {
 
 export default function Services() {
   return (
-    <section id="services" className="relative py-32 px-6">
-      <div className="absolute inset-0 bg-[#121212]" />
-
-      <div className="relative z-10 max-w-6xl mx-auto">
+    <section id="services" className="py-32 px-6 bg-slate-50">
+      <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -44,11 +39,14 @@ export default function Services() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-white">
-            Premium <span className="text-amber-500">Services</span>
+          <p className="text-blue-600 text-sm font-semibold tracking-widest uppercase mb-3">
+            What We Do
+          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
+            Our Services
           </h2>
-          <p className="mt-4 text-slate-400 text-lg max-w-xl mx-auto">
-            Expertise you can trust, quality you can see.
+          <p className="mt-4 text-slate-600 text-lg max-w-xl mx-auto">
+            From new installations to emergency repairs, we do it all.
           </p>
         </motion.div>
 
@@ -63,15 +61,19 @@ export default function Services() {
             <motion.div
               key={s.title}
               variants={item}
-              className="group bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 hover:bg-white/10 hover:border-amber-500/30 transition-all duration-500"
+              className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="w-14 h-14 rounded-xl bg-amber-500/10 flex items-center justify-center mb-6 group-hover:bg-amber-500/20 transition-colors">
-                <s.icon className="w-7 h-7 text-amber-500" />
+              <img
+                src={s.img}
+                alt={s.title}
+                className="w-full h-56 object-cover"
+              />
+              <div className="p-8">
+                <h3 className="text-xl font-bold text-slate-900 mb-3">
+                  {s.title}
+                </h3>
+                <p className="text-slate-600 leading-relaxed">{s.desc}</p>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {s.title}
-              </h3>
-              <p className="text-slate-400 leading-relaxed">{s.desc}</p>
             </motion.div>
           ))}
         </motion.div>
