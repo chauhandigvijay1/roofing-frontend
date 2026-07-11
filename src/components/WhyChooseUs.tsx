@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 
 const points = [
@@ -12,28 +11,18 @@ export default function WhyChooseUs() {
   return (
     <section className="py-24 px-6 bg-white">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="overflow-hidden shadow-xl shadow-stone-200/50"
-        >
+        <div className="overflow-hidden shadow-xl shadow-stone-200/50 bg-stone-100 transform-gpu will-change-transform">
           <img
             loading="lazy"
             decoding="async"
             src="/why-choose-us.jpg"
             alt="Why Choose Us"
             className="w-full h-80 md:h-full object-cover"
+            style={{ transform: "translateZ(0)" }}
           />
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-        >
+        <div>
           <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-4">
             Built on Trust, Driven by Quality
           </h2>
@@ -46,7 +35,7 @@ export default function WhyChooseUs() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

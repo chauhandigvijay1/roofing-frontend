@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useBrand } from "../BrandContext";
 
 const projects = [
@@ -16,35 +15,29 @@ export default function Portfolio() {
   return (
     <section className="pt-36 pb-24 px-6 bg-stone-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900">Our Work</h1>
           <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
           <p className="text-zinc-600 text-lg max-w-xl mx-auto font-serif">
             Every project tells a story. Here are some of our favorites from around Texas.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" style={{ contentVisibility: "auto" }}>
-          {projects.map((p, i) => (
-            <motion.div
+          {projects.map((p) => (
+            <div
               key={p.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="bg-white overflow-hidden shadow-lg border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+              className="bg-white overflow-hidden shadow-lg border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-2 hover:shadow-xl transform-gpu will-change-transform"
             >
-              <img loading="lazy" decoding="async" src={p.img} alt={p.title} className="w-full h-56 object-cover" />
+              <div className="overflow-hidden bg-stone-100 h-56">
+                <img loading="lazy" decoding="async" src={p.img} alt={p.title} className="w-full h-full object-cover" style={{ transform: "translateZ(0)" }} />
+              </div>
               <div className="p-8">
                 <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900">{p.title}</h3>
                 <p className="text-sm text-zinc-500 font-serif">{p.location}</p>
                 <p className="text-xs text-zinc-400 mt-1 font-serif">A {name} project</p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

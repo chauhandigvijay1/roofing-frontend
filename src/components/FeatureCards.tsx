@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Shield, HardHat, Clock } from "lucide-react";
 
 const features = [
@@ -19,40 +18,23 @@ const features = [
   },
 ];
 
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.2 } },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
-};
-
 export default function FeatureCards() {
   return (
     <section className="relative z-20 max-w-7xl mx-auto px-6 -mt-24 pb-16">
-      <motion.div
-        variants={container}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-100px" }}
-        className="grid md:grid-cols-3 gap-8"
-      >
+      <div className="grid md:grid-cols-3 gap-8">
         {features.map((f) => (
-          <motion.div
+          <div
             key={f.title}
-            variants={item}
-            className="bg-white p-8 shadow-xl shadow-stone-200/50 border border-stone-100 border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-stone-200/50 cursor-pointer"
+            className="bg-white p-8 shadow-xl shadow-stone-200/50 border border-stone-100 border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer transform-gpu will-change-transform"
           >
             <div className="w-14 h-14 bg-crimson/10 flex items-center justify-center mb-6">
               <f.icon className="w-7 h-7 text-crimson" />
             </div>
             <h3 className="text-xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-3">{f.title}</h3>
             <p className="text-zinc-600 leading-relaxed font-serif">{f.desc}</p>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }
