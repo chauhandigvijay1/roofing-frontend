@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Calendar, ChevronDown } from "lucide-react";
+import { Calendar, ChevronDown, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { useBrand } from "../BrandContext";
 
@@ -20,7 +20,7 @@ const company = [
 ];
 
 export default function Navbar() {
-  const { name } = useBrand();
+  const { name, phone } = useBrand();
   const { pathname } = useLocation();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -108,13 +108,22 @@ export default function Navbar() {
           </div>
         </div>
 
-        <a
-          href="#estimate"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-crimson text-white font-oswald uppercase tracking-wider font-bold text-sm shadow-lg hover:scale-105 transition-transform"
-        >
-          <Calendar className="w-4 h-4" />
-          Book Now
-        </a>
+        <div className="flex items-center gap-3">
+          <a
+            href={`tel:${phone}`}
+            className="inline-flex items-center gap-2 px-5 py-2.5 border-2 border-crimson text-crimson font-oswald uppercase tracking-wider font-bold text-sm hover:bg-crimson hover:text-white transition-colors"
+          >
+            <Phone className="w-4 h-4" />
+            {phone}
+          </a>
+          <a
+            href="#estimate"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-crimson text-white font-oswald uppercase tracking-wider font-bold text-sm shadow-lg hover:scale-105 transition-transform"
+          >
+            <Calendar className="w-4 h-4" />
+            Book Now
+          </a>
+        </div>
       </div>
     </motion.nav>
   );

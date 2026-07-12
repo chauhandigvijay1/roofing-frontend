@@ -3,16 +3,16 @@ import { MapPin, Phone } from "lucide-react";
 import { useBrand } from "../BrandContext";
 
 const cities = [
-  { name: "Dallas", phone: "(214) 555-0100" },
-  { name: "Fort Worth", phone: "(817) 555-0102" },
-  { name: "Austin", phone: "(512) 555-0104" },
-  { name: "Houston", phone: "(713) 555-0106" },
-  { name: "San Antonio", phone: "(210) 555-0108" },
-  { name: "Plano", phone: "(972) 555-0110" },
+  "Dallas",
+  "Fort Worth",
+  "Austin",
+  "Houston",
+  "San Antonio",
+  "Plano",
 ];
 
 export default function Locations() {
-  const { name } = useBrand();
+  const { name, phone } = useBrand();
 
   return (
     <section className="pt-36 pb-24 px-6 bg-white min-h-screen">
@@ -31,9 +31,9 @@ export default function Locations() {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {cities.map((c) => (
+          {cities.map((city) => (
             <motion.div
-              key={c.name}
+              key={city}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
@@ -41,11 +41,11 @@ export default function Locations() {
             >
               <div className="flex items-center gap-3 mb-4">
                 <MapPin className="w-6 h-6 text-crimson shrink-0" />
-                <h3 className="text-xl font-oswald uppercase tracking-wider font-bold text-zinc-900">{c.name}</h3>
+                <h3 className="text-xl font-oswald uppercase tracking-wider font-bold text-zinc-900">{city}</h3>
               </div>
-              <a href={`tel:${c.phone}`} className="flex items-center gap-2 text-zinc-600 hover:text-crimson transition-colors font-serif">
+              <a href={`tel:${phone}`} className="flex items-center gap-2 text-zinc-600 hover:text-crimson transition-colors font-serif">
                 <Phone className="w-4 h-4" />
-                <span>{c.phone}</span>
+                <span>{phone}</span>
               </a>
             </motion.div>
           ))}
