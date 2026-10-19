@@ -8,6 +8,7 @@ interface Message {
 }
 
 const INITIAL_MESSAGE = "Do you need a free roof inspection?";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://roofing-backend-n688.onrender.com";
 
 function BouncingDots() {
   return (
@@ -48,7 +49,7 @@ export default function Chatbot() {
   const prewarm = useCallback(() => {
     if (warmedUp.current) return;
     warmedUp.current = true;
-    fetch("https://roofing-backend-n688.onrender.com/api/chat", {
+    fetch(`${BACKEND_URL}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: "ping", history: [] }),
@@ -66,7 +67,7 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://roofing-backend-n688.onrender.com/api/chat", {
+      const res = await fetch(`${BACKEND_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -136,7 +137,7 @@ export default function Chatbot() {
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed font-serif ${
+                    className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed font-serif whitespace-pre-wrap break-words ${
                       msg.role === "user"
                         ? "bg-crimson text-white shadow-md"
                         : "bg-white/80 backdrop-blur-sm text-zinc-800 border border-gray-200"
