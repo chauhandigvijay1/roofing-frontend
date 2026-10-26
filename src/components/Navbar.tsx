@@ -20,7 +20,7 @@ const company = [
 ];
 
 export default function Navbar() {
-  const { name, phone } = useBrand();
+  const { name, phone, logo } = useBrand();
   const { pathname } = useLocation();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -35,8 +35,12 @@ export default function Navbar() {
       onMouseLeave={() => setOpenDropdown(null)}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-oswald uppercase tracking-wider font-black text-zinc-900">
-          {name}
+        <Link to="/" className="flex items-center gap-2">
+          {logo ? (
+            <img src={logo} alt={name} className="h-10 max-w-[220px] object-contain" />
+          ) : (
+            <span className="text-2xl font-oswald uppercase tracking-wider font-black text-zinc-900">{name}</span>
+          )}
         </Link>
 
         <div className="hidden lg:flex items-center gap-1">

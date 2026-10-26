@@ -1,7 +1,15 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import { useBrand } from "../BrandContext";
 
-const reviews = [
+interface ReviewItem {
+  name: string;
+  location?: string;
+  text: string;
+  rating: number;
+}
+
+const reviews: ReviewItem[] = [
   {
     name: "Michael T.",
     text: "They patched my roof in under 4 hours during a rainstorm. Incredibly fast and professional. Won't call anyone else.",
@@ -19,6 +27,27 @@ const reviews = [
   },
 ];
 
+const drewReviews: ReviewItem[] = [
+  {
+    name: "Robert M.",
+    location: "Lakeway, TX",
+    text: "Drew Boy and his team replaced our roof in Lakeway after a severe hailstorm. As an engineer myself, I appreciated Drew's building science explanation of our attic ventilation. Outstanding craftsmanship.",
+    rating: 5,
+  },
+  {
+    name: "Sarah H.",
+    location: "West Lake Hills, TX",
+    text: "Instant Roofing handled our West Lake Hills home with total professionalism. Handled our insurance claim 100% by the book under Texas law. Cleaned up every single nail.",
+    rating: 5,
+  },
+  {
+    name: "David R.",
+    location: "Round Rock, TX",
+    text: "Emergency leak fixed at 10 PM during torrential rain in Round Rock. Drew's team arrived with an emergency tarp and saved our hardwood floors. Best roofer in Central Texas.",
+    rating: 5,
+  },
+];
+
 const container = {
   hidden: {},
   show: { transition: { staggerChildren: 0.2 } },
@@ -30,6 +59,9 @@ const item = {
 };
 
 export default function Reviews() {
+  const brand = useBrand();
+  const currentReviews = brand.isDrew ? drewReviews : reviews;
+
   return (
     <section id="reviews" className="py-24 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -41,11 +73,13 @@ export default function Reviews() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900">
-            Trusted by 500+ Homeowners
+            {brand.isDrew ? "Trusted by 96+ Austin Homeowners" : "Trusted by 500+ Homeowners"}
           </h2>
           <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
           <p className="text-zinc-600 text-lg max-w-xl mx-auto font-serif">
-            See why locals choose us to protect what matters most.
+            {brand.isDrew
+              ? "See why Central Texas families trust Drew Boy & Instant Roofing for building science craftsmanship."
+              : "See why locals choose us to protect what matters most."}
           </p>
         </motion.div>
 
@@ -56,7 +90,7 @@ export default function Reviews() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid md:grid-cols-3 gap-8"
         >
-          {reviews.map((r) => (
+          {currentReviews.map((r) => (
             <motion.div
               key={r.name}
               variants={item}
@@ -67,8 +101,17 @@ export default function Reviews() {
                   <Star key={i} className="w-5 h-5 fill-crimson text-crimson" />
                 ))}
               </div>
-              <p className="text-zinc-700 leading-relaxed mb-6 font-serif">&ldquo;{r.text}&rdquo;</p>
-              <p className="text-zinc-900 font-oswald uppercase tracking-wider font-bold text-sm">{r.name}</p>
+              <p className="text-zinc-800 leading-relaxed mb-6 font-serif">&ldquo;{r.text}&rdquo;</p>
+              <div className="flex items-center justify-between">
+                <p className="text-zinc-900 font-oswald uppercase tracking-wider font-bold text-sm">
+                  {r.name}
+                </p>
+                {r.location && (
+                  <span className="text-zinc-500 font-serif text-xs italic">
+                    {r.location}
+                  </span>
+                )}
+              </div>
             </motion.div>
           ))}
         </motion.div>

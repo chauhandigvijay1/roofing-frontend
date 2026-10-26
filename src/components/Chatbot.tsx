@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send } from "lucide-react";
+import { useBrand } from "../BrandContext";
 
 interface Message {
   role: "user" | "assistant";
   content: string;
 }
 
-const INITIAL_MESSAGE = "Do you need a free roof inspection?";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://roofing-backend-n688.onrender.com";
 
 function BouncingDots() {
@@ -25,6 +25,7 @@ function BouncingDots() {
 }
 
 export default function Chatbot() {
+  const brand = useBrand();
   const [open, setOpen] = useState(false);
   const [showDot, setShowDot] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -32,6 +33,10 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false);
   const warmedUp = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const initialMessage = brand.isDrew
+    ? "Do you need a free building science roof inspection in Austin?"
+    : "Do you need a free roof inspection?";
 
   useEffect(() => {
     const timer = setTimeout(() => setOpen(true), 2000);
@@ -52,9 +57,19 @@ export default function Chatbot() {
     fetch(`${BACKEND_URL}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: "ping", history: [] }),
+      body: JSON.stringify({
+        message: "ping",
+        history: [],
+        brand: {
+          name: brand.name,
+          city: brand.city,
+          phone: brand.phone,
+          email: brand.email,
+          isDrew: brand.isDrew,
+        },
+      }),
     }).catch(() => {});
-  }, []);
+  }, [brand]);
 
   const sendMessage = async () => {
     const text = input.trim();
@@ -73,6 +88,13 @@ export default function Chatbot() {
         body: JSON.stringify({
           message: text,
           history: messages.map((m) => ({ role: m.role, content: m.content })),
+          brand: {
+            name: brand.name,
+            city: brand.city,
+            phone: brand.phone,
+            email: brand.email,
+            isDrew: brand.isDrew,
+          },
         }),
       });
       const data = await res.json();
@@ -115,7 +137,9 @@ export default function Chatbot() {
                 <div className="w-9 h-9 bg-crimson flex items-center justify-center shadow-md">
                   <MessageCircle className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-zinc-900 font-oswald uppercase tracking-wider font-bold text-sm">Roofing Assistant</span>
+                <span className="text-zinc-900 font-oswald uppercase tracking-wider font-bold text-sm">
+                  {brand.name ? `${brand.name} Assistant` : "Roofing Assistant"}
+                </span>
               </div>
               <button
                 onClick={() => setOpen(false)}
@@ -128,7 +152,7 @@ export default function Chatbot() {
             <div className="h-80 overflow-y-auto px-5 py-4 space-y-3">
               {messages.length === 0 && (
                 <div className="bg-crimson/5 backdrop-blur-sm border border-crimson/20 px-4 py-3 text-sm text-crimson font-serif">
-                  {INITIAL_MESSAGE}
+                  {initialMessage}
                 </div>
               )}
               {messages.map((msg, i) => (

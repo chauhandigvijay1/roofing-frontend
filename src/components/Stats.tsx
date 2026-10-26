@@ -1,11 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, animate, useInView } from "framer-motion";
+import { useBrand } from "../BrandContext";
 
 const stats = [
   { value: 500, suffix: "+", label: "Projects Completed" },
   { value: 10, suffix: "+", label: "Years of Excellence" },
   { value: 5.0, suffix: "", label: "Average Rating", decimals: 1 },
   { value: 100, suffix: "%", label: "Satisfaction Rate" },
+];
+
+const drewStats = [
+  { value: 96, suffix: "+", label: "5-Star Verified Reviews" },
+  { value: 15, suffix: "+", label: "Years Central Texas Heritage" },
+  { value: 5.0, suffix: "", label: "Google & Thumbtack Rating", decimals: 1 },
+  { value: 100, suffix: "%", label: "Texas HB 2102 Compliant" },
 ];
 
 function CountUp({ value, suffix, decimals = 0 }: { value: number; suffix: string; decimals?: number }) {
@@ -42,6 +50,9 @@ const item = {
 };
 
 export default function Stats() {
+  const brand = useBrand();
+  const currentStats = brand.isDrew ? drewStats : stats;
+
   return (
     <section className="bg-crimson text-white py-12 px-6">
       <motion.div
@@ -51,7 +62,7 @@ export default function Stats() {
         viewport={{ once: true, margin: "-50px" }}
         className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
       >
-        {stats.map((s) => (
+        {currentStats.map((s) => (
           <motion.div
             key={s.label}
             variants={item}
