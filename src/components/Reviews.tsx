@@ -3,7 +3,8 @@ import { Star } from "lucide-react";
 import { useBrand } from "../BrandContext";
 
 interface ReviewItem {
-  name: string;
+  name?: string;
+  author?: string;
   location?: string;
   text: string;
   rating: number;
@@ -48,6 +49,24 @@ const drewReviews: ReviewItem[] = [
   },
 ];
 
+const richardReviews: ReviewItem[] = [
+  {
+    author: "Michael T. — Katy, TX",
+    rating: 5,
+    text: "Paramount Roofing replaced our entire roof after severe wind storms in Katy. Richard Keathley's team was prompt, professional, and handled every detail with precision. Cleaned up every single nail. Highest recommendation in Houston.",
+  },
+  {
+    author: "David R. — Sugar Land, TX",
+    rating: 5,
+    text: "Richard and David run an exceptional outfit. They replaced our commercial flat roof in Sugar Land with zero downtime for our business. Fair pricing, clean job site, and honest communication.",
+  },
+  {
+    author: "Elena G. — The Woodlands, TX",
+    rating: 5,
+    text: "Outstanding emergency leak repair and roof inspection. They arrived quickly, diagnosed the issue, and fixed it right the first time. True Houston roofing experts.",
+  },
+];
+
 const container = {
   hidden: {},
   show: { transition: { staggerChildren: 0.2 } },
@@ -60,7 +79,7 @@ const item = {
 
 export default function Reviews() {
   const brand = useBrand();
-  const currentReviews = brand.isDrew ? drewReviews : reviews;
+  const currentReviews = brand.isDrew ? drewReviews : brand.isRichard ? richardReviews : reviews;
 
   return (
     <section id="reviews" className="py-24 px-6 bg-white">
@@ -73,12 +92,18 @@ export default function Reviews() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900">
-            {brand.isDrew ? "Trusted by 96+ Austin Homeowners" : "Trusted by 500+ Homeowners"}
+            {brand.isDrew
+              ? "Trusted by 96+ Austin Homeowners"
+              : brand.isRichard
+              ? "Trusted by Hundreds of Greater Houston Homeowners & Commercial Managers"
+              : "Trusted by 500+ Homeowners"}
           </h2>
           <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
           <p className="text-zinc-600 text-lg max-w-xl mx-auto font-serif">
             {brand.isDrew
               ? "See why Central Texas families trust Drew Boy & Instant Roofing for building science craftsmanship."
+              : brand.isRichard
+              ? "Promises Made. Promises Kept. Decades of 5-star service across Greater Houston."
               : "See why locals choose us to protect what matters most."}
           </p>
         </motion.div>
@@ -90,9 +115,9 @@ export default function Reviews() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid md:grid-cols-3 gap-8"
         >
-          {currentReviews.map((r) => (
+          {currentReviews.map((r, idx) => (
             <motion.div
-              key={r.name}
+              key={r.author || r.name || idx}
               variants={item}
               className="bg-stone-50 p-8 border border-stone-200 border-t-4 border-t-crimson hover:shadow-xl hover:shadow-stone-200/50 transition-shadow duration-300"
             >
@@ -104,7 +129,7 @@ export default function Reviews() {
               <p className="text-zinc-800 leading-relaxed mb-6 font-serif">&ldquo;{r.text}&rdquo;</p>
               <div className="flex items-center justify-between">
                 <p className="text-zinc-900 font-oswald uppercase tracking-wider font-bold text-sm">
-                  {r.name}
+                  {r.author || r.name}
                 </p>
                 {r.location && (
                   <span className="text-zinc-500 font-serif text-xs italic">

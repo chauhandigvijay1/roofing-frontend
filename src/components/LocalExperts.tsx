@@ -9,7 +9,7 @@ const values = [
 
 export default function LocalExperts() {
   const brand = useBrand();
-  const { city, name, isDrew, founderPhoto, gafBadge, txstBadge } = brand;
+  const { city, name, isDrew, isRichard, founderPhoto, gafBadge, txstBadge, bbbBadge, haaBadge, taaBadge } = brand;
 
   if (isDrew) {
     return (
@@ -70,6 +70,65 @@ export default function LocalExperts() {
                   )}
                   <span className="text-xs font-oswald uppercase tracking-wider text-zinc-500 font-medium">
                     100% Texas HB 2102 Deductible Compliant
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (isRichard) {
+    return (
+      <section className="py-24 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-4">
+              Meet Richard, David & The Paramount Roofing Team
+            </h2>
+            <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
+            <p className="text-zinc-600 text-lg max-w-3xl mx-auto font-serif">
+              Founded in 1995 by Richard W. Keathley and David, Paramount Roofing Inc. has provided 31+ years of honest craftsmanship across Greater Houston. &ldquo;Promises Made. Promises Kept.&rdquo; Built on equal partnership, zero high-pressure sales teams, and fully insured crews spanning two generations.
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto bg-stone-50 border border-stone-200 border-t-4 border-t-crimson p-8 md:p-12 shadow-xl shadow-stone-200/50">
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+              <div className="relative shrink-0">
+                <div className="w-48 h-48 bg-stone-900 border-4 border-white shadow-xl flex items-center justify-center p-4">
+                  <img
+                    src="https://paramountroofing.com/wp-content/uploads/2021/06/Residential-Roofing-Houston-White-01-1024x372.png"
+                    alt="Paramount Roofing Inc."
+                    className="max-h-24 object-contain"
+                  />
+                </div>
+                <div className="absolute -bottom-3 -right-3 bg-crimson text-white text-xs font-oswald uppercase tracking-wider font-bold px-3 py-1 shadow-md">
+                  Since 1995
+                </div>
+              </div>
+              <div className="flex-1 text-center md:text-left space-y-4">
+                <h3 className="text-2xl md:text-3xl font-oswald uppercase tracking-wider font-bold text-zinc-900">
+                  Richard W. Keathley & David
+                </h3>
+                <p className="text-crimson font-oswald uppercase tracking-wider text-sm font-semibold">
+                  Co-Owners & Founders | Paramount Roofing Inc.
+                </p>
+                <p className="text-zinc-700 font-serif leading-relaxed text-sm md:text-base">
+                  Combining high-tensile commercial TPO, modified bitumen, and impact-resistant residential architectural shingles engineered specifically for Gulf Coast tropical humidity, severe wind storms, and heavy coastal rain.
+                </p>
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-4 border-t border-stone-200">
+                  {bbbBadge && (
+                    <img src={bbbBadge} alt="BBB Accredited" className="h-10 object-contain" />
+                  )}
+                  {haaBadge && (
+                    <img src={haaBadge} alt="Houston Apartment Association" className="h-10 object-contain" />
+                  )}
+                  {taaBadge && (
+                    <img src={taaBadge} alt="Texas Apartment Association" className="h-10 object-contain" />
+                  )}
+                  <span className="text-xs font-oswald uppercase tracking-wider text-zinc-500 font-medium">
+                    Fully Insured & Texas Windstorm Certified
                   </span>
                 </div>
               </div>

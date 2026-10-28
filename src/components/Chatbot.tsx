@@ -36,6 +36,8 @@ export default function Chatbot() {
 
   const initialMessage = brand.isDrew
     ? "Do you need a free building science roof inspection in Austin?"
+    : brand.isRichard
+    ? "Do you need a free Houston residential or commercial roof inspection?"
     : "Do you need a free roof inspection?";
 
   useEffect(() => {
@@ -66,6 +68,7 @@ export default function Chatbot() {
           phone: brand.phone,
           email: brand.email,
           isDrew: brand.isDrew,
+          isRichard: brand.isRichard,
         },
       }),
     }).catch(() => {});
@@ -94,6 +97,7 @@ export default function Chatbot() {
             phone: brand.phone,
             email: brand.email,
             isDrew: brand.isDrew,
+            isRichard: brand.isRichard,
           },
         }),
       });

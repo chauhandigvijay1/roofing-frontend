@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Home, Building2, AlertTriangle, Droplets } from "lucide-react";
 import { useBrand } from "../BrandContext";
 
-const services = [
+interface ServiceItem {
+  slug: string;
+  title: string;
+  desc: string;
+  img: string;
+  icon?: typeof Home;
+}
+
+const services: ServiceItem[] = [
   { slug: "residential", title: "Residential Replacement", desc: "Full tear-off and replacement with premium architectural shingles or metal panels.", img: "/service-metal.jpg" },
   { slug: "repair", title: "Emergency Repair", desc: "24/7 emergency tarping, leak stops, and storm damage mitigation to protect your home.", img: "/service-repair.jpg" },
   { slug: "storm-damage", title: "Storm Damage", desc: "Complete insurance claim assistance and restoration after hail, wind, or tornado damage.", img: "/service-storm.jpg" },
@@ -11,7 +19,7 @@ const services = [
   { slug: "gutters", title: "Gutters", desc: "Custom seamless gutter installation, gutter guards, and downspout repairs in matching colors.", img: "/service-gutters.jpg" },
 ];
 
-const drewServices = [
+const drewServices: ServiceItem[] = [
   {
     slug: "residential",
     title: "GAF Timberline HDZ Replacement",
@@ -50,9 +58,40 @@ const drewServices = [
   }
 ];
 
+const richardServices: ServiceItem[] = [
+  {
+    slug: "residential",
+    title: "Residential Shingle Replacement",
+    desc: "Class 4 impact-resistant architectural shingles engineered for Gulf Coast wind, heat, and tropical humidity.",
+    icon: Home,
+    img: "/service-shingle.jpg",
+  },
+  {
+    slug: "commercial",
+    title: "Commercial Flat Roofing",
+    desc: "TPO, PVC, and modified bitumen roofing systems for Houston commercial properties, apartment complexes, and facilities.",
+    icon: Building2,
+    img: "/service-commercial.jpg",
+  },
+  {
+    slug: "repair",
+    title: "Emergency Storm & Leak Repair",
+    desc: "Priority sub-2-hour emergency dispatch across Greater Houston for storm leaks, wind damage, and immediate tarping.",
+    icon: AlertTriangle,
+    img: "/service-repair.jpg",
+  },
+  {
+    slug: "gutters",
+    title: "Seamless Gutters & Drainage",
+    desc: "Custom seamless aluminum gutters and downspout systems engineered for intense Houston downpours.",
+    icon: Droplets,
+    img: "/service-gutters.jpg",
+  },
+];
+
 export default function Services() {
   const brand = useBrand();
-  const currentServices = brand.isDrew ? drewServices : services;
+  const currentServices = brand.isDrew ? drewServices : brand.isRichard ? richardServices : services;
 
   return (
     <section id="services" className="py-24 px-6 bg-stone-50">
@@ -63,21 +102,46 @@ export default function Services() {
           <p className="text-zinc-600 text-lg max-w-xl mx-auto font-serif">
             {brand.isDrew
               ? "Building science roofing systems engineered for Central Texas climate."
+              : brand.isRichard
+              ? "Houston's 31+ year commercial flat roofing & residential shingle authority."
               : "From residential to commercial, we handle every roof."}
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" style={{ contentVisibility: "auto" }}>
+        <div
+          className={`grid md:grid-cols-2 ${brand.isRichard ? "lg:grid-cols-4" : "lg:grid-cols-3"} gap-8`}
+          style={{ contentVisibility: "auto" }}
+        >
           {currentServices.map((s) => (
             <Link key={s.slug} to={`/services/${s.slug}`} className="block">
-              <div className="bg-white overflow-hidden shadow-lg border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer transform-gpu will-change-transform">
-                <div className="overflow-hidden bg-stone-100 h-48">
-                  <img loading="lazy" decoding="async" src={s.img} alt={s.title} className="w-full h-full object-cover" style={{ transform: "translateZ(0)" }} />
+              <div className="bg-white overflow-hidden shadow-lg border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer transform-gpu will-change-transform h-full flex flex-col">
+                <div className="overflow-hidden bg-stone-100 h-48 relative shrink-0">
+                  <img
+                    loading="lazy"
+                    decoding="async"
+                    src={s.img}
+                    alt={s.title}
+                    className="w-full h-full object-cover"
+                    style={{ transform: "translateZ(0)" }}
+                  />
+                  {s.icon && (
+                    <div className="absolute top-3 right-3 w-9 h-9 bg-zinc-950/80 backdrop-blur-sm text-white flex items-center justify-center shadow">
+                      <s.icon className="w-4 h-4 text-crimson" />
+                    </div>
+                  )}
                 </div>
-                <div className="p-8">
-                  <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-2">{s.title}</h3>
-                  <p className="text-zinc-600 text-sm leading-relaxed font-serif">{s.desc}</p>
-                  <span className="mt-6 flex items-center text-sm font-oswald uppercase tracking-wider font-bold text-crimson group-hover:text-crimson-dark transition-colors">Explore Details <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-2" /></span>
+                <div className="p-8 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-2">
+                      {s.title}
+                    </h3>
+                    <p className="text-zinc-600 text-sm leading-relaxed font-serif">
+                      {s.desc}
+                    </p>
+                  </div>
+                  <span className="mt-6 flex items-center text-sm font-oswald uppercase tracking-wider font-bold text-crimson group-hover:text-crimson-dark transition-colors">
+                    Explore Details <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-2" />
+                  </span>
                 </div>
               </div>
             </Link>

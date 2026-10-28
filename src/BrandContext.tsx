@@ -6,10 +6,14 @@ export interface Brand {
   email: string;
   city: string;
   isDrew: boolean;
+  isRichard: boolean;
   logo?: string;
   founderPhoto?: string;
   gafBadge?: string;
   txstBadge?: string;
+  bbbBadge?: string;
+  taaBadge?: string;
+  haaBadge?: string;
   founderName?: string;
   founderTitle?: string;
   tagline?: string;
@@ -21,6 +25,7 @@ const BrandContext = createContext<Brand>({
   email: "info@roofing.com",
   city: "Texas",
   isDrew: false,
+  isRichard: false,
 });
 
 export function BrandProvider({ children }: { children: ReactNode }) {
@@ -28,7 +33,12 @@ export function BrandProvider({ children }: { children: ReactNode }) {
 
   const rawName = params.get("name") || "";
   const rawCity = params.get("city") || "";
-  const isDrew = rawName.toLowerCase().includes("instant");
+  const isDrew =
+    rawName.toLowerCase().includes("instant") &&
+    rawCity.toLowerCase().includes("austin");
+  const isRichard =
+    rawName.toLowerCase().includes("paramount") &&
+    rawCity.toLowerCase().includes("houston");
 
   const brand: Brand = isDrew
     ? {
@@ -37,6 +47,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         email: params.get("email") || "support@instantrfg.com",
         city: rawCity || "Austin, TX",
         isDrew: true,
+        isRichard: false,
         logo: "https://images.squarespace-cdn.com/content/v1/67c0d49644e97311a2d0e480/270a97e8-8c53-4f03-a50d-2ffc3b2566cf/Screenshot+2025-03-03+at+11.23.30%E2%80%AFPM.png?format=1500w",
         founderPhoto:
           "https://images.squarespace-cdn.com/content/v1/67c0d49644e97311a2d0e480/3eb6b517-2bf5-47bb-a557-1a8c2dfbc050/Drew1.jpg",
@@ -49,12 +60,31 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           "Founder & Master Craftsman (MS Building Science, Texas State)",
         tagline: "Austin's Premier Building Science Roofing Contractors",
       }
+    : isRichard
+    ? {
+        name: rawName || "Paramount Roofing Inc.",
+        phone: params.get("phone") || "(713) 748-4000",
+        email: params.get("email") || "service@paramountroofing.com",
+        city: rawCity || "Houston, TX",
+        isDrew: false,
+        isRichard: true,
+        logo: "https://paramountroofing.com/wp-content/uploads/2021/06/Residential-Roofing-Houston-White-01-1024x372.png",
+        bbbBadge: "https://paramountroofing.com/wp-content/uploads/2021/06/bbb.png",
+        taaBadge: "https://paramountroofing.com/wp-content/uploads/2021/06/taa.png",
+        haaBadge: "https://paramountroofing.com/wp-content/uploads/2021/06/haa.png",
+        founderName: "Richard W. Keathley & David",
+        founderTitle:
+          "Co-Owners & Principals (31+ Years Houston Commercial & Residential Roofing Heritage)",
+        tagline:
+          "Promises Made. Promises Kept. Houston's Commercial & Residential Roofing Authority.",
+      }
     : {
         name: rawName || "Premium Roofing",
         phone: params.get("phone") || "Update Your Number",
         email: params.get("email") || "info@roofing.com",
         city: rawCity || "Texas",
         isDrew: false,
+        isRichard: false,
       };
 
   return (

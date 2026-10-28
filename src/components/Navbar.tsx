@@ -20,7 +20,7 @@ const company = [
 ];
 
 export default function Navbar() {
-  const { name, phone, logo } = useBrand();
+  const { name, phone, logo, isRichard } = useBrand();
   const { pathname } = useLocation();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -37,7 +37,9 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           {logo ? (
-            <img src={logo} alt={name} className="h-10 max-w-[220px] object-contain" />
+            <div className={isRichard ? "bg-zinc-950 px-3 py-1.5 rounded shadow-sm flex items-center" : "flex items-center"}>
+              <img src={logo} alt={name} className="h-10 max-w-[220px] object-contain" />
+            </div>
           ) : (
             <span className="text-2xl font-oswald uppercase tracking-wider font-black text-zinc-900">{name}</span>
           )}
