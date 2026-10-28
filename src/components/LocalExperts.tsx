@@ -96,15 +96,21 @@ export default function LocalExperts() {
           <div className="max-w-4xl mx-auto bg-stone-50 border border-stone-200 border-t-4 border-t-crimson p-8 md:p-12 shadow-xl shadow-stone-200/50">
             <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
               <div className="relative shrink-0">
-                <div className="w-48 h-48 bg-stone-900 border-4 border-white shadow-xl flex items-center justify-center p-4">
+                <div className="w-48 h-48 bg-white border-2 border-stone-200 shadow-lg flex flex-col items-center justify-center p-4">
                   <img
-                    src="https://paramountroofing.com/wp-content/uploads/2021/06/Residential-Roofing-Houston-White-01-1024x372.png"
+                    src="https://paramountroofing.com/wp-content/uploads/2021/11/logo.png"
                     alt="Paramount Roofing Inc."
-                    className="max-h-24 object-contain"
+                    className="max-h-20 w-auto object-contain mb-2"
                   />
+                  <span className="text-[11px] font-oswald uppercase tracking-widest font-bold text-zinc-900">
+                    Houston, TX
+                  </span>
+                  <span className="text-[10px] tracking-wider text-crimson font-bold uppercase">
+                    Established 1995
+                  </span>
                 </div>
                 <div className="absolute -bottom-3 -right-3 bg-crimson text-white text-xs font-oswald uppercase tracking-wider font-bold px-3 py-1 shadow-md">
-                  Since 1995
+                  31+ Years
                 </div>
               </div>
               <div className="flex-1 text-center md:text-left space-y-4">

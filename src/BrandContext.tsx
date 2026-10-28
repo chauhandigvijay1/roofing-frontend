@@ -68,7 +68,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         city: rawCity || "Houston, TX",
         isDrew: false,
         isRichard: true,
-        logo: "https://paramountroofing.com/wp-content/uploads/2021/06/Residential-Roofing-Houston-White-01-1024x372.png",
+        logo: "https://paramountroofing.com/wp-content/uploads/2021/11/logo.png",
         bbbBadge: "https://paramountroofing.com/wp-content/uploads/2021/06/bbb.png",
         taaBadge: "https://paramountroofing.com/wp-content/uploads/2021/06/taa.png",
         haaBadge: "https://paramountroofing.com/wp-content/uploads/2021/06/haa.png",
