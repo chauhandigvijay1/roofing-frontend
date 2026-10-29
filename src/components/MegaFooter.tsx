@@ -1,8 +1,9 @@
-import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, ShieldCheck } from "lucide-react";
 import { useBrand } from "../BrandContext";
 
 export default function MegaFooter() {
-  const { name, phone, email, city } = useBrand();
+  const brand = useBrand();
+  const { name, phone, email, city, isJim, licenseNumber } = brand;
 
   return (
     <footer className="bg-zinc-950 text-zinc-400">
@@ -11,9 +12,16 @@ export default function MegaFooter() {
         <div>
           <h3 className="text-xl font-oswald uppercase tracking-wider font-bold text-white mb-4">{name}</h3>
           <p className="text-sm leading-relaxed font-serif">
-            The #1 roofers in {city}. Premium craftsmanship, trusted materials,
-            and a 100% satisfaction guarantee on every project.
+            {isJim
+              ? "We Nailed It! Northeast Florida's trusted hurricane-tested roofing team serving Duval, St. Johns, Clay, Nassau, and Flagler counties."
+              : `The #1 roofers in ${city}. Premium craftsmanship, trusted materials, and a 100% satisfaction guarantee on every project.`}
           </p>
+          {licenseNumber && (
+            <div className="mt-4 flex items-center gap-2 text-xs text-white/80 font-oswald uppercase tracking-wider">
+              <ShieldCheck className="w-4 h-4 text-crimson shrink-0" />
+              <span>{licenseNumber}</span>
+            </div>
+          )}
         </div>
 
         {/* Quick Links */}
@@ -42,7 +50,11 @@ export default function MegaFooter() {
             </div>
             <div className="flex items-center gap-3">
               <MapPin className="w-4 h-4 text-crimson shrink-0" />
-              <span>Serving {city} & Surrounding Areas</span>
+              <span>
+                {isJim
+                  ? "5105 Philips Hwy, Suite 205, Jacksonville, FL 32207"
+                  : `Serving ${city} & Surrounding Areas`}
+              </span>
             </div>
           </div>
         </div>
@@ -65,7 +77,7 @@ export default function MegaFooter() {
 
       <div className="border-t border-stone-800">
         <div className="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-zinc-500 font-serif">
-          &copy; {new Date().getFullYear()} {name}. All rights reserved. | The #1 roofers in {city}
+          &copy; {new Date().getFullYear()} {name}. All rights reserved. | {isJim ? "Florida DBPR Lic. # RC29027754" : `The #1 roofers in ${city}`}
         </div>
       </div>
     </footer>

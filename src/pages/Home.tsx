@@ -2,6 +2,7 @@ import Hero from "../components/Hero";
 import TrustRibbon from "../components/TrustRibbon";
 import Stats from "../components/Stats";
 import Services from "../components/Services";
+import EstimateWizard from "../components/EstimateWizard";
 import WhyChooseUs from "../components/WhyChooseUs";
 import Process from "../components/Process";
 import Gallery from "../components/Gallery";
@@ -17,6 +18,9 @@ export default function Home() {
       <TrustRibbon />
       <Stats />
       <Services />
+      <div id="estimate">
+        <EstimateWizard variant="full" />
+      </div>
       <WhyChooseUs />
       <Process />
       <Gallery />

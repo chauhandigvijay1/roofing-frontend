@@ -23,6 +23,13 @@ const richardStats = [
   { value: 100, suffix: "%", label: "Texas Windstorm & TDI Compliant" },
 ];
 
+const jimStats = [
+  { value: 140, suffix: "+ MPH", label: "Hurricane Wind-Rated Assemblies" },
+  { value: 20, suffix: "+", label: "Years Construction & Roofing Heritage" },
+  { value: 100, suffix: "%", label: "Florida Wind Mitigation & Code Compliant" },
+  { value: 4.9, suffix: "", label: "Google & Customer Rating across Duval", decimals: 1 },
+];
+
 function CountUp({ value, suffix, decimals = 0 }: { value: number; suffix: string; decimals?: number }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const inView = useInView(ref, { once: true });
@@ -58,7 +65,13 @@ const item = {
 
 export default function Stats() {
   const brand = useBrand();
-  const currentStats = brand.isDrew ? drewStats : brand.isRichard ? richardStats : stats;
+  const currentStats = brand.isDrew
+    ? drewStats
+    : brand.isRichard
+    ? richardStats
+    : brand.isJim
+    ? jimStats
+    : stats;
 
   return (
     <section className="bg-crimson text-white py-12 px-6">

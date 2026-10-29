@@ -89,9 +89,54 @@ const richardServices: ServiceItem[] = [
   },
 ];
 
+const jimServices: ServiceItem[] = [
+  {
+    slug: "residential",
+    title: "140+ MPH Hurricane Fastened Shingles",
+    desc: "Florida Building Code high-wind rated architectural shingle systems engineered for Northeast Florida tropical storms.",
+    img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
+  },
+  {
+    slug: "metal",
+    title: "Worthouse Metal Tile Systems",
+    desc: "High-tensile storm resistance at half the weight and cost of concrete tile. Elite hurricane protection.",
+    img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2447926003-1920w.jpg",
+  },
+  {
+    slug: "storm-damage",
+    title: "Florida Wind Mitigation Inspection",
+    desc: "Qualify for statutory Florida insurance discounts (-$500 to -$1,200/yr) with verified hurricane ties and water barrier certs.",
+    img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
+  },
+  {
+    slug: "commercial",
+    title: "Commercial TPO & Silicone Coatings",
+    desc: "Single-ply commercial roofing and reflective silicone elastomeric coatings for Jacksonville industrial facilities.",
+    img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2467902073-1920w.jpg",
+  },
+  {
+    slug: "repair",
+    title: "24/7 Emergency Storm Leak Dispatch",
+    desc: "Next-day and immediate emergency structural tarping and leak stops across Duval, St. Johns, and Clay counties.",
+    img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/pexels-photo-221525-2880w.jpeg",
+  },
+  {
+    slug: "gutters",
+    title: "Seamless Gutters & Drainage",
+    desc: "Custom high-capacity seamless aluminum gutters engineered to handle Florida heavy rainfall deluges.",
+    img: "/service-gutters.jpg",
+  },
+];
+
 export default function Services() {
   const brand = useBrand();
-  const currentServices = brand.isDrew ? drewServices : brand.isRichard ? richardServices : services;
+  const currentServices = brand.isDrew
+    ? drewServices
+    : brand.isRichard
+    ? richardServices
+    : brand.isJim
+    ? jimServices
+    : services;
 
   return (
     <section id="services" className="py-24 px-6 bg-stone-50">
@@ -104,6 +149,8 @@ export default function Services() {
               ? "Building science roofing systems engineered for Central Texas climate."
               : brand.isRichard
               ? "Houston's 31+ year commercial flat roofing & residential shingle authority."
+              : brand.isJim
+              ? "Northeast Florida hurricane-tested roofing, Worthouse metal, and Florida Wind Mitigation."
               : "From residential to commercial, we handle every roof."}
           </p>
         </div>
@@ -130,18 +177,14 @@ export default function Services() {
                     </div>
                   )}
                 </div>
-                <div className="p-8 flex-1 flex flex-col justify-between">
+                <div className="p-8 flex flex-col justify-between flex-1">
                   <div>
-                    <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-2">
-                      {s.title}
-                    </h3>
-                    <p className="text-zinc-600 text-sm leading-relaxed font-serif">
-                      {s.desc}
-                    </p>
+                    <h3 className="text-2xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-3">{s.title}</h3>
+                    <p className="text-zinc-600 leading-relaxed font-serif text-sm">{s.desc}</p>
                   </div>
-                  <span className="mt-6 flex items-center text-sm font-oswald uppercase tracking-wider font-bold text-crimson group-hover:text-crimson-dark transition-colors">
-                    Explore Details <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-2" />
-                  </span>
+                  <div className="mt-6 flex items-center gap-2 text-crimson font-oswald uppercase tracking-wider font-bold text-sm">
+                    Learn More <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
               </div>
             </Link>

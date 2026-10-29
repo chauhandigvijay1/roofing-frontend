@@ -67,6 +67,24 @@ const richardReviews: ReviewItem[] = [
   },
 ];
 
+const jimReviews: ReviewItem[] = [
+  {
+    author: "Mark & Brenda S. — St. Augustine, FL",
+    rating: 5,
+    text: "After Hurricane Ian cracked our concrete tiles, competing bids were over $100k. Jim Jessup came out personally and showed us Worthouse metal tile — incredible hurricane rating for half the price. Jim's team nailed it!",
+  },
+  {
+    author: "Dave & Cheryl M. — Orange Park, FL",
+    rating: 5,
+    text: "Jim's suggestion of an energy-efficient solar vent on our flat roof home dropped our power bills immediately. The crew was polite, respectful of our animals, and left our property immaculate. Highly recommend Ready Roofing.",
+  },
+  {
+    author: "Marcus T. — Jacksonville (Duval County), FL",
+    rating: 5,
+    text: "Had 5 ceiling leaks during heavy storm season. Called Jim's dispatch and they had a tech out fixing the leaks the very next business day. Fast, fair, and reliable craftsmanship.",
+  },
+];
+
 const container = {
   hidden: {},
   show: { transition: { staggerChildren: 0.2 } },
@@ -79,7 +97,13 @@ const item = {
 
 export default function Reviews() {
   const brand = useBrand();
-  const currentReviews = brand.isDrew ? drewReviews : brand.isRichard ? richardReviews : reviews;
+  const currentReviews = brand.isDrew
+    ? drewReviews
+    : brand.isRichard
+    ? richardReviews
+    : brand.isJim
+    ? jimReviews
+    : reviews;
 
   return (
     <section id="reviews" className="py-24 px-6 bg-white">
@@ -96,6 +120,8 @@ export default function Reviews() {
               ? "Trusted by 96+ Austin Homeowners"
               : brand.isRichard
               ? "Trusted by Hundreds of Greater Houston Homeowners & Commercial Managers"
+              : brand.isJim
+              ? "Trusted Across Duval, St. Johns, Clay & Flagler Counties"
               : "Trusted by 500+ Homeowners"}
           </h2>
           <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
@@ -104,6 +130,8 @@ export default function Reviews() {
               ? "See why Central Texas families trust Drew Boy & Instant Roofing for building science craftsmanship."
               : brand.isRichard
               ? "Promises Made. Promises Kept. Decades of 5-star service across Greater Houston."
+              : brand.isJim
+              ? "Real Florida hurricane recovery and reroof experiences from your neighbors across Northeast Florida."
               : "See why locals choose us to protect what matters most."}
           </p>
         </motion.div>

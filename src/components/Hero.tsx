@@ -2,7 +2,20 @@ import { motion } from "framer-motion";
 import { useBrand } from "../BrandContext";
 
 export default function Hero() {
-  const { name } = useBrand();
+  const brand = useBrand();
+  const { name } = brand;
+
+  const ribbonText = brand.isJim
+    ? "FL DBPR LIC. # RC29027754 • WE NAILED IT!"
+    : brand.isRichard
+    ? "BBB A+ ACCREDITED • 31+ YEARS HOUSTON HERITAGE"
+    : brand.isDrew
+    ? "GAF CERTIFIED PLUS • AUSTIN BUILDING SCIENCE"
+    : "BBB ACCREDITED • FULLY INSURED";
+
+  const subText = brand.isJim
+    ? "We Nailed It! Elite craftsmanship, fair storm pricing, and 140+ MPH hurricane-engineered roofing systems across Northeast Florida."
+    : "Premium craftsmanship, trusted materials, and a 100% satisfaction guarantee. Your home is in expert hands.";
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-zinc-950">
@@ -25,7 +38,7 @@ export default function Hero() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="bg-crimson text-white py-1 px-4 text-sm font-oswald font-bold tracking-widest inline-block mb-6"
         >
-          BBB ACCREDITED &bull; FULLY INSURED
+          {ribbonText}
         </motion.div>
 
         <motion.h1
@@ -42,8 +55,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
           className="mt-6 text-lg md:text-xl text-zinc-200 max-w-2xl font-serif"
         >
-          Premium craftsmanship, trusted materials, and a 100% satisfaction
-          guarantee. Your home is in expert hands.
+          {subText}
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

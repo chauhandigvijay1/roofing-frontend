@@ -9,7 +9,20 @@ const values = [
 
 export default function LocalExperts() {
   const brand = useBrand();
-  const { city, name, isDrew, isRichard, founderPhoto, gafBadge, txstBadge, bbbBadge, haaBadge, taaBadge } = brand;
+  const {
+    city,
+    name,
+    isDrew,
+    isRichard,
+    isJim,
+    founderPhoto,
+    mascotPhoto,
+    gafBadge,
+    txstBadge,
+    bbbBadge,
+    haaBadge,
+    taaBadge,
+  } = brand;
 
   if (isDrew) {
     return (
@@ -135,6 +148,91 @@ export default function LocalExperts() {
                   )}
                   <span className="text-xs font-oswald uppercase tracking-wider text-zinc-500 font-medium">
                     Fully Insured & Texas Windstorm Certified
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (isJim) {
+    return (
+      <section className="py-24 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-4">
+              Meet Jim Jessup & The Ready Roofing Team
+            </h2>
+            <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
+            <p className="text-zinc-600 text-lg max-w-3xl mx-auto font-serif">
+              Founded by Jim (James V.) Jessup, carrying forward over 20 years of construction and roofing heritage. Based in Jacksonville, Ready Roofing operates under Florida DBPR Lic. # RC29027754 with honest pricing, hurricane-engineered craftsmanship, and a zero price-gouging promise during storm recovery. &ldquo;We Nailed It!&rdquo;
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto bg-stone-50 border border-stone-200 border-t-4 border-t-crimson p-8 md:p-12 shadow-xl shadow-stone-200/50">
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+              <div className="relative shrink-0">
+                {founderPhoto ? (
+                  <img
+                    src={founderPhoto}
+                    alt="Jim Jessup - Owner & Operator"
+                    className="w-48 h-48 md:w-56 md:h-56 object-cover object-top border-4 border-white shadow-xl"
+                  />
+                ) : (
+                  <div className="w-48 h-48 bg-stone-200 flex items-center justify-center">
+                    <HardHat className="w-16 h-16 text-zinc-400" />
+                  </div>
+                )}
+                <div className="absolute -bottom-3 -right-3 bg-crimson text-white text-xs font-oswald uppercase tracking-wider font-bold px-3 py-1 shadow-md">
+                  FL Lic. # RC29027754
+                </div>
+              </div>
+
+              <div className="flex-1 text-center md:text-left space-y-4">
+                <h3 className="text-2xl md:text-3xl font-oswald uppercase tracking-wider font-bold text-zinc-900">
+                  Jim Jessup
+                </h3>
+                <p className="text-crimson font-oswald uppercase tracking-wider text-sm font-semibold">
+                  Owner & Operator (20+ Years Construction Heritage)
+                </p>
+                <p className="text-zinc-700 font-serif leading-relaxed text-sm md:text-base">
+                  Delivering hands-on Florida building science: 140+ MPH hurricane-fastened architectural shingles, high-tensile Worthouse metal tile, and commercial flat roof systems across Duval, St. Johns, Clay, and Flagler counties. Every replacement is engineered to qualify for statutory Florida Wind Mitigation insurance discounts.
+                </p>
+
+                {/* Badges & Dexter Mascot Tribute */}
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-4 border-t border-stone-200">
+                  {mascotPhoto && (
+                    <div className="inline-flex items-center gap-2.5 bg-white border border-stone-200 px-3 py-1.5 shadow-sm">
+                      <img
+                        src={mascotPhoto}
+                        alt="Dexter - Office Companion & Mascot"
+                        className="w-9 h-9 rounded-full object-cover border border-crimson/50"
+                      />
+                      <div className="text-left">
+                        <span className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900 block leading-tight">
+                          Dexter
+                        </span>
+                        <span className="text-[10px] text-zinc-500 font-serif block leading-tight">
+                          Office Companion & Mascot
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="bg-emerald-50 border border-emerald-300 px-3 py-1.5 text-left">
+                    <span className="text-xs font-oswald uppercase tracking-wider font-bold text-emerald-900 block leading-tight">
+                      Florida DBPR Registered
+                    </span>
+                    <span className="text-[10px] text-emerald-700 font-serif block leading-tight">
+                      Lic. # RC29027754
+                    </span>
+                  </div>
+
+                  <span className="text-xs font-oswald uppercase tracking-wider text-zinc-600 font-medium">
+                    Florida Wind Mitigation Certified
                   </span>
                 </div>
               </div>

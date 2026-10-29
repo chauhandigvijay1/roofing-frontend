@@ -7,8 +7,10 @@ export interface Brand {
   city: string;
   isDrew: boolean;
   isRichard: boolean;
+  isJim: boolean;
   logo?: string;
   founderPhoto?: string;
+  mascotPhoto?: string;
   gafBadge?: string;
   txstBadge?: string;
   bbbBadge?: string;
@@ -17,6 +19,7 @@ export interface Brand {
   founderName?: string;
   founderTitle?: string;
   tagline?: string;
+  licenseNumber?: string;
 }
 
 const BrandContext = createContext<Brand>({
@@ -26,6 +29,7 @@ const BrandContext = createContext<Brand>({
   city: "Texas",
   isDrew: false,
   isRichard: false,
+  isJim: false,
 });
 
 export function BrandProvider({ children }: { children: ReactNode }) {
@@ -39,6 +43,9 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   const isRichard =
     rawName.toLowerCase().includes("paramount") &&
     rawCity.toLowerCase().includes("houston");
+  const isJim =
+    rawName.toLowerCase().includes("ready") &&
+    rawCity.toLowerCase().includes("jacksonville");
 
   const brand: Brand = isDrew
     ? {
@@ -48,6 +55,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         city: rawCity || "Austin, TX",
         isDrew: true,
         isRichard: false,
+        isJim: false,
         logo: "https://images.squarespace-cdn.com/content/v1/67c0d49644e97311a2d0e480/270a97e8-8c53-4f03-a50d-2ffc3b2566cf/Screenshot+2025-03-03+at+11.23.30%E2%80%AFPM.png?format=1500w",
         founderPhoto:
           "https://images.squarespace-cdn.com/content/v1/67c0d49644e97311a2d0e480/3eb6b517-2bf5-47bb-a557-1a8c2dfbc050/Drew1.jpg",
@@ -68,6 +76,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         city: rawCity || "Houston, TX",
         isDrew: false,
         isRichard: true,
+        isJim: false,
         logo: "https://paramountroofing.com/wp-content/uploads/2021/11/logo.png",
         bbbBadge: "https://paramountroofing.com/wp-content/uploads/2021/06/bbb.png",
         taaBadge: "https://paramountroofing.com/wp-content/uploads/2021/06/taa.png",
@@ -78,6 +87,25 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         tagline:
           "Promises Made. Promises Kept. Houston's Commercial & Residential Roofing Authority.",
       }
+    : isJim
+    ? {
+        name: rawName || "Ready Roofing, LLC",
+        phone: params.get("phone") || "(904) 404-9849",
+        email: params.get("email") || "jvjessup@gmail.com",
+        city: rawCity || "Jacksonville, FL",
+        isDrew: false,
+        isRichard: false,
+        isJim: true,
+        logo: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/Ready+Roofing_+We+Nailed+It.png",
+        founderPhoto:
+          "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/1731678213934_11824_114204am-1920w.png",
+        mascotPhoto:
+          "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/Cheerful+Jack+Russell+Mascot+with+RR+Harness-1920w.png",
+        founderName: "Jim Jessup",
+        founderTitle: "Owner & Operator (20+ Years Construction Heritage)",
+        tagline: "We Nailed It. North Florida's Trusted Hurricane-Tested Roofing Team.",
+        licenseNumber: "Florida DBPR Lic. # RC29027754",
+      }
     : {
         name: rawName || "Premium Roofing",
         phone: params.get("phone") || "Update Your Number",
@@ -85,6 +113,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         city: rawCity || "Texas",
         isDrew: false,
         isRichard: false,
+        isJim: false,
       };
 
   return (
