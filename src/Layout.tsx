@@ -22,6 +22,7 @@ function DynamicTitle() {
       "/portfolio": "Portfolio",
       "/financing": "Financing",
       "/locations": "Locations",
+      "/book": "Book Inspection",
     };
     const label = labels[pathname] || "Services";
     document.title = `${name} | ${label}`;
@@ -33,6 +34,7 @@ export default function Layout() {
   const { pathname } = useLocation();
   const { city, phone } = useBrand();
   const isServicePage = pathname.startsWith("/services");
+  const isHomeOrBook = pathname === "/" || pathname === "/book";
 
   return (
     <>
@@ -47,7 +49,7 @@ export default function Layout() {
       <main className="min-h-screen bg-white font-serif antialiased">
         <Outlet />
       </main>
-      {!isServicePage && <EstimateWizard />}
+      {!isServicePage && !isHomeOrBook && <EstimateWizard />}
       <MegaFooter />
       <Chatbot />
     </>

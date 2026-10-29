@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBrand } from "../BrandContext";
-import { Calculator, ShieldCheck, ArrowRight, CheckCircle2, PhoneCall } from "lucide-react";
+import { Calculator, ShieldCheck, ArrowRight, CheckCircle2, PhoneCall, Calendar } from "lucide-react";
+import BookingModal from "./BookingModal";
 
 export default function EstimateWizard({ variant = "full" }: { variant?: "full" | "sidebar" }) {
   const brand = useBrand();
@@ -13,6 +14,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   // Dynamic Price Calculation Logic
   const calculation = useMemo(() => {
@@ -33,7 +35,8 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
   };
 
   return (
-    <section className={isSidebar ? "py-6 px-4 bg-stone-100 border border-stone-200" : "py-20 px-6 bg-stone-100 border-y border-stone-200"}>
+    <>
+      <section className={isSidebar ? "py-6 px-4 bg-stone-100 border border-stone-200" : "py-20 px-6 bg-stone-100 border-y border-stone-200"}>
       <div className={isSidebar ? "w-full" : "max-w-4xl mx-auto"}>
         <div className={`text-center ${isSidebar ? "mb-6" : "mb-10"}`}>
           <div className="inline-flex items-center gap-2 bg-crimson/10 border border-crimson/30 px-3 py-1 text-crimson text-xs font-oswald uppercase tracking-widest font-bold mb-3">
@@ -84,7 +87,14 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                   has been locked. {brand.isJim ? "Jim Jessup" : "Our lead estimator"} has received your property details at{" "}
                   <span className="text-crimson font-bold">{address || "your address"}</span> and will confirm your on-site measurement window.
                 </p>
-                <div className="pt-4">
+                <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsBookingOpen(true)}
+                    className="inline-flex items-center gap-2 bg-stone-900 hover:bg-black text-white px-6 py-3 font-oswald uppercase font-bold tracking-wider text-sm shadow-md cursor-pointer transition-all"
+                  >
+                    <Calendar className="w-4 h-4 text-crimson" /> Pick Specific Calendar Window
+                  </button>
                   <a
                     href={`tel:${brand.phone}`}
                     className="inline-flex items-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-6 py-3 font-oswald uppercase font-bold tracking-wider text-sm shadow-md"
@@ -285,5 +295,12 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
         </div>
       </div>
     </section>
+    <BookingModal
+      isOpen={isBookingOpen}
+      onClose={() => setIsBookingOpen(false)}
+      initialService={scope}
+      initialAddress={address}
+    />
+  </>
   );
 }

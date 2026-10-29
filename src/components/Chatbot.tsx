@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X, Send, Calendar, Phone } from "lucide-react";
 import { useBrand } from "../BrandContext";
+import FormattedMessage from "./FormattedMessage";
+import BookingModal from "./BookingModal";
 
 interface Message {
   role: "user" | "assistant";
@@ -31,6 +33,7 @@ export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
   const warmedUp = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -77,10 +80,16 @@ export default function Chatbot() {
     }).catch(() => {});
   }, [brand]);
 
-  const sendMessage = async () => {
-    const text = input.trim();
+  const sendMessage = async (overrideText?: string) => {
+    const text = (overrideText !== undefined ? overrideText : input).trim();
     if (!text || loading) return;
     setInput("");
+
+    // Quick booking intent shortcut: if user literally commands "book now", open modal as well
+    const lower = text.toLowerCase();
+    if (lower === "book now" || lower === "book" || lower === "schedule" || lower === "schedule now") {
+      setIsBookingOpen(true);
+    }
 
     const userMsg: Message = { role: "user", content: text };
     const updated = [...messages, userMsg];
@@ -130,95 +139,141 @@ export default function Chatbot() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="w-80 sm:w-96 bg-white/90 backdrop-blur-xl shadow-xl shadow-stone-200/50 border border-stone-200 overflow-hidden"
-          >
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50/80">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-crimson flex items-center justify-center shadow-md">
-                  <MessageCircle className="w-5 h-5 text-white" />
+    <>
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="w-80 sm:w-96 bg-white/95 backdrop-blur-xl shadow-2xl border-2 border-stone-300 overflow-hidden"
+            >
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-zinc-950 text-white">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-crimson flex items-center justify-center shadow-md">
+                    <MessageCircle className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <span className="text-white font-oswald uppercase tracking-wider font-bold text-sm block">
+                      {brand.name ? `${brand.name} Assistant` : "Roofing Assistant"}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 font-serif block">
+                      {brand.licenseNumber || "24/7 Verified Dispatch"}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-zinc-900 font-oswald uppercase tracking-wider font-bold text-sm">
-                  {brand.name ? `${brand.name} Assistant` : "Roofing Assistant"}
-                </span>
-              </div>
-              <button
-                onClick={() => setOpen(false)}
-                className="text-zinc-400 hover:text-zinc-600 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="h-80 overflow-y-auto px-5 py-4 space-y-3">
-              {messages.length === 0 && (
-                <div className="bg-crimson/5 backdrop-blur-sm border border-crimson/20 px-4 py-3 text-sm text-crimson font-serif">
-                  {initialMessage}
-                </div>
-              )}
-              {messages.map((msg, i) => (
-                <div
-                  key={i}
-                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                <button
+                  onClick={() => setOpen(false)}
+                  className="text-zinc-400 hover:text-white transition-colors"
+                  aria-label="Close chat"
                 >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="h-80 overflow-y-auto px-5 py-4 space-y-3 bg-stone-50/50">
+                {messages.length === 0 && (
+                  <div className="bg-crimson/5 border border-crimson/20 px-4 py-3 text-sm text-crimson font-serif">
+                    <p className="font-medium">{initialMessage}</p>
+                    <div className="flex flex-wrap gap-1.5 mt-3 pt-2 border-t border-crimson/15">
+                      <button
+                        type="button"
+                        onClick={() => setIsBookingOpen(true)}
+                        className="inline-flex items-center gap-1 bg-crimson text-white px-2.5 py-1 text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-sm hover:bg-crimson-dark"
+                      >
+                        <Calendar className="w-3 h-3" /> Book Online
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => sendMessage("What are your estimated roof replacement prices?")}
+                        className="inline-flex items-center gap-1 bg-white border border-stone-300 hover:border-stone-400 text-zinc-800 px-2.5 py-1 text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-sm"
+                      >
+                        Pricing Guide
+                      </button>
+                      <a
+                        href={`tel:${brand.phone}`}
+                        className="inline-flex items-center gap-1 bg-white border border-stone-300 hover:border-stone-400 text-zinc-800 px-2.5 py-1 text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-sm"
+                      >
+                        <Phone className="w-3 h-3" /> Call
+                      </a>
+                    </div>
+                  </div>
+                )}
+                {messages.map((msg, i) => (
                   <div
-                    className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed font-serif whitespace-pre-wrap break-words ${
-                      msg.role === "user"
-                        ? "bg-crimson text-white shadow-md"
-                        : "bg-white/80 backdrop-blur-sm text-zinc-800 border border-gray-200"
-                    }`}
+                    key={i}
+                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                   >
-                    {msg.content}
+                    <div
+                      className={`max-w-[85%] px-4 py-3 text-sm leading-relaxed font-serif break-words shadow-sm ${
+                        msg.role === "user"
+                          ? "bg-crimson text-white shadow-md font-sans"
+                          : "bg-white text-zinc-800 border border-stone-200"
+                      }`}
+                    >
+                      <FormattedMessage
+                        content={msg.content}
+                        isUser={msg.role === "user"}
+                        onBookClick={() => setIsBookingOpen(true)}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
-              {loading && (
-                <div className="flex justify-start">
-                  <div className="bg-white/80 backdrop-blur-sm border border-gray-200 px-4 py-3 text-sm text-zinc-500 font-serif">
-                    <BouncingDots />
+                ))}
+                {loading && (
+                  <div className="flex justify-start">
+                    <div className="bg-white border border-gray-200 px-4 py-3 text-sm text-zinc-500 font-serif shadow-sm">
+                      <BouncingDots />
+                    </div>
                   </div>
-                </div>
-              )}
-              <div ref={bottomRef} />
-            </div>
+                )}
+                <div ref={bottomRef} />
+              </div>
 
-            <div className="flex items-center gap-2 px-5 py-4 border-t border-gray-200 bg-gray-50/80">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                placeholder="Type your message..."
-                className="flex-1 bg-white border border-gray-300 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-crimson transition-colors font-serif"
-              />
-              <button
-                onClick={sendMessage}
-                disabled={loading || !input.trim()}
-                className="p-3 bg-crimson hover:bg-crimson-dark text-white disabled:opacity-40 transition-all shadow-md"
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <div className="flex items-center gap-2 px-4 py-3 border-t border-gray-200 bg-white">
+                <button
+                  type="button"
+                  onClick={() => setIsBookingOpen(true)}
+                  title="Open Calendar Booking"
+                  className="p-2.5 bg-stone-100 hover:bg-stone-200 text-zinc-700 transition-colors"
+                >
+                  <Calendar className="w-4 h-4 text-crimson" />
+                </button>
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                  placeholder="Ask a question or type 'Book'..."
+                  className="flex-1 bg-stone-50 border border-stone-300 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-crimson transition-colors font-serif"
+                />
+                <button
+                  onClick={() => sendMessage()}
+                  disabled={loading || !input.trim()}
+                  className="p-2.5 bg-crimson hover:bg-crimson-dark text-white disabled:opacity-40 transition-all shadow-md cursor-pointer"
+                  aria-label="Send message"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      <button
-        onClick={handleToggle}
-        className="relative w-14 h-14 bg-crimson text-white shadow-lg shadow-crimson/30 flex items-center justify-center transition-all duration-300 hover:scale-105"
-      >
-        {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
-        {showDot && !open && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-pulse" />
-        )}
-      </button>
-    </div>
+        <button
+          onClick={handleToggle}
+          className="relative w-14 h-14 bg-crimson text-white shadow-lg shadow-crimson/30 flex items-center justify-center transition-all duration-300 hover:scale-105 cursor-pointer"
+          aria-label="Open chat assistant"
+        >
+          {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+          {showDot && !open && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-pulse" />
+          )}
+        </button>
+      </div>
+
+      <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
+    </>
   );
 }

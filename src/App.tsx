@@ -6,6 +6,7 @@ import ServiceDetail from "./pages/ServiceDetail";
 import Portfolio from "./pages/Portfolio";
 import Financing from "./pages/Financing";
 import Locations from "./pages/Locations";
+import Book from "./pages/Book";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="portfolio" element={<Portfolio />} />
             <Route path="financing" element={<Financing />} />
             <Route path="locations" element={<Locations />} />
+            <Route path="book" element={<Book />} />
           </Route>
         </Routes>
       </BrowserRouter>
