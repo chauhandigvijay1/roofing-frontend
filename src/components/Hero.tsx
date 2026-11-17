@@ -5,17 +5,17 @@ export default function Hero() {
   const brand = useBrand();
   const { name } = brand;
 
-  const ribbonText = brand.isJim
-    ? "FL DBPR LIC. # RC29027754 • WE NAILED IT!"
-    : brand.isRichard
-    ? "BBB A+ ACCREDITED • 31+ YEARS HOUSTON HERITAGE"
-    : brand.isDrew
-    ? "GAF CERTIFIED PLUS • AUSTIN BUILDING SCIENCE"
-    : "BBB ACCREDITED • FULLY INSURED";
+  const ribbonText = brand.licenseNumber
+    ? `${brand.licenseNumber.toUpperCase()} • FULLY LICENSED & INSURED`
+    : brand.state === "FL"
+    ? "FLORIDA BUILDING CODE CERTIFIED • 140+ MPH WIND RATED"
+    : brand.state === "TX"
+    ? "TEXAS WINDSTORM CERTIFIED • IMPACT RESISTANT"
+    : "BBB ACCREDITED • FULLY LICENSED & INSURED";
 
-  const subText = brand.isJim
-    ? "We Nailed It! Elite craftsmanship, fair storm pricing, and 140+ MPH hurricane-engineered roofing systems across Northeast Florida."
-    : "Premium craftsmanship, trusted materials, and a 100% satisfaction guarantee. Your home is in expert hands.";
+  const subText = brand.tagline
+    ? `${brand.tagline} Serving ${brand.city} and surrounding areas with verified master craftsmanship and transparent upfront pricing.`
+    : `Premium craftsmanship, trusted materials, and a 100% satisfaction guarantee serving ${brand.city}. Your property is in expert hands.`;
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-zinc-950">
@@ -36,7 +36,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="bg-crimson text-white py-1 px-4 text-sm font-oswald font-bold tracking-widest inline-block mb-6"
+          className="bg-crimson text-white py-1 px-4 text-sm font-oswald font-bold tracking-widest inline-block mb-6 shadow-md"
         >
           {ribbonText}
         </motion.div>
@@ -65,9 +65,9 @@ export default function Hero() {
         >
           <a
             href="#estimate"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-crimson hover:bg-crimson-dark text-white font-oswald uppercase tracking-wider font-bold transition-all duration-300 text-lg hover:scale-105 active:scale-95"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-crimson hover:bg-crimson-dark text-white font-oswald uppercase tracking-wider font-bold transition-all duration-300 text-lg hover:scale-105 active:scale-95 shadow-xl"
           >
-            Get a Free Estimate
+            Get an Instant Estimate
           </a>
           <a
             href="#services"

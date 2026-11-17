@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { Calendar } from "lucide-react";
+import { Calendar, ShieldCheck, ArrowRight } from "lucide-react";
 
 interface FormattedMessageProps {
   content: string;
@@ -9,14 +9,17 @@ interface FormattedMessageProps {
 
 // Parses inline bold (**text**), italics (*text*), and links ([text](url))
 function renderInline(text: string): ReactNode[] {
+  // Strip any accidental markdown triple-backticks or raw artifacts
+  const clean = text.replace(/```/g, "");
+
   // Split on bold **...**
-  const boldParts = text.split(/\*\*(.+?)\*\*/g);
+  const boldParts = clean.split(/\*\*(.+?)\*\*/g);
 
   return boldParts.map((part, i) => {
     // Odd index is bold text
     if (i % 2 === 1) {
       return (
-        <strong key={`b-${i}`} className="font-bold text-zinc-900 font-sans">
+        <strong key={`b-${i}`} className="font-bold text-zinc-950 font-sans tracking-tight">
           {part}
         </strong>
       );
@@ -74,7 +77,7 @@ export default function FormattedMessage({
     const line = rawLines[i];
     const trimmed = line.trim();
 
-    // 1. Markdown Table parsing
+    // 1. Markdown Table parsing -> Responsive Card / Table
     if (isTableRow(line) && i + 1 < rawLines.length && isTableSeparator(rawLines[i + 1])) {
       const headerCells = parseTableCells(line);
       i += 2; // skip header + separator line
@@ -88,32 +91,34 @@ export default function FormattedMessage({
       }
 
       nodes.push(
-        <div key={`table-${i}`} className="my-2.5 overflow-x-auto border border-stone-300 rounded bg-stone-50 text-xs">
-          <table className="min-w-full divide-y divide-stone-200">
-            <thead className="bg-stone-200/80">
-              <tr>
-                {headerCells.map((h, colIdx) => (
-                  <th
-                    key={colIdx}
-                    className="px-2.5 py-1.5 text-left font-oswald uppercase tracking-wider font-bold text-zinc-900"
-                  >
-                    {renderInline(h)}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-stone-200 bg-white">
-              {dataRows.map((row, rowIdx) => (
-                <tr key={rowIdx} className="hover:bg-stone-50">
-                  {row.map((cell, cIdx) => (
-                    <td key={cIdx} className="px-2.5 py-1.5 text-zinc-800 font-serif">
-                      {renderInline(cell)}
-                    </td>
+        <div key={`table-${i}`} className="my-3 overflow-hidden border border-zinc-200 rounded-xl bg-stone-50/80 text-xs shadow-xs">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-zinc-200">
+              <thead className="bg-zinc-100">
+                <tr>
+                  {headerCells.map((h, colIdx) => (
+                    <th
+                      key={colIdx}
+                      className="px-3 py-2 text-left font-oswald uppercase tracking-wider font-bold text-zinc-900"
+                    >
+                      {renderInline(h)}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-zinc-200 bg-white">
+                {dataRows.map((row, rowIdx) => (
+                  <tr key={rowIdx} className="hover:bg-stone-50/60 transition-colors">
+                    {row.map((cell, cIdx) => (
+                      <td key={cIdx} className="px-3 py-2 text-zinc-800 font-serif leading-snug">
+                        {renderInline(cell)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       );
       continue;
@@ -166,7 +171,7 @@ export default function FormattedMessage({
 
       if (isNumbered) {
         nodes.push(
-          <ol key={`ol-${i}`} className="list-decimal pl-5 space-y-1 my-2 text-xs sm:text-sm font-serif">
+          <ol key={`ol-${i}`} className="list-decimal pl-5 space-y-1.5 my-2 text-xs sm:text-sm font-serif">
             {listItems.map((item, idx) => (
               <li key={idx} className="leading-relaxed">
                 {renderInline(item)}
@@ -176,7 +181,7 @@ export default function FormattedMessage({
         );
       } else {
         nodes.push(
-          <ul key={`ul-${i}`} className="list-disc pl-5 space-y-1 my-2 text-xs sm:text-sm font-serif">
+          <ul key={`ul-${i}`} className="list-disc pl-5 space-y-1.5 my-2 text-xs sm:text-sm font-serif">
             {listItems.map((item, idx) => (
               <li key={idx} className="leading-relaxed">
                 {renderInline(item)}
@@ -203,9 +208,15 @@ export default function FormattedMessage({
     i++;
   }
 
-  // Detect booking intent in content to surface interactive booking action
+  // Detect conversion handoff or general booking intent
   const lowerContent = content.toLowerCase();
+  const isHandoff =
+    lowerContent.includes("priority scheduling") ||
+    lowerContent.includes("unlocked priority") ||
+    lowerContent.includes("conversion_handoff");
+
   const hasBookingIntent =
+    isHandoff ||
     lowerContent.includes("schedule") ||
     lowerContent.includes("appointment") ||
     lowerContent.includes("inspection") ||
@@ -215,17 +226,35 @@ export default function FormattedMessage({
   return (
     <div className="space-y-1">
       {nodes}
-      {hasBookingIntent && onBookClick && (
+
+      {/* Conversion Handoff Card or 1-Click Action Chip */}
+      {isHandoff && onBookClick ? (
+        <div className="mt-3 p-3.5 bg-zinc-950 text-white rounded-xl shadow-lg border border-red-500/30 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-oswald uppercase tracking-wider font-bold text-crimson">
+            <ShieldCheck className="w-4 h-4 text-crimson" /> VIP Inspection Handoff
+          </div>
+          <p className="text-xs text-zinc-300 font-serif leading-relaxed">
+            Your inquiry is pre-qualified. Select your preferred morning or afternoon window to reserve on-site dispatch.
+          </p>
+          <button
+            type="button"
+            onClick={onBookClick}
+            className="w-full inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-4 py-2.5 rounded-lg text-xs font-oswald uppercase tracking-wider font-bold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+          >
+            <Calendar className="w-3.5 h-3.5" /> Lock Priority Inspection Slot <ArrowRight className="w-3 h-3" />
+          </button>
+        </div>
+      ) : hasBookingIntent && onBookClick ? (
         <div className="pt-2">
           <button
             type="button"
             onClick={onBookClick}
-            className="inline-flex items-center gap-1.5 bg-crimson hover:bg-crimson-dark text-white px-3 py-1.5 text-xs font-oswald uppercase tracking-wider font-bold shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+            className="inline-flex items-center gap-1.5 bg-crimson hover:bg-crimson-dark text-white px-3 py-1.5 rounded-lg text-xs font-oswald uppercase tracking-wider font-bold shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
           >
             <Calendar className="w-3.5 h-3.5" /> Book Inspection Online
           </button>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

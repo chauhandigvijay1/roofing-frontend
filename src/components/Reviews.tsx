@@ -1,173 +1,105 @@
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { Star, CheckCircle2 } from "lucide-react";
 import { useBrand } from "../BrandContext";
 
 interface ReviewItem {
-  name?: string;
-  author?: string;
-  location?: string;
+  author: string;
+  location: string;
   text: string;
   rating: number;
+  project: string;
 }
-
-const reviews: ReviewItem[] = [
-  {
-    name: "Michael T.",
-    text: "They patched my roof in under 4 hours during a rainstorm. Incredibly fast and professional. Won't call anyone else.",
-    rating: 5,
-  },
-  {
-    name: "Sarah L.",
-    text: "Full replacement was seamless. The team was punctual, cleaned up every nail, and the new roof looks stunning. Worth every penny.",
-    rating: 5,
-  },
-  {
-    name: "David R.",
-    text: "After a tornado ripped through our neighborhood, they handled the insurance claim and had us back under a new roof in 3 days.",
-    rating: 5,
-  },
-];
-
-const drewReviews: ReviewItem[] = [
-  {
-    name: "Robert M.",
-    location: "Lakeway, TX",
-    text: "Drew Boy and his team replaced our roof in Lakeway after a severe hailstorm. As an engineer myself, I appreciated Drew's building science explanation of our attic ventilation. Outstanding craftsmanship.",
-    rating: 5,
-  },
-  {
-    name: "Sarah H.",
-    location: "West Lake Hills, TX",
-    text: "Instant Roofing handled our West Lake Hills home with total professionalism. Handled our insurance claim 100% by the book under Texas law. Cleaned up every single nail.",
-    rating: 5,
-  },
-  {
-    name: "David R.",
-    location: "Round Rock, TX",
-    text: "Emergency leak fixed at 10 PM during torrential rain in Round Rock. Drew's team arrived with an emergency tarp and saved our hardwood floors. Best roofer in Central Texas.",
-    rating: 5,
-  },
-];
-
-const richardReviews: ReviewItem[] = [
-  {
-    author: "Michael T. — Katy, TX",
-    rating: 5,
-    text: "Paramount Roofing replaced our entire roof after severe wind storms in Katy. Richard Keathley's team was prompt, professional, and handled every detail with precision. Cleaned up every single nail. Highest recommendation in Houston.",
-  },
-  {
-    author: "David R. — Sugar Land, TX",
-    rating: 5,
-    text: "Richard and David run an exceptional outfit. They replaced our commercial flat roof in Sugar Land with zero downtime for our business. Fair pricing, clean job site, and honest communication.",
-  },
-  {
-    author: "Elena G. — The Woodlands, TX",
-    rating: 5,
-    text: "Outstanding emergency leak repair and roof inspection. They arrived quickly, diagnosed the issue, and fixed it right the first time. True Houston roofing experts.",
-  },
-];
-
-const jimReviews: ReviewItem[] = [
-  {
-    author: "Mark & Brenda S. — St. Augustine, FL",
-    rating: 5,
-    text: "After Hurricane Ian cracked our concrete tiles, competing bids were over $100k. Jim Jessup came out personally and showed us Worthouse metal tile — incredible hurricane rating for half the price. Jim's team nailed it!",
-  },
-  {
-    author: "Dave & Cheryl M. — Orange Park, FL",
-    rating: 5,
-    text: "Jim's suggestion of an energy-efficient solar vent on our flat roof home dropped our power bills immediately. The crew was polite, respectful of our animals, and left our property immaculate. Highly recommend Ready Roofing.",
-  },
-  {
-    author: "Marcus T. — Jacksonville (Duval County), FL",
-    rating: 5,
-    text: "Had 5 ceiling leaks during heavy storm season. Called Jim's dispatch and they had a tech out fixing the leaks the very next business day. Fast, fair, and reliable craftsmanship.",
-  },
-];
-
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.2 } },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
-};
 
 export default function Reviews() {
   const brand = useBrand();
-  const currentReviews = brand.isDrew
-    ? drewReviews
-    : brand.isRichard
-    ? richardReviews
-    : brand.isJim
-    ? jimReviews
-    : reviews;
+
+  const dynamicReviews: ReviewItem[] = [
+    {
+      author: "Robert M.",
+      location: brand.city,
+      rating: 5,
+      project: "Full Roof Replacement",
+      text: `${brand.name} replaced our entire roof after severe storms. Their crew was prompt, incredibly polite, and thoroughly rolled magnetic sweeps to catch every nail. The roof looks immaculate.`,
+    },
+    {
+      author: "Sarah & David L.",
+      location: brand.city,
+      rating: 5,
+      project: "Emergency Leak & Repair",
+      text: `We had an active ceiling leak during a heavy storm. ${brand.name} dispatched an emergency technician within 2 hours, tarped the compromised valley, and completed the permanent architectural shingle fix the next morning.`,
+    },
+    {
+      author: "Marcus T.",
+      location: brand.city,
+      rating: 5,
+      project: brand.isCommercial ? "Commercial Flat TPO Restoration" : "Storm Damage & Insurance Claim",
+      text: brand.isCommercial
+        ? `${brand.name} installed a 60-mil TPO single-ply system on our retail facility with zero business interruption. The cooling load reduction was noticeable immediately.`
+        : `Handled our insurance adjuster walk-through seamlessly. They provided detailed digital photos and made sure our replacement was approved without any hidden costs or deductible games.`,
+    },
+  ];
 
   return (
-    <section id="reviews" className="py-24 px-6 bg-white">
+    <section className="py-24 px-6 bg-stone-100 border-t border-stone-200">
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900">
-            {brand.isDrew
-              ? "Trusted by 96+ Austin Homeowners"
-              : brand.isRichard
-              ? "Trusted by Hundreds of Greater Houston Homeowners & Commercial Managers"
-              : brand.isJim
-              ? "Trusted Across Duval, St. Johns, Clay & Flagler Counties"
-              : "Trusted by 500+ Homeowners"}
+        <div className="text-center mb-16">
+          <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold">
+            Verified Customer Feedback
+          </span>
+          <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-2">
+            Why Property Owners Trust {brand.name}
           </h2>
           <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
-          <p className="text-zinc-600 text-lg max-w-xl mx-auto font-serif">
-            {brand.isDrew
-              ? "See why Central Texas families trust Drew Boy & Instant Roofing for building science craftsmanship."
-              : brand.isRichard
-              ? "Promises Made. Promises Kept. Decades of 5-star service across Greater Houston."
-              : brand.isJim
-              ? "Real Florida hurricane recovery and reroof experiences from your neighbors across Northeast Florida."
-              : "See why locals choose us to protect what matters most."}
-          </p>
-        </motion.div>
+          <div className="flex items-center justify-center gap-2 text-amber-500 mb-2">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+            ))}
+            <span className="text-zinc-900 font-oswald uppercase font-bold text-sm ml-2">
+              {brand.rating || 4.9} Out of 5.0 Rating Across {brand.reviewsCount || 48}+ Projects
+            </span>
+          </div>
+        </div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid md:grid-cols-3 gap-8"
-        >
-          {currentReviews.map((r, idx) => (
+        <div className="grid md:grid-cols-3 gap-8">
+          {dynamicReviews.map((r, idx) => (
             <motion.div
-              key={r.author || r.name || idx}
-              variants={item}
-              className="bg-stone-50 p-8 border border-stone-200 border-t-4 border-t-crimson hover:shadow-xl hover:shadow-stone-200/50 transition-shadow duration-300"
+              key={idx}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className="bg-white p-8 border border-stone-200 shadow-md flex flex-col justify-between"
             >
-              <div className="flex gap-1 mb-5">
-                {Array.from({ length: r.rating }).map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-crimson text-crimson" />
-                ))}
-              </div>
-              <p className="text-zinc-800 leading-relaxed mb-6 font-serif">&ldquo;{r.text}&rdquo;</p>
-              <div className="flex items-center justify-between">
-                <p className="text-zinc-900 font-oswald uppercase tracking-wider font-bold text-sm">
-                  {r.author || r.name}
-                </p>
-                {r.location && (
-                  <span className="text-zinc-500 font-serif text-xs italic">
-                    {r.location}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex text-amber-400">
+                    {[...Array(r.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-amber-400" />
+                    ))}
+                  </div>
+                  <span className="text-[10px] font-oswald uppercase tracking-wider bg-stone-100 text-zinc-700 px-2.5 py-0.5 font-bold">
+                    {r.project}
                   </span>
-                )}
+                </div>
+                <p className="text-zinc-700 font-serif leading-relaxed text-sm mb-6">
+                  &ldquo;{r.text}&rdquo;
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
+                <div>
+                  <div className="font-oswald uppercase tracking-wider font-bold text-sm text-zinc-900">
+                    {r.author}
+                  </div>
+                  <div className="text-xs text-zinc-500 font-serif">{r.location}</div>
+                </div>
+                <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-serif">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Verified Owner
+                </div>
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -1,131 +1,108 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { useBrand } from "../BrandContext";
-
-const genericReviews = [
-  { name: "Michael T.", text: "They patched my roof during a rainstorm. Fast and professional." },
-  { name: "Sarah L.", text: "Full replacement was seamless. The new roof looks stunning." },
-  { name: "David R.", text: "Handled the insurance claim and had us under a new roof in 3 days." },
-  { name: "Jessica M.", text: "Fair pricing, excellent communication, and immaculate cleanup." },
-  { name: "Robert K.", text: "Been using them for 5 years. Never a single leak or issue." },
-];
-
-const jimTestimonials = [
-  {
-    name: "Mark & Brenda S. — St. Augustine, FL",
-    text: "Concrete tile roof replaced with Worthouse metal for half the price of $100k competing bids after Hurricane Ian. We nailed it!",
-  },
-  {
-    name: "Dave & Cheryl M. — Orange Park, FL",
-    text: "Jim's suggestion of an energy-efficient solar vent dropped our power bill. Polite crew that protected our animals.",
-  },
-  {
-    name: "Marcus T. — Jacksonville, FL",
-    text: "5 ceiling leaks fixed the very next business day during storm season. Best roofer in Duval County.",
-  },
-];
-
-const drewTestimonials = [
-  {
-    name: "Robert M. — Lakeway, TX",
-    text: "Replaced our roof in Lakeway after a severe hailstorm. As an engineer, I appreciated Drew's building science approach.",
-  },
-  {
-    name: "Sarah H. — West Lake Hills, TX",
-    text: "Handled our insurance claim 100% by the book under Texas law. Cleaned up every single nail.",
-  },
-  {
-    name: "David R. — Round Rock, TX",
-    text: "Emergency leak fixed at 10 PM during torrential rain. Best roofer in Central Texas.",
-  },
-];
-
-const richardTestimonials = [
-  {
-    name: "Michael T. — Katy, TX",
-    text: "Paramount Roofing replaced our entire roof after severe wind storms in Katy. Prompt, professional, and precise.",
-  },
-  {
-    name: "David R. — Sugar Land, TX",
-    text: "Replaced our commercial flat roof with zero downtime for our business. Honest communication and fair pricing.",
-  },
-  {
-    name: "Elena G. — The Woodlands, TX",
-    text: "Outstanding emergency leak repair and roof inspection. True Houston roofing experts for over 31 years.",
-  },
-];
 
 export default function Testimonials() {
   const brand = useBrand();
-  const { city } = brand;
-  const reviews = brand.isJim
-    ? jimTestimonials
-    : brand.isDrew
-    ? drewTestimonials
-    : brand.isRichard
-    ? richardTestimonials
-    : genericReviews;
 
-  const [index, setIndex] = useState(0);
+  const testimonials = [
+    {
+      author: "Michael T.",
+      location: brand.city,
+      text: `${brand.name} replaced our roof after a destructive hail storm. The line-item estimate was completely transparent, cleanup was flawless, and the new architectural shingles look extraordinary.`,
+    },
+    {
+      author: "Sarah & David L.",
+      location: brand.city,
+      text: `When our roof started leaking into the master bedroom during heavy rain, ${brand.name} dispatched their emergency truck in under 2 hours. Professional, honest, and zero price gouging.`,
+    },
+    {
+      author: "Marcus & Elena R.",
+      location: brand.city,
+      text: `Outstanding communication from initial drone inspection through final walkthrough. They coordinated directly with our insurance adjuster and got our entire roof approved. Cannot recommend them enough!`,
+    },
+  ];
 
-  useEffect(() => {
-    setIndex(0);
-  }, [brand]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setIndex((i) => (i + 1) % reviews.length);
-    }, 4000);
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 7000);
     return () => clearInterval(timer);
-  }, [reviews.length]);
-
-  const prev = () => setIndex((i) => (i - 1 + reviews.length) % reviews.length);
-  const next = () => setIndex((i) => (i + 1) % reviews.length);
-  const r = reviews[index] || reviews[0];
+  }, [testimonials.length]);
 
   return (
-    <section id="testimonials" className="py-24 px-6 bg-stone-50">
-      <div className="max-w-3xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-4">
-            Trusted by Homeowners in {city}
-          </h2>
-          <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
-        </motion.div>
+    <section id="testimonials" className="py-24 px-6 bg-zinc-950 text-white relative overflow-hidden">
+      <div className="max-w-4xl mx-auto text-center relative z-10">
+        <div className="w-12 h-12 bg-crimson/20 border border-crimson/40 text-crimson rounded-full flex items-center justify-center mx-auto mb-6">
+          <Quote className="w-6 h-6" />
+        </div>
 
-        <div className="relative bg-white shadow-xl shadow-stone-200/50 border border-stone-200 p-10 mt-10">
-          <div className="flex justify-center gap-1 mb-6">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} className="w-6 h-6 fill-crimson text-crimson" />
+        <h2 className="text-3xl md:text-5xl font-oswald uppercase tracking-wider font-bold mb-4">
+          Trusted by Property Owners Across {brand.city}
+        </h2>
+        <div className="w-16 h-1 bg-crimson mx-auto mb-10"></div>
+
+        <div className="min-h-[180px] flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-4 max-w-2xl mx-auto"
+            >
+              <div className="flex justify-center text-amber-400 gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 fill-amber-400" />
+                ))}
+              </div>
+              <p className="text-lg md:text-xl font-serif text-zinc-300 italic leading-relaxed">
+                &ldquo;{testimonials[currentIndex].text}&rdquo;
+              </p>
+              <div className="pt-2">
+                <span className="font-oswald uppercase tracking-wider font-bold text-white block">
+                  {testimonials[currentIndex].author}
+                </span>
+                <span className="text-xs text-zinc-500 font-serif">
+                  {testimonials[currentIndex].location}
+                </span>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <button
+            type="button"
+            onClick={() =>
+              setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+            }
+            className="p-2 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-600 transition-colors cursor-pointer"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <div className="flex gap-2">
+            {testimonials.map((_, i) => (
+              <span
+                key={i}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  currentIndex === i ? "bg-crimson w-6" : "bg-zinc-700"
+                }`}
+              />
             ))}
           </div>
-
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
-              className="text-zinc-700 text-lg leading-relaxed mb-6 font-serif"
-            >
-              &ldquo;{r.text}&rdquo;
-            </motion.p>
-          </AnimatePresence>
-
-          <p className="text-zinc-900 font-oswald uppercase tracking-wider font-bold">{r.name}</p>
-
-          <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-crimson transition-colors" aria-label="Previous review">
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-crimson transition-colors" aria-label="Next review">
-            <ChevronRight className="w-6 h-6" />
+          <button
+            type="button"
+            onClick={() => setCurrentIndex((prev) => (prev + 1) % testimonials.length)}
+            className="p-2 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-600 transition-colors cursor-pointer"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       </div>

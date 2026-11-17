@@ -2,34 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { motion, animate, useInView } from "framer-motion";
 import { useBrand } from "../BrandContext";
 
-const stats = [
-  { value: 500, suffix: "+", label: "Projects Completed" },
-  { value: 10, suffix: "+", label: "Years of Excellence" },
-  { value: 5.0, suffix: "", label: "Average Rating", decimals: 1 },
-  { value: 100, suffix: "%", label: "Satisfaction Rate" },
-];
-
-const drewStats = [
-  { value: 96, suffix: "+", label: "5-Star Verified Reviews" },
-  { value: 15, suffix: "+", label: "Years Central Texas Heritage" },
-  { value: 5.0, suffix: "", label: "Google & Thumbtack Rating", decimals: 1 },
-  { value: 100, suffix: "%", label: "Texas HB 2102 Compliant" },
-];
-
-const richardStats = [
-  { value: 31, suffix: "+", label: "Years Greater Houston Heritage" },
-  { value: 100, suffix: "%", label: "BBB A+ & HAA/TAA Certified" },
-  { value: 4.7, suffix: "", label: "Google & Customer Rating", decimals: 1 },
-  { value: 100, suffix: "%", label: "Texas Windstorm & TDI Compliant" },
-];
-
-const jimStats = [
-  { value: 140, suffix: "+ MPH", label: "Hurricane Wind-Rated Assemblies" },
-  { value: 20, suffix: "+", label: "Years Construction & Roofing Heritage" },
-  { value: 100, suffix: "%", label: "Florida Wind Mitigation & Code Compliant" },
-  { value: 4.9, suffix: "", label: "Google & Customer Rating across Duval", decimals: 1 },
-];
-
 function CountUp({ value, suffix, decimals = 0 }: { value: number; suffix: string; decimals?: number }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const inView = useInView(ref, { once: true });
@@ -60,36 +32,34 @@ const container = {
 
 const item = {
   hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
 export default function Stats() {
   const brand = useBrand();
-  const currentStats = brand.isDrew
-    ? drewStats
-    : brand.isRichard
-    ? richardStats
-    : brand.isJim
-    ? jimStats
-    : stats;
+
+  const statsList = [
+    { value: brand.reviewsCount || 48, suffix: "+", label: "Verified 5-Star Reviews" },
+    { value: 20, suffix: "+", label: `Years Serving ${brand.city}` },
+    { value: brand.rating || 4.9, suffix: "", label: "Google Customer Rating", decimals: 1 },
+    { value: 100, suffix: "%", label: "Licensed & Guaranteed" },
+  ];
 
   return (
-    <section className="bg-crimson text-white py-12 px-6">
+    <section className="bg-zinc-900 text-white py-16 border-y border-zinc-800">
       <motion.div
         variants={container}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, margin: "-50px" }}
-        className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
+        viewport={{ once: true, margin: "-100px" }}
+        className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
       >
-        {currentStats.map((s) => (
-          <motion.div
-            key={s.label}
-            variants={item}
-            className="group transition-transform duration-300 hover:scale-110"
-          >
-            <CountUp value={s.value} suffix={s.suffix} decimals={s.decimals ?? 0} />
-            <p className="text-sm text-white/80 mt-2 font-serif">{s.label}</p>
+        {statsList.map((s) => (
+          <motion.div key={s.label} variants={item}>
+            <CountUp value={s.value} suffix={s.suffix} decimals={s.decimals} />
+            <p className="text-zinc-400 text-xs md:text-sm font-oswald uppercase tracking-wider mt-2 font-bold">
+              {s.label}
+            </p>
           </motion.div>
         ))}
       </motion.div>
