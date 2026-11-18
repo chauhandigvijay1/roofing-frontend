@@ -4,16 +4,22 @@ import {
   Calendar,
   Building2,
   Home,
-  CheckCircle,
+  CheckCircle2,
   ArrowRight,
+  ShieldCheck,
+  Sparkles,
+  Layers,
+  Wrench,
 } from "lucide-react";
 import BookingModal from "./BookingModal";
 
 interface ScopeOption {
+  id: string;
   title: string;
   subtitle: string;
   rate: number;
   warranty: string;
+  icon: any;
 }
 
 export default function EstimateWizard({ variant = "full" }: { variant?: "full" | "sidebar" }) {
@@ -30,80 +36,149 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
     }
   }, [brand.isCommercial]);
 
-  // Authentic Systems with Harmonized Typography Copy matching Process.tsx & WhyChooseUs.tsx
-  const residentialScopes: ScopeOption[] = [
-    {
-      title: "Architectural Shingles (50-Yr)",
-      subtitle: "Lifetime GAF Timberline HDZ / Owens Corning Duration systems engineered for severe weather.",
-      rate: 4.8,
-      warranty: "50-Yr Lifetime",
-    },
-    {
-      title: "Class 4 Impact Hail Defense",
-      subtitle: "UL 2218 impact-rated shingles qualifying your property for up to 28% insurance discounts.",
-      rate: 5.8,
-      warranty: "Lifetime Impact",
-    },
-    {
+  // Dynamic Scopes Engine: Synthesizes material scopes from brand digital footprint & market
+  const dynamicScopes = useMemo(() => {
+    const isFL = brand.state === "FL";
+    const isComm = tradeMode === "commercial";
+
+    if (isComm) {
+      return [
+        {
+          id: "comm-tpo",
+          title: "60-Mil TPO Heat-Welded Membrane",
+          subtitle: "Energy Star reflective cool-roof single-ply membrane engineered for superior puncture resistance and thermal efficiency.",
+          rate: 5.2,
+          warranty: "20-Yr NDL",
+          icon: Building2,
+        },
+        {
+          id: "comm-silicone",
+          title: "Seamless Silicone Restoration Coating",
+          subtitle: "Liquid-applied monolithic silicone barrier extending existing commercial roof life by 15-20 years with zero tear-off.",
+          rate: 4.2,
+          warranty: "15-20 Yr Seal",
+          icon: Layers,
+        },
+        {
+          id: "comm-modbit",
+          title: "Multi-Ply Modified Bitumen System",
+          subtitle: "Dual-ply SBS rubberized asphalt system engineered for heavy foot traffic, mechanical equipment decks, and flat roofs.",
+          rate: 6.2,
+          warranty: "25-Yr Commercial",
+          icon: Building2,
+        },
+        {
+          id: "comm-metal",
+          title: "Commercial Structural Standing Seam",
+          subtitle: "Heavy-gauge architectural steel panels with concealed fasteners engineered for facilities, retail centers, and complexes.",
+          rate: 7.6,
+          warranty: "30-Yr Warranty",
+          icon: Wrench,
+        },
+      ];
+    }
+
+    // Residential Scopes
+    const scopes: ScopeOption[] = [
+      {
+        id: "res-shingle",
+        title: "Lifetime Architectural Shingles",
+        subtitle: "High-definition multi-dimensional shingle systems engineered for severe weather and backed by certified non-prorated manufacturer warranty.",
+        rate: 4.8,
+        warranty: "50-Yr Lifetime",
+        icon: Home,
+      },
+    ];
+
+    if (isFL) {
+      scopes.push({
+        id: "res-hurricane",
+        title: "140+ MPH Hurricane-Fortified Shingle",
+        subtitle: "High-wind engineered 6-nail reinforced installation with secondary water barrier (SWR) underlayment for maximum storm defense.",
+        rate: 5.6,
+        warranty: "140 MPH Wind",
+        icon: ShieldCheck,
+      });
+    } else {
+      scopes.push({
+        id: "res-impact",
+        title: "Class 4 Impact Hail Defense",
+        subtitle: "UL 2218 impact-rated SBS asphalt shingles qualifying your home for up to 28% annual insurance premium discounts across Texas.",
+        rate: 5.8,
+        warranty: "Lifetime Impact",
+        icon: ShieldCheck,
+      });
+    }
+
+    scopes.push({
+      id: "res-metal",
       title: "Standing Seam Designer Metal",
-      subtitle: "24-gauge concealed fastener architectural steel roofing with lifetime 50+ year resilience.",
+      subtitle: "24-gauge concealed-fastener architectural steel roofing providing unmatched durability, modern aesthetics, and 50+ year longevity.",
       rate: 7.8,
       warranty: "50+ Yr Resilient",
-    },
-    {
-      title: brand.state === "FL" ? "Florida Tile & Hurricane Engineered" : "Designer Shake & Tile System",
-      subtitle: brand.state === "FL"
-        ? "140+ MPH hurricane fastened Spanish clay or concrete tile designed for maximum wind defense."
-        : "High-definition composite cedar shake & slate replacement with authentic dimensional depth.",
-      rate: 9.2,
-      warranty: "Lifetime Premium",
-    },
-  ];
+      icon: Wrench,
+    });
 
-  const commercialScopes: ScopeOption[] = [
-    {
-      title: "60-Mil TPO Heat-Welded Membrane",
-      subtitle: "Energy Star reflective cool roof single-ply membrane with high thermal efficiency.",
-      rate: 5.2,
-      warranty: "20-Yr NDL",
-    },
-    {
-      title: "Seamless Silicone Roof Coating",
-      subtitle: "Liquid-applied monolithic restoration barrier over existing deck with 15-20 year leak protection.",
-      rate: 4.2,
-      warranty: "15-20 Yr Seal",
-    },
-    {
-      title: "Multi-Ply Modified Bitumen",
-      subtitle: "Heavy-duty dual-ply SBS asphalt system engineered for high foot traffic and mechanical decks.",
-      rate: 6.2,
-      warranty: "25-Yr Commercial",
-    },
-    {
-      title: "Commercial Structural Standing Seam",
-      subtitle: "Heavy-gauge industrial metal panels for large facilities, retail centers, and warehouses.",
-      rate: 7.6,
-      warranty: "30-Yr Warranty",
-    },
-  ];
+    if (isFL) {
+      scopes.push({
+        id: "res-tile",
+        title: "Florida Tile & Concrete Barrel System",
+        subtitle: "Mechanically fastened and foam-adhered Spanish tile engineered to resist severe coastal winds, heavy salt spray, and UV heat.",
+        rate: 9.4,
+        warranty: "50-Yr Hurricane",
+        icon: Sparkles,
+      });
+    } else {
+      scopes.push({
+        id: "res-shake",
+        title: "Designer Shake & Composite Tile",
+        subtitle: "Class A fire-rated composite shake replicating authentic dimensional depth without high wood maintenance or rot risks.",
+        rate: 8.9,
+        warranty: "Lifetime Premium",
+        icon: Sparkles,
+      });
+    }
 
-  const currentScopes = tradeMode === "commercial" ? commercialScopes : residentialScopes;
-  const [selectedScope, setSelectedScope] = useState<string>(currentScopes[0].title);
+    return scopes;
+  }, [brand.state, tradeMode]);
+
+  const [selectedScope, setSelectedScope] = useState<string>(dynamicScopes[0].title);
   const [resSqFt, setResSqFt] = useState<number>(2400);
   const [commSqFt, setCommSqFt] = useState<number>(12000);
   const [includeIncentive, setIncludeIncentive] = useState<boolean>(true);
-
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
+  // Keep selected scope synced if trade mode changes
   const handleTradeModeChange = (mode: "residential" | "commercial") => {
     setTradeMode(mode);
-    setSelectedScope(mode === "commercial" ? commercialScopes[0].title : residentialScopes[0].title);
   };
+
+  useEffect(() => {
+    setSelectedScope(dynamicScopes[0].title);
+  }, [dynamicScopes]);
+
+  // Size Presets for instant Apple-style one-tap adjustment
+  const resPresets = [
+    { label: "1,600 sq ft", value: 1600, desc: "Cottage / Ranch" },
+    { label: "2,400 sq ft", value: 2400, desc: "Standard Home" },
+    { label: "3,500 sq ft", value: 3500, desc: "Spacious Home" },
+    { label: "5,000 sq ft", value: 5000, desc: "Estate Residence" },
+  ];
+
+  const commPresets = [
+    { label: "5,000 sq ft", value: 5000, desc: "Retail / Office" },
+    { label: "12,000 sq ft", value: 12000, desc: "Commercial Deck" },
+    { label: "25,000 sq ft", value: 25000, desc: "Business Complex" },
+    { label: "50,000 sq ft", value: 50000, desc: "Industrial Facility" },
+  ];
+
+  const currentPresets = tradeMode === "commercial" ? commPresets : resPresets;
+  const currentSqFt = tradeMode === "commercial" ? commSqFt : resSqFt;
 
   const calculation = useMemo(() => {
     const isComm = tradeMode === "commercial";
     const sqFt = isComm ? commSqFt : resSqFt;
-    const activeScope = currentScopes.find((s) => s.title === selectedScope) || currentScopes[0];
+    const activeScope = dynamicScopes.find((s) => s.title === selectedScope) || dynamicScopes[0];
 
     const baseCost = sqFt * activeScope.rate;
     const rawLow = Math.round(baseCost * 0.95);
@@ -139,7 +214,33 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
       includeIncentive,
       activeScope,
     };
-  }, [tradeMode, selectedScope, resSqFt, commSqFt, includeIncentive, brand.state, currentScopes]);
+  }, [tradeMode, selectedScope, resSqFt, commSqFt, includeIncentive, brand.state, dynamicScopes]);
+
+  // Incentive title and copy localized to state & trade
+  const incentiveInfo = useMemo(() => {
+    if (brand.state === "FL") {
+      return {
+        title: "Florida Statutory Wind Mitigation Credit (OIR-B1-1802)",
+        desc: "Certified secondary water barrier (SWR) underlayment and hurricane fastening qualify for mandatory statutory homeowner insurance discounts.",
+      };
+    }
+    if (tradeMode === "commercial") {
+      return {
+        title: "Commercial Energy Star Cool Roof Rebate & Section 179",
+        desc: "Reflective single-ply cool-roof membranes qualify for municipal energy efficiency utility rebates and direct operating expense write-offs.",
+      };
+    }
+    if (brand.state === "TX") {
+      return {
+        title: "Texas TDI Class 4 Hail Insurance Reduction (Up to 28%)",
+        desc: "Certified UL 2218 impact-resistant shingle installations qualify Texas property owners for annual policy premium discounts up to 28%.",
+      };
+    }
+    return {
+      title: "Certified Manufacturer Lifetime Warranty Rebate",
+      desc: "Licensed installer credentials qualify your project for non-prorated manufacturer backing, free wind warranty riders, and local rebates.",
+    };
+  }, [brand.state, tradeMode]);
 
   return (
     <>
@@ -148,27 +249,27 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
         className={
           isSidebar
             ? "py-8 px-4 bg-stone-50"
-            : "py-12 sm:py-16 px-4 sm:px-6 bg-stone-100 border-y border-stone-200"
+            : "py-12 sm:py-16 px-4 sm:px-6 bg-stone-100/70 border-y border-stone-200"
         }
       >
         <div className={isSidebar ? "w-full" : "max-w-7xl mx-auto"}>
-          {/* Section Header with Consistent Editorial Typography */}
-          <div className="text-center mb-8 sm:mb-10">
+          {/* Calm, Minimalist Apple-Style Header */}
+          <div className="text-center mb-8 sm:mb-12">
             <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold">
-              Precision Cost Modeling
+              Transparent Cost Modeling • {brand.city.toUpperCase()}
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-1">
-              Instant Roof Cost Calculator
+              Instant Roof Investment Estimator
             </h2>
-            <div className="w-14 h-1 bg-crimson mx-auto mt-3 mb-4"></div>
+            <div className="w-12 h-1 bg-crimson mx-auto mt-2.5 mb-3.5" />
             <p className="text-zinc-600 text-sm sm:text-base max-w-2xl mx-auto font-serif leading-relaxed">
               {tradeMode === "commercial"
-                ? `Commercial flat roof & single-ply TPO replacement modeling calibrated to facilities across ${brand.city}.`
-                : `Transparent line-item roof replacement modeling calibrated to local ${brand.city} material & labor rates.`}
+                ? `Commercial flat roof & single-ply TPO investment modeling calibrated to local material & certified labor indexes across ${brand.city}.`
+                : `Interactive roof replacement modeling calibrated to verified local ${brand.city} building codes, material tiers, and crew labor rates.`}
             </p>
 
-            {/* Apple-Style Segmented Trade Pill */}
-            <div className="inline-flex items-center p-1 bg-stone-200/90 rounded-full mt-5 shadow-inner border border-stone-300/60">
+            {/* Apple-Style Segmented Trade Switcher */}
+            <div className="inline-flex items-center p-1 bg-stone-200/90 rounded-full mt-5 shadow-2xs border border-stone-300/70">
               <button
                 type="button"
                 onClick={() => handleTradeModeChange("residential")}
@@ -194,13 +295,13 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
             </div>
           </div>
 
-          {/* 2-COLUMN SINGLE-VIEWPORT INTERACTIVE STUDIO */}
+          {/* TWO-COLUMN STUDIO WITH GENEROUS WHITESPACE */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
-            {/* LEFT COLUMN: Controls & System Scope (7 Columns) */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-zinc-200/80 space-y-5">
-              {/* Material Selection Grid */}
+            {/* LEFT COLUMN: System Scope, Size Presets & Slider (7 Columns) */}
+            <div className="lg:col-span-7 bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-stone-200/90 space-y-6">
+              {/* 1. System Material Selection Cards */}
               <div>
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-3">
                   <label className="text-xs sm:text-sm font-oswald uppercase tracking-wider font-bold text-zinc-900">
                     1. Choose Roof System Material
                   </label>
@@ -209,44 +310,55 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {currentScopes.map((scope) => {
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {dynamicScopes.map((scope) => {
                     const isSelected = selectedScope === scope.title;
+                    const Icon = scope.icon;
                     return (
                       <button
-                        key={scope.title}
+                        key={scope.id}
                         type="button"
                         onClick={() => setSelectedScope(scope.title)}
-                        className={`text-left p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
+                        className={`text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
                           isSelected
-                            ? "border-crimson bg-crimson/5 shadow-xs ring-1 ring-crimson"
-                            : "border-zinc-200 hover:border-zinc-300 bg-stone-50/50"
+                            ? "border-crimson bg-crimson/5 shadow-2xs ring-1 ring-crimson"
+                            : "border-stone-200 hover:border-stone-300 bg-stone-50/50 hover:bg-white"
                         }`}
                       >
                         <div>
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm text-zinc-900 leading-snug">
-                              {scope.title}
-                            </span>
+                          <div className="flex items-start justify-between gap-2.5">
+                            <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                              <div
+                                className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
+                                  isSelected ? "bg-crimson text-white" : "bg-stone-200/80 text-zinc-700"
+                                }`}
+                              >
+                                <Icon className="w-4 h-4" />
+                              </div>
+                              <span className="font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm text-zinc-900 leading-snug">
+                                {scope.title}
+                              </span>
+                            </div>
                             <span
-                              className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
-                                isSelected ? "border-crimson bg-crimson" : "border-zinc-300 bg-white"
+                              className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 mt-1 ${
+                                isSelected ? "border-crimson bg-crimson" : "border-stone-300 bg-white"
                               }`}
                             >
                               {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                             </span>
                           </div>
-                          <p className="text-xs text-zinc-600 font-serif leading-relaxed mt-1 line-clamp-2">
+
+                          <p className="text-xs text-zinc-600 font-serif leading-relaxed mt-2 line-clamp-2">
                             {scope.subtitle}
                           </p>
                         </div>
 
-                        <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between gap-2 text-xs">
-                          <span className="text-zinc-500 font-serif whitespace-nowrap">
-                            Warranty: <strong className="font-sans font-semibold text-zinc-700">{scope.warranty}</strong>
+                        <div className="mt-3 pt-2.5 border-t border-stone-200/60 flex items-center justify-between text-xs">
+                          <span className="text-zinc-500 font-serif">
+                            Warranty: <strong className="font-sans font-semibold text-zinc-800">{scope.warranty}</strong>
                           </span>
-                          <span className="font-oswald font-bold text-crimson text-xs whitespace-nowrap shrink-0">
-                            ~${scope.rate.toFixed(2)}/sq ft
+                          <span className="font-oswald font-bold text-crimson text-xs">
+                            ${scope.rate.toFixed(2)} / sq ft
                           </span>
                         </div>
                       </button>
@@ -255,15 +367,15 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                 </div>
               </div>
 
-              {/* Smooth Area Slider */}
-              <div className="space-y-2">
+              {/* 2. Approximate Roof Footprint with Quick Presets & Precision Slider */}
+              <div className="space-y-3 pt-1">
                 <div className="flex items-center justify-between">
                   <div>
                     <label className="text-xs sm:text-sm font-oswald uppercase tracking-wider font-bold text-zinc-900 block">
                       2. Approximate Roof Footprint
                     </label>
-                    <span className="text-xs text-zinc-500 font-sans block">
-                      Slide to match estimated surface area
+                    <span className="text-xs text-zinc-500 font-serif block">
+                      Select typical property size or slide for exact footage
                     </span>
                   </div>
                   <div className="text-right">
@@ -276,7 +388,44 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                   </div>
                 </div>
 
-                <div className="pt-1">
+                {/* Quick Tactile Size Presets */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {currentPresets.map((preset) => {
+                    const isPresetSelected = currentSqFt === preset.value;
+                    return (
+                      <button
+                        key={preset.value}
+                        type="button"
+                        onClick={() => {
+                          if (tradeMode === "commercial") {
+                            setCommSqFt(preset.value);
+                          } else {
+                            setResSqFt(preset.value);
+                          }
+                        }}
+                        className={`p-2.5 text-center rounded-xl border transition-all cursor-pointer ${
+                          isPresetSelected
+                            ? "border-crimson bg-crimson text-white font-bold shadow-2xs"
+                            : "border-stone-200 bg-stone-50/70 hover:bg-stone-100 text-zinc-700"
+                        }`}
+                      >
+                        <div className="text-xs font-oswald uppercase tracking-wider font-bold">
+                          {preset.label}
+                        </div>
+                        <div
+                          className={`text-[10px] font-serif mt-0.5 truncate ${
+                            isPresetSelected ? "text-white/80" : "text-zinc-500"
+                          }`}
+                        >
+                          {preset.desc}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Precision Smooth Slider */}
+                <div className="pt-2">
                   <input
                     type="range"
                     min={tradeMode === "commercial" ? 5000 : 1200}
@@ -293,149 +442,161 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                     }}
                     className="w-full h-2 bg-stone-200 rounded-full appearance-none cursor-pointer accent-crimson focus:outline-none"
                   />
-                  <div className="flex justify-between text-xs font-sans text-zinc-500 mt-1">
-                    <span>{tradeMode === "commercial" ? "5,000 sq ft" : "1,200 sq ft (Cottage)"}</span>
-                    <span>{tradeMode === "commercial" ? "25,000 sq ft" : "3,200 sq ft (Average Home)"}</span>
-                    <span>{tradeMode === "commercial" ? "50,000 sq ft" : "5,500 sq ft (Estate)"}</span>
+                  <div className="flex justify-between text-[11px] font-sans text-zinc-500 mt-1">
+                    <span>{tradeMode === "commercial" ? "5,000 sq ft" : "1,200 sq ft"}</span>
+                    <span>{tradeMode === "commercial" ? "25,000 sq ft" : "3,200 sq ft (Average)"}</span>
+                    <span>{tradeMode === "commercial" ? "50,000 sq ft" : "5,500 sq ft"}</span>
                   </div>
                 </div>
               </div>
 
-              {/* Interactive Incentive Credit Box with Live Reactive Toggle */}
-              <div
-                className={`p-3 sm:p-3.5 rounded-xl border transition-all flex items-start gap-2.5 ${
-                  includeIncentive
-                    ? "bg-emerald-50/90 border-emerald-300 ring-1 ring-emerald-400/20 shadow-2xs"
-                    : "bg-stone-50 border-stone-200 opacity-80"
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  id="incentiveCredit"
-                  checked={includeIncentive}
-                  onChange={(e) => setIncludeIncentive(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 text-emerald-600 border-zinc-300 rounded focus:ring-emerald-500 cursor-pointer shrink-0"
-                />
-                <label htmlFor="incentiveCredit" className="text-xs text-zinc-700 font-sans leading-relaxed cursor-pointer flex-1">
-                  <div className="flex flex-wrap items-center justify-between gap-1">
-                    <strong className="text-emerald-950 font-oswald uppercase tracking-wider text-xs sm:text-sm font-bold">
-                      {brand.state === "FL"
-                        ? "Apply Florida Statutory Wind Mitigation Credit (Up to 45%)"
-                        : tradeMode === "commercial"
-                        ? "Apply Commercial Energy Star Rebate & Section 179 Deduction"
-                        : brand.state === "TX"
-                        ? "Apply Texas TDI Class 4 Hail Insurance Discount (Up to 28%)"
-                        : "Apply High-Wind & Impact Manufacturer Warranty Rebate"}
-                    </strong>
-                    <span
-                      className={`text-[10px] font-oswald uppercase tracking-wider px-2 py-0.5 rounded font-bold ${
+              {/* 3. Apple-Style Local Incentive & Rebate Toggle */}
+              <div className="pt-1">
+                <div
+                  onClick={() => setIncludeIncentive(!includeIncentive)}
+                  className={`p-4 rounded-2xl border transition-all flex items-center justify-between gap-4 cursor-pointer ${
+                    includeIncentive
+                      ? "bg-emerald-50/80 border-emerald-300 ring-1 ring-emerald-400/20 shadow-2xs"
+                      : "bg-stone-50 border-stone-200/80 hover:bg-stone-100/50"
+                  }`}
+                >
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <div
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
                         includeIncentive
                           ? "bg-emerald-600 text-white"
-                          : "bg-stone-200 text-zinc-600"
+                          : "bg-stone-200 text-zinc-500"
                       }`}
                     >
-                      {includeIncentive
-                        ? `-$${calculation.incentiveAmount.toLocaleString()} Applied`
-                        : `Save ~$${calculation.incentiveAmount.toLocaleString()}`}
-                    </span>
+                      <ShieldCheck className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm text-zinc-900">
+                          {incentiveInfo.title}
+                        </span>
+                        <span
+                          className={`text-[10px] font-oswald uppercase tracking-wider px-2 py-0.5 rounded-full font-bold ${
+                            includeIncentive
+                              ? "bg-emerald-600 text-white"
+                              : "bg-stone-200 text-zinc-600"
+                          }`}
+                        >
+                          {includeIncentive
+                            ? `-$${calculation.incentiveAmount.toLocaleString()} Savings Applied`
+                            : `Save ~$${calculation.incentiveAmount.toLocaleString()}`}
+                        </span>
+                      </div>
+                      <p className="text-xs text-zinc-600 font-serif leading-relaxed mt-1">
+                        {incentiveInfo.desc}
+                      </p>
+                    </div>
                   </div>
-                  <span className="text-xs text-zinc-600 font-sans leading-relaxed block mt-0.5">
-                    {brand.state === "FL"
-                      ? "Official OIR-B1-1802 certificate verifying hurricane clips and secondary water barrier (SWR) underlayment."
-                      : tradeMode === "commercial"
-                      ? "Reflective cool roof TPO membranes qualify for commercial utility rebates and immediate operating expense write-offs."
-                      : brand.state === "TX"
-                      ? "Underwriters provide annual premium discounts up to 28% for certified UL 2218 impact-resistant shingle systems across Texas."
-                      : "Qualifies your property for non-prorated lifetime manufacturer coverage and regional storm resilience incentives."}
-                  </span>
-                </label>
+
+                  {/* Clean Apple Toggle Switch */}
+                  <div
+                    className={`w-12 h-6 rounded-full transition-colors flex items-center p-0.5 shrink-0 ${
+                      includeIncentive ? "bg-emerald-600" : "bg-stone-300"
+                    }`}
+                  >
+                    <div
+                      className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                        includeIncentive ? "translate-x-6" : "translate-x-0"
+                      }`}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Live Sticky Calculation & Booking Studio (5 Columns) */}
-            <div className="lg:col-span-5 bg-white rounded-3xl p-4 sm:p-5 lg:p-6 shadow-md border border-zinc-200/90 space-y-3.5 sm:space-y-4 lg:sticky lg:top-24">
-              <div className="border-b border-zinc-100 pb-3">
-                <span className="text-[11px] font-oswald uppercase tracking-widest text-crimson font-bold block mb-0.5">
-                  Live Estimated Investment
+            {/* RIGHT COLUMN: Apple-Grade Investment Summary & Booking Studio (5 Columns) */}
+            <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 shadow-xl border border-stone-200/90 space-y-5 lg:sticky lg:top-24">
+              <div>
+                <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold block mb-1">
+                  Estimated Total Investment
                 </span>
                 <div className="text-3xl sm:text-4xl font-oswald font-bold text-zinc-950 tracking-tight transition-all">
                   ${calculation.low.toLocaleString()} &ndash; ${calculation.high.toLocaleString()}
                 </div>
-                <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-oswald uppercase tracking-wider font-bold">
-                    As Low As ${calculation.monthly}/mo
+                <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                  <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-oswald uppercase tracking-wider font-bold">
+                    As Low As ${calculation.monthly} / month
                   </span>
                   {includeIncentive ? (
-                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-oswald uppercase tracking-wider font-bold border border-emerald-200">
-                      ✓ -${calculation.incentiveAmount.toLocaleString()} Savings Included
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-oswald uppercase tracking-wider font-bold border border-emerald-200">
+                      ✓ -${calculation.incentiveAmount.toLocaleString()} Credit Included
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 rounded-full bg-stone-100 text-zinc-500 text-[10px] font-oswald uppercase tracking-wider font-medium">
-                      Standard Rate (No Deduction)
+                    <span className="px-2.5 py-1 rounded-full bg-stone-100 text-zinc-500 text-[11px] font-oswald uppercase tracking-wider font-medium">
+                      Standard Rate
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* Selected Scope Summary */}
-              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 space-y-1.5 text-xs font-sans">
-                <div className="flex justify-between items-center">
-                  <span className="text-zinc-600">Selected Scope</span>
-                  <strong className="text-zinc-900 font-semibold truncate max-w-[190px]">{selectedScope}</strong>
+              {/* Transparent Scope Details Card (No Truncation) */}
+              <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-2 text-xs font-sans">
+                <div className="flex justify-between items-start gap-2">
+                  <span className="text-zinc-500 font-serif">Selected Scope:</span>
+                  <strong className="text-zinc-900 font-semibold text-right max-w-[220px]">
+                    {selectedScope}
+                  </strong>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-zinc-600">Surface Footprint</span>
-                  <strong className="text-zinc-900 font-semibold">{calculation.sqFt.toLocaleString()} sq ft ({calculation.squares} Squares)</strong>
+                  <span className="text-zinc-500 font-serif">Surface Footprint:</span>
+                  <strong className="text-zinc-900 font-semibold">
+                    {calculation.sqFt.toLocaleString()} sq ft ({calculation.squares} Squares)
+                  </strong>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-zinc-600">Service Territory</span>
+                  <span className="text-zinc-500 font-serif">Service Territory:</span>
                   <strong className="text-zinc-900 font-semibold">
                     {brand.city.includes(brand.state) ? brand.city : `${brand.city}, ${brand.state}`}
                   </strong>
                 </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-500 font-serif">Warranty Protection:</span>
+                  <strong className="text-crimson font-semibold">
+                    {calculation.activeScope.warranty} Non-Prorated
+                  </strong>
+                </div>
               </div>
 
-              {/* Inclusions (Matching Why Choose Us & Process.tsx) */}
-              <div className="space-y-1.5 py-0.5 font-sans">
-                <span className="text-[10px] font-oswald uppercase tracking-wider text-zinc-400 font-bold block">
+              {/* Turnkey Inclusions with Clean Red Checkmarks */}
+              <div className="space-y-2 font-sans pt-1">
+                <span className="text-[11px] font-oswald uppercase tracking-wider text-zinc-500 font-bold block">
                   Standard Turnkey Inclusions
                 </span>
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="w-3.5 h-3.5 text-crimson shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-crimson shrink-0 mt-0.5" />
                   <span className="text-zinc-700 text-xs leading-snug">
-                    Complete tear-off & structural deck inspection
+                    Complete tear-off, structural deck inspection & disposal
                   </span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="w-3.5 h-3.5 text-crimson shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-crimson shrink-0 mt-0.5" />
                   <span className="text-zinc-700 text-xs leading-snug">
                     Synthetic moisture-barrier underlayment & ice shield
                   </span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="w-3.5 h-3.5 text-crimson shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-crimson shrink-0 mt-0.5" />
                   <span className="text-zinc-700 text-xs leading-snug">
-                    Non-prorated manufacturer warranty & wind guarantee
-                  </span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="w-3.5 h-3.5 text-crimson shrink-0 mt-0.5" />
-                  <span className="text-zinc-700 text-xs leading-snug">
-                    Triple-sweep magnetic nail cleanup around property
+                    Non-prorated manufacturer warranty & magnetic nail cleanup
                   </span>
                 </div>
               </div>
 
-              {/* 1-Click Booking Action */}
-              <div className="pt-1">
+              {/* Primary Call to Action */}
+              <div className="pt-2">
                 <button
                   type="button"
                   onClick={() => setIsBookingOpen(true)}
-                  className="w-full inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white py-3 px-5 rounded-full font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-101 active:scale-98 cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white py-3.5 px-6 rounded-full font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-101 active:scale-98 cursor-pointer"
                 >
-                  <Calendar className="w-4 h-4" /> Book Free Inspection for This Estimate <ArrowRight className="w-4 h-4" />
+                  <Calendar className="w-4 h-4" /> Lock Estimate & Book Free Inspection <ArrowRight className="w-4 h-4" />
                 </button>
-                <p className="text-xs text-zinc-500 font-sans text-center mt-1.5">
+                <p className="text-xs text-zinc-500 font-serif text-center mt-2 leading-relaxed">
                   Zero deposit required &bull; Complimentary on-site diagnostic survey confirms final quote
                 </p>
               </div>
@@ -444,7 +605,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
         </div>
       </section>
 
-      {/* Synchronized Minimal Booking Modal */}
+      {/* Synchronized Apple-Grade Booking Modal */}
       <BookingModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
