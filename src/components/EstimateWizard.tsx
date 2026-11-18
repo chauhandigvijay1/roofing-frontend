@@ -30,29 +30,31 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
     }
   }, [brand.isCommercial]);
 
-  // Authentic Systems with Harmonized Typography Copy
+  // Authentic Systems with Harmonized Typography Copy matching Process.tsx & WhyChooseUs.tsx
   const residentialScopes: ScopeOption[] = [
     {
       title: "Architectural Shingles (50-Yr)",
-      subtitle: "Lifetime GAF Timberline HDZ / Owens Corning Duration",
+      subtitle: "Lifetime GAF Timberline HDZ / Owens Corning Duration systems engineered for severe weather.",
       rate: 4.8,
       warranty: "50-Year Non-Prorated",
     },
     {
       title: "Class 4 Impact Hail Defense",
-      subtitle: "UL 2218 rated shingles with up to 28% insurance discounts",
+      subtitle: "UL 2218 impact-rated shingles qualifying your property for up to 28% insurance discounts.",
       rate: 5.8,
       warranty: "Lifetime Impact",
     },
     {
       title: "Standing Seam Designer Metal",
-      subtitle: "24-gauge concealed fastener architectural steel roofing",
+      subtitle: "24-gauge concealed fastener architectural steel roofing with lifetime 50+ year resilience.",
       rate: 7.8,
       warranty: "50+ Year Lifetime",
     },
     {
-      title: brand.state === "FL" ? "Florida Tile / Hurricane Engineered" : "Designer Shake & Tile System",
-      subtitle: brand.state === "FL" ? "140+ MPH hurricane fastened Spanish clay or concrete tile" : "High-definition composite cedar shake & slate replacement",
+      title: brand.state === "FL" ? "Florida Tile & Hurricane Engineered" : "Designer Shake & Tile System",
+      subtitle: brand.state === "FL"
+        ? "140+ MPH hurricane fastened Spanish clay or concrete tile designed for maximum wind defense."
+        : "High-definition composite cedar shake & slate replacement with authentic dimensional depth.",
       rate: 9.2,
       warranty: "Lifetime Premium",
     },
@@ -61,25 +63,25 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
   const commercialScopes: ScopeOption[] = [
     {
       title: "60-Mil TPO Heat-Welded Membrane",
-      subtitle: "Energy Star reflective cool roof single-ply system",
+      subtitle: "Energy Star reflective cool roof single-ply membrane with high thermal efficiency.",
       rate: 5.2,
       warranty: "20-Year NDL Warranty",
     },
     {
       title: "Seamless Silicone Roof Coating",
-      subtitle: "Liquid-applied monolithic restoration over existing roof",
+      subtitle: "Liquid-applied monolithic restoration barrier over existing deck with 15-20 year leak protection.",
       rate: 4.2,
       warranty: "15-20 Year Leak-Free",
     },
     {
       title: "Multi-Ply Modified Bitumen",
-      subtitle: "Heavy-duty SBS dual-ply system for high foot traffic decks",
+      subtitle: "Heavy-duty dual-ply SBS asphalt system engineered for high foot traffic and mechanical decks.",
       rate: 6.2,
       warranty: "25-Year Commercial",
     },
     {
       title: "Commercial Structural Standing Seam",
-      subtitle: "Heavy-gauge industrial metal for retail & distribution centers",
+      subtitle: "Heavy-gauge industrial metal panels for large facilities, retail centers, and warehouses.",
       rate: 7.6,
       warranty: "30-Year Warranty",
     },
@@ -137,68 +139,68 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
         className={
           isSidebar
             ? "py-8 px-4 bg-stone-50"
-            : "py-20 px-4 sm:px-6 bg-stone-100 border-y border-stone-200"
+            : "py-24 px-4 sm:px-6 bg-stone-100 border-y border-stone-200"
         }
       >
         <div className={isSidebar ? "w-full" : "max-w-7xl mx-auto"}>
-          {/* Section Header with Consistent Typography */}
-          <div className="text-center mb-10">
+          {/* Section Header with Consistent Editorial Typography */}
+          <div className="text-center mb-12">
             <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold">
               Precision Cost Modeling
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-2">
+            <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-2">
               Instant Roof Cost Calculator
             </h2>
-            <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-4"></div>
-            <p className="text-zinc-600 text-sm sm:text-base max-w-2xl mx-auto font-serif">
+            <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-6"></div>
+            <p className="text-zinc-600 text-lg max-w-2xl mx-auto font-serif leading-relaxed">
               {tradeMode === "commercial"
                 ? `Commercial flat roof & single-ply TPO replacement modeling calibrated to facilities across ${brand.city}.`
                 : `Transparent line-item roof replacement modeling calibrated to ${brand.city} municipal building codes.`}
             </p>
 
             {/* Apple-Style Segmented Trade Pill */}
-            <div className="inline-flex items-center p-1 bg-stone-200/90 rounded-full mt-4 shadow-inner border border-stone-300/60">
+            <div className="inline-flex items-center p-1 bg-stone-200/90 rounded-full mt-6 shadow-inner border border-stone-300/60">
               <button
                 type="button"
                 onClick={() => handleTradeModeChange("residential")}
-                className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all cursor-pointer ${
+                className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all cursor-pointer ${
                   tradeMode === "residential"
                     ? "bg-white text-zinc-900 shadow-sm ring-1 ring-black/5"
                     : "text-zinc-600 hover:text-zinc-900"
                 }`}
               >
-                <Home className="w-3.5 h-3.5 text-crimson" /> Residential Replacement
+                <Home className="w-4 h-4 text-crimson" /> Residential Replacement
               </button>
               <button
                 type="button"
                 onClick={() => handleTradeModeChange("commercial")}
-                className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all cursor-pointer ${
+                className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all cursor-pointer ${
                   tradeMode === "commercial"
                     ? "bg-white text-zinc-900 shadow-sm ring-1 ring-black/5"
                     : "text-zinc-600 hover:text-zinc-900"
                 }`}
               >
-                <Building2 className="w-3.5 h-3.5 text-crimson" /> Commercial Flat / TPO
+                <Building2 className="w-4 h-4 text-crimson" /> Commercial Flat / TPO
               </button>
             </div>
           </div>
 
           {/* 2-COLUMN SINGLE-VIEWPORT INTERACTIVE STUDIO */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* LEFT COLUMN: Controls & System Scope (7 Columns) */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-zinc-200/80 space-y-6">
+            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-zinc-200/80 space-y-7">
               {/* Material Selection Grid */}
               <div>
-                <div className="flex items-center justify-between mb-2.5">
-                  <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-sm font-oswald uppercase tracking-wider font-bold text-zinc-900">
                     1. Choose Roof System Material
                   </label>
-                  <span className="text-[11px] text-zinc-500 font-serif">
-                    {tradeMode === "commercial" ? "Commercial Scope" : "Residential Scope"}
+                  <span className="text-xs text-zinc-500 font-sans font-medium">
+                    {tradeMode === "commercial" ? "Commercial Membrane" : "Residential Scope"}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   {currentScopes.map((scope) => {
                     const isSelected = selectedScope === scope.title;
                     return (
@@ -206,33 +208,33 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                         key={scope.title}
                         type="button"
                         onClick={() => setSelectedScope(scope.title)}
-                        className={`text-left p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                        className={`text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
                           isSelected
                             ? "border-crimson bg-crimson/5 shadow-xs ring-1 ring-crimson"
                             : "border-zinc-200 hover:border-zinc-300 bg-stone-50/50"
                         }`}
                       >
                         <div>
-                          <div className="flex items-center justify-between gap-1.5">
-                            <span className="font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm text-zinc-900 truncate">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-oswald uppercase tracking-wider font-bold text-sm text-zinc-900">
                               {scope.title}
                             </span>
                             <span
-                              className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
+                              className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
                                 isSelected ? "border-crimson bg-crimson" : "border-zinc-300 bg-white"
                               }`}
                             >
                               {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                             </span>
                           </div>
-                          <p className="text-[11px] text-zinc-600 font-serif mt-1 leading-snug">
+                          <p className="text-sm text-zinc-600 font-serif leading-relaxed mt-1.5">
                             {scope.subtitle}
                           </p>
                         </div>
 
-                        <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between text-[10px]">
-                          <span className="text-zinc-500 font-serif">Warranty: {scope.warranty}</span>
-                          <span className="font-oswald font-bold text-crimson">~${scope.rate.toFixed(2)}/sq ft</span>
+                        <div className="mt-3 pt-2.5 border-t border-zinc-100 flex items-center justify-between text-xs">
+                          <span className="text-zinc-500 font-sans font-medium">Warranty: {scope.warranty}</span>
+                          <span className="font-oswald font-bold text-crimson text-sm">~${scope.rate.toFixed(2)}/sq ft</span>
                         </div>
                       </button>
                     );
@@ -241,27 +243,27 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
               </div>
 
               {/* Smooth Area Slider */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900 block">
+                    <label className="text-sm font-oswald uppercase tracking-wider font-bold text-zinc-900 block">
                       2. Approximate Roof Footprint
                     </label>
-                    <span className="text-[11px] text-zinc-500 font-serif">
+                    <span className="text-sm text-zinc-600 font-serif">
                       Slide to match estimated surface area
                     </span>
                   </div>
                   <div className="text-right">
-                    <span className="text-xl sm:text-2xl font-oswald font-bold text-crimson">
+                    <span className="text-2xl sm:text-3xl font-oswald font-bold text-crimson">
                       {calculation.sqFt.toLocaleString()} sq ft
                     </span>
-                    <span className="text-[10px] text-zinc-400 font-serif block">
+                    <span className="text-xs text-zinc-400 font-sans font-medium block">
                       ~{calculation.squares} Squares
                     </span>
                   </div>
                 </div>
 
-                <div className="pt-1">
+                <div className="pt-2">
                   <input
                     type="range"
                     min={tradeMode === "commercial" ? 5000 : 1200}
@@ -276,92 +278,107 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                         setResSqFt(val);
                       }
                     }}
-                    className="w-full h-2 bg-stone-200 rounded-full appearance-none cursor-pointer accent-crimson focus:outline-none"
+                    className="w-full h-2.5 bg-stone-200 rounded-full appearance-none cursor-pointer accent-crimson focus:outline-none"
                   />
-                  <div className="flex justify-between text-[10px] font-oswald uppercase tracking-wider text-zinc-400 mt-1 font-mono">
+                  <div className="flex justify-between text-xs font-sans text-zinc-500 font-medium mt-2">
                     <span>{tradeMode === "commercial" ? "5,000 sq ft" : "1,200 sq ft (Cottage)"}</span>
-                    <span>{tradeMode === "commercial" ? "25,000 sq ft" : "3,200 sq ft (Average)"}</span>
+                    <span>{tradeMode === "commercial" ? "25,000 sq ft" : "3,200 sq ft (Average Home)"}</span>
                     <span>{tradeMode === "commercial" ? "50,000 sq ft" : "5,500 sq ft (Estate)"}</span>
                   </div>
                 </div>
               </div>
 
               {/* Incentive Credit Box */}
-              <div className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200/90 flex items-start gap-2.5">
+              <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200/90 flex items-start gap-3">
                 <input
                   type="checkbox"
                   id="incentiveCredit"
                   checked={includeIncentive}
                   onChange={(e) => setIncludeIncentive(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 text-emerald-600 border-zinc-300 rounded focus:ring-emerald-500 cursor-pointer"
+                  className="mt-1 w-4 h-4 text-emerald-600 border-zinc-300 rounded focus:ring-emerald-500 cursor-pointer"
                 />
-                <label htmlFor="incentiveCredit" className="text-xs text-zinc-700 font-serif cursor-pointer">
-                  <strong className="text-emerald-950 block font-oswald uppercase tracking-wider text-xs">
+                <label htmlFor="incentiveCredit" className="text-sm text-zinc-700 font-serif leading-relaxed cursor-pointer">
+                  <strong className="text-emerald-950 block font-oswald uppercase tracking-wider text-sm font-bold">
                     {brand.state === "FL"
                       ? "Apply Florida Wind Mitigation Insurance Deduction (-$850/yr)"
                       : tradeMode === "commercial"
                       ? "Apply Commercial Cool Roof Energy Efficiency Credit"
                       : "Apply Impact-Resistant Class 4 Insurance Deduction (Up to 28%)"}
                   </strong>
-                  <span className="text-[11px] text-zinc-600">
+                  <span className="text-sm text-zinc-600 font-serif leading-relaxed block mt-0.5">
                     {brand.state === "FL"
                       ? "Qualifies property for statutory hurricane tie-down and secondary water barrier insurance discounts."
                       : tradeMode === "commercial"
                       ? "Reflective cool roof solar coatings qualify for commercial energy rebates and reduce cooling loads."
-                      : "Impact-resistant shingles qualify for verified homeowner insurance premium discounts."}
+                      : "Impact-resistant Class 4 shingles qualify for permanent homeowner insurance policy discounts."}
                   </span>
                 </label>
               </div>
             </div>
 
             {/* RIGHT COLUMN: Live Sticky Calculation & Booking Studio (5 Columns) */}
-            <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 shadow-xl border border-zinc-200/90 space-y-5 lg:sticky lg:top-24">
-              <div>
-                <span className="text-[10px] font-oswald uppercase tracking-widest text-crimson font-bold block">
-                  Live Estimated Investment
+            <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-zinc-200/90 space-y-6 lg:sticky lg:top-24">
+              <div className="border-b border-zinc-100 pb-5">
+                <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold block mb-1">
+                  Estimated Investment Range
                 </span>
-                <div className="text-3xl sm:text-4xl font-oswald font-bold text-zinc-950 mt-1">
+                <div className="text-4xl sm:text-5xl font-oswald font-bold text-zinc-950 tracking-tight">
                   ${calculation.low.toLocaleString()} &ndash; ${calculation.high.toLocaleString()}
                 </div>
-                <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-oswald uppercase tracking-wider font-bold">
-                  <span>As Low As ${calculation.monthly}/mo</span>
-                  <span className="text-emerald-600 font-serif normal-case font-normal text-[11px]">(0% Down Available)</span>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-oswald uppercase tracking-wider font-bold">
+                    As Low As ${calculation.monthly}/mo
+                  </span>
+                  <span className="text-xs text-zinc-500 font-serif">
+                    0% Down Available
+                  </span>
                 </div>
               </div>
 
               {/* Selected Scope Summary */}
-              <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200/80 text-xs space-y-1.5 font-serif">
-                <div className="flex justify-between">
-                  <span className="text-zinc-500">System Scope:</span>
-                  <strong className="text-zinc-900 font-oswald uppercase truncate max-w-[180px]">{selectedScope}</strong>
+              <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-2 text-sm font-serif">
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-500">Selected Material</span>
+                  <strong className="text-zinc-900 font-oswald uppercase tracking-wider truncate max-w-[200px]">{selectedScope}</strong>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-zinc-500">Surface Footprint:</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-500">Surface Footprint</span>
                   <strong className="text-zinc-900 font-oswald">{calculation.sqFt.toLocaleString()} sq ft ({calculation.squares} Squares)</strong>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-zinc-500">Service Territory:</span>
-                  <strong className="text-zinc-900 font-oswald">{brand.city}</strong>
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-500">Local Territory</span>
+                  <strong className="text-zinc-900 font-oswald uppercase">{brand.city}</strong>
                 </div>
               </div>
 
-              {/* Inclusions (Matching Why Choose Us Editorial Font) */}
-              <div className="space-y-2 border-t border-zinc-100 pt-3">
-                <div className="flex items-center gap-2 text-xs text-zinc-700 font-serif">
-                  <CheckCircle className="w-4 h-4 text-crimson shrink-0" />
-                  <span>Full tear-off & structural deck inspection</span>
+              {/* Inclusions (Matching Why Choose Us & Process.tsx) */}
+              <div className="space-y-3 py-1">
+                <span className="text-xs font-oswald uppercase tracking-wider text-zinc-400 font-bold block">
+                  Standard Turnkey Inclusions
+                </span>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-crimson shrink-0 mt-0.5" />
+                  <span className="text-zinc-700 text-sm font-serif leading-relaxed">
+                    Complete tear-off & forensic structural deck inspection
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-zinc-700 font-serif">
-                  <CheckCircle className="w-4 h-4 text-crimson shrink-0" />
-                  <span>Synthetic underlayment & ice/water shield</span>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-crimson shrink-0 mt-0.5" />
+                  <span className="text-zinc-700 text-sm font-serif leading-relaxed">
+                    Synthetic moisture-barrier underlayment & ice shield
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-zinc-700 font-serif">
-                  <CheckCircle className="w-4 h-4 text-crimson shrink-0" />
-                  <span>Non-prorated manufacturer warranty</span>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-crimson shrink-0 mt-0.5" />
+                  <span className="text-zinc-700 text-sm font-serif leading-relaxed">
+                    Non-prorated manufacturer warranty & wind guarantee
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-zinc-700 font-serif">
-                  <CheckCircle className="w-4 h-4 text-crimson shrink-0" />
-                  <span>Magnetic nail sweep & clean-up guarantee</span>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-crimson shrink-0 mt-0.5" />
+                  <span className="text-zinc-700 text-sm font-serif leading-relaxed">
+                    Triple-sweep magnetic nail cleanup around property
+                  </span>
                 </div>
               </div>
 
@@ -370,12 +387,12 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                 <button
                   type="button"
                   onClick={() => setIsBookingOpen(true)}
-                  className="w-full inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white py-3.5 px-6 rounded-full font-oswald uppercase tracking-wider font-bold text-xs shadow-md transition-all hover:scale-102 active:scale-98 cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white py-4 px-6 rounded-full font-oswald uppercase tracking-wider font-bold text-sm shadow-md transition-all hover:scale-102 active:scale-98 cursor-pointer"
                 >
-                  <Calendar className="w-4 h-4" /> Book Inspection for This Estimate <ArrowRight className="w-4 h-4" />
+                  <Calendar className="w-4 h-4" /> Book Free Inspection for This Estimate <ArrowRight className="w-4 h-4" />
                 </button>
-                <p className="text-[11px] text-zinc-400 font-serif text-center mt-2">
-                  Zero deposit required • On-site verification confirms final quote
+                <p className="text-xs text-zinc-500 font-serif text-center mt-2.5">
+                  Zero deposit required • Complimentary on-site drone diagnostic survey
                 </p>
               </div>
             </div>

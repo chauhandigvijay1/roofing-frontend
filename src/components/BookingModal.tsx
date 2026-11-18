@@ -237,10 +237,10 @@ export default function BookingModal({
                             <Icon className="w-4 h-4" />
                           </div>
                           <div className="min-w-0">
-                            <p className="text-xs font-oswald uppercase tracking-wider font-bold truncate">
+                            <p className="text-sm font-oswald uppercase tracking-wider font-bold truncate">
                               {s.title}
                             </p>
-                            <p className="text-[11px] text-zinc-500 font-serif">{s.tag}</p>
+                            <p className="text-xs text-zinc-500 font-sans font-medium">{s.tag}</p>
                           </div>
                         </div>
                         <div
@@ -297,10 +297,10 @@ export default function BookingModal({
               {/* Arrival Window */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800">
+                  <label className="text-sm font-oswald uppercase tracking-wider font-bold text-zinc-800">
                     3. Arrival Window
                   </label>
-                  <span className="text-[10px] text-zinc-400 font-serif">
+                  <span className="text-xs text-zinc-500 font-sans">
                     Live dispatch window
                   </span>
                 </div>
@@ -321,8 +321,8 @@ export default function BookingModal({
                         <p className="text-xs font-oswald uppercase tracking-wider font-bold">
                           {slot.label}
                         </p>
-                        <p className="text-[10px] text-zinc-500 font-serif mt-0.5">{slot.time}</p>
-                        <span className="text-[9px] text-emerald-600 font-mono font-medium block mt-0.5">
+                        <p className="text-xs text-zinc-500 font-sans mt-0.5">{slot.time}</p>
+                        <span className="text-[10px] text-emerald-600 font-sans font-medium block mt-0.5">
                           ✓ Open Slot
                         </span>
                       </button>
@@ -431,7 +431,7 @@ export default function BookingModal({
                 </div>
               </div>
 
-              <div className="text-[11px] text-zinc-500 font-serif text-center pt-1">
+              <div className="text-xs text-zinc-600 font-serif text-center pt-1 leading-relaxed">
                 Zero deposit required • 100% Free written estimate • Direct technician dispatch
               </div>
 
@@ -468,7 +468,7 @@ export default function BookingModal({
               </motion.div>
 
               <div>
-                <span className="text-[10px] font-oswald uppercase tracking-widest text-emerald-700 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                <span className="text-xs font-oswald uppercase tracking-widest text-emerald-700 font-bold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
                   Confirmed & Dispatched
                 </span>
                 <h3 className="text-xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-2">
@@ -482,7 +482,7 @@ export default function BookingModal({
               <div className="bg-stone-50 border border-stone-200 rounded-2xl p-4 text-xs space-y-2 text-left max-w-sm mx-auto">
                 <div className="flex justify-between">
                   <span className="text-zinc-500 font-serif">Scope:</span>
-                  <strong className="text-zinc-900 font-oswald">{selectedService}</strong>
+                  <strong className="text-zinc-900 font-oswald uppercase">{selectedService}</strong>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-500 font-serif">Arrival:</span>
@@ -496,7 +496,7 @@ export default function BookingModal({
                     {address}
                   </strong>
                 </div>
-                <div className="pt-2 border-t border-stone-200/80 text-[11px] text-emerald-700 flex items-center gap-1.5 font-medium">
+                <div className="pt-2 border-t border-stone-200/80 text-xs text-emerald-700 flex items-center gap-1.5 font-sans font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                   <span>Synced in {brand.name} Master Calendar & SMS Dispatched</span>
                 </div>
