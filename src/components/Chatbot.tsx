@@ -258,23 +258,26 @@ export default function Chatbot() {
             />
 
             {/* Header: Assistant Info & Controls */}
-            <div className="shrink-0 flex items-center justify-between px-4 sm:px-5 py-3 border-b border-zinc-200 bg-white/80 backdrop-blur-md">
-              <div className="flex items-center gap-2.5 min-w-0 pr-2">
+            <div className="shrink-0 flex items-center justify-between px-3.5 sm:px-4 py-2.5 sm:py-3 border-b border-zinc-200 bg-white/90 backdrop-blur-md">
+              <div className="flex items-center gap-2.5 min-w-0 flex-1 pr-1.5">
                 <div className="w-8 h-8 rounded-full bg-crimson text-white flex items-center justify-center shadow-md shrink-0">
                   <MessageCircle className="w-4 h-4" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-zinc-950 font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm leading-tight line-clamp-2">
+                  <h3
+                    className="text-zinc-950 font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm leading-tight line-clamp-2"
+                    title={brand.name}
+                  >
                     {brand.name || "Roofing Concierge"}
                   </h3>
-                  {brand.licenseNumber ? (
+                  {brand.licenseNumber && /^(?:#|[A-Z]{2,4}\s*[-#]?\s*\d|\d)/i.test(brand.licenseNumber.trim()) ? (
                     <span className="text-[11px] text-zinc-500 font-sans font-medium block truncate mt-0.5">
-                      Lic: #{brand.licenseNumber} &bull; Serving {brand.city}
+                      Lic #{brand.licenseNumber.replace(/^#/, "")} &bull; Serving {brand.city}
                     </span>
                   ) : (
                     <span className="text-[11px] text-emerald-700 font-sans font-medium flex items-center gap-1.5 mt-0.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                      <span className="truncate">Serving {brand.city} &bull; 24/7 Verified</span>
+                      <span className="truncate">Active Dispatch &bull; {brand.city}</span>
                     </span>
                   )}
                 </div>

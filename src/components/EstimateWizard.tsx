@@ -204,7 +204,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                   <label className="text-xs sm:text-sm font-oswald uppercase tracking-wider font-bold text-zinc-900">
                     1. Choose Roof System Material
                   </label>
-                  <span className="text-xs text-zinc-500 font-serif">
+                  <span className="text-xs text-zinc-500 font-sans">
                     {tradeMode === "commercial" ? "Commercial Scope" : "Residential Scope"}
                   </span>
                 </div>
@@ -236,14 +236,14 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                               {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                             </span>
                           </div>
-                          <p className="text-[11px] text-zinc-600 font-serif leading-relaxed mt-1 line-clamp-2">
+                          <p className="text-xs text-zinc-600 font-sans leading-normal mt-1 line-clamp-2">
                             {scope.subtitle}
                           </p>
                         </div>
 
-                        <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between gap-2 text-[11px]">
-                          <span className="text-zinc-500 font-serif whitespace-nowrap">
-                            Warranty: <strong className="font-sans font-medium text-zinc-700">{scope.warranty}</strong>
+                        <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between gap-2 text-xs font-sans">
+                          <span className="text-zinc-500 whitespace-nowrap">
+                            Warranty: <strong className="font-sans font-semibold text-zinc-700">{scope.warranty}</strong>
                           </span>
                           <span className="font-oswald font-bold text-crimson text-xs whitespace-nowrap shrink-0">
                             ~${scope.rate.toFixed(2)}/sq ft
@@ -262,7 +262,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                     <label className="text-xs sm:text-sm font-oswald uppercase tracking-wider font-bold text-zinc-900 block">
                       2. Approximate Roof Footprint
                     </label>
-                    <span className="text-[11px] text-zinc-500 font-serif block">
+                    <span className="text-xs text-zinc-500 font-sans block">
                       Slide to match estimated surface area
                     </span>
                   </div>
@@ -270,7 +270,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                     <span className="text-xl sm:text-2xl font-oswald font-bold text-crimson">
                       {calculation.sqFt.toLocaleString()} sq ft
                     </span>
-                    <span className="text-[11px] text-zinc-500 font-serif block">
+                    <span className="text-xs text-zinc-500 font-sans block">
                       ~{calculation.squares} Squares
                     </span>
                   </div>
@@ -293,7 +293,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                     }}
                     className="w-full h-2 bg-stone-200 rounded-full appearance-none cursor-pointer accent-crimson focus:outline-none"
                   />
-                  <div className="flex justify-between text-[11px] font-serif text-zinc-500 mt-1">
+                  <div className="flex justify-between text-xs font-sans text-zinc-500 mt-1">
                     <span>{tradeMode === "commercial" ? "5,000 sq ft" : "1,200 sq ft (Cottage)"}</span>
                     <span>{tradeMode === "commercial" ? "25,000 sq ft" : "3,200 sq ft (Average Home)"}</span>
                     <span>{tradeMode === "commercial" ? "50,000 sq ft" : "5,500 sq ft (Estate)"}</span>
@@ -316,7 +316,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                   onChange={(e) => setIncludeIncentive(e.target.checked)}
                   className="mt-0.5 w-4 h-4 text-emerald-600 border-zinc-300 rounded focus:ring-emerald-500 cursor-pointer shrink-0"
                 />
-                <label htmlFor="incentiveCredit" className="text-xs text-zinc-700 font-serif leading-relaxed cursor-pointer flex-1">
+                <label htmlFor="incentiveCredit" className="text-xs text-zinc-700 font-sans leading-relaxed cursor-pointer flex-1">
                   <div className="flex flex-wrap items-center justify-between gap-1">
                     <strong className="text-emerald-950 font-oswald uppercase tracking-wider text-xs sm:text-sm font-bold">
                       {brand.state === "FL"
@@ -337,7 +337,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                         : `Save ~$${calculation.incentiveAmount.toLocaleString()}`}
                     </span>
                   </div>
-                  <span className="text-[11px] text-zinc-600 font-serif leading-relaxed block mt-0.5">
+                  <span className="text-xs text-zinc-600 font-sans leading-relaxed block mt-0.5">
                     {brand.state === "FL"
                       ? "Qualifies property for statutory hurricane tie-down and secondary water barrier insurance discounts."
                       : tradeMode === "commercial"
@@ -374,49 +374,49 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
               </div>
 
               {/* Selected Scope Summary */}
-              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 space-y-1.5 text-xs">
+              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 space-y-1.5 text-xs font-sans">
                 <div className="flex justify-between items-center">
-                  <span className="text-zinc-600 font-serif">Selected Scope</span>
-                  <strong className="text-zinc-900 font-serif font-bold truncate max-w-[190px]">{selectedScope}</strong>
+                  <span className="text-zinc-600">Selected Scope</span>
+                  <strong className="text-zinc-900 font-semibold truncate max-w-[190px]">{selectedScope}</strong>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-zinc-600 font-serif">Surface Footprint</span>
-                  <strong className="text-zinc-900 font-serif font-bold">{calculation.sqFt.toLocaleString()} sq ft ({calculation.squares} Squares)</strong>
+                  <span className="text-zinc-600">Surface Footprint</span>
+                  <strong className="text-zinc-900 font-semibold">{calculation.sqFt.toLocaleString()} sq ft ({calculation.squares} Squares)</strong>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-zinc-600 font-serif">Service Territory</span>
-                  <strong className="text-zinc-900 font-serif font-bold">
+                  <span className="text-zinc-600">Service Territory</span>
+                  <strong className="text-zinc-900 font-semibold">
                     {brand.city.includes(brand.state) ? brand.city : `${brand.city}, ${brand.state}`}
                   </strong>
                 </div>
               </div>
 
               {/* Inclusions (Matching Why Choose Us & Process.tsx) */}
-              <div className="space-y-1.5 py-0.5">
+              <div className="space-y-1.5 py-0.5 font-sans">
                 <span className="text-[10px] font-oswald uppercase tracking-wider text-zinc-400 font-bold block">
                   Standard Turnkey Inclusions
                 </span>
                 <div className="flex items-start gap-2">
                   <CheckCircle className="w-3.5 h-3.5 text-crimson shrink-0 mt-0.5" />
-                  <span className="text-zinc-700 text-xs font-serif leading-snug">
+                  <span className="text-zinc-700 text-xs leading-snug">
                     Complete tear-off & forensic structural deck inspection
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle className="w-3.5 h-3.5 text-crimson shrink-0 mt-0.5" />
-                  <span className="text-zinc-700 text-xs font-serif leading-snug">
+                  <span className="text-zinc-700 text-xs leading-snug">
                     Synthetic moisture-barrier underlayment & ice shield
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle className="w-3.5 h-3.5 text-crimson shrink-0 mt-0.5" />
-                  <span className="text-zinc-700 text-xs font-serif leading-snug">
+                  <span className="text-zinc-700 text-xs leading-snug">
                     Non-prorated manufacturer warranty & wind guarantee
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle className="w-3.5 h-3.5 text-crimson shrink-0 mt-0.5" />
-                  <span className="text-zinc-700 text-xs font-serif leading-snug">
+                  <span className="text-zinc-700 text-xs leading-snug">
                     Triple-sweep magnetic nail cleanup around property
                   </span>
                 </div>
@@ -431,7 +431,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                 >
                   <Calendar className="w-4 h-4" /> Book Free Inspection for This Estimate <ArrowRight className="w-4 h-4" />
                 </button>
-                <p className="text-[11px] text-zinc-500 font-serif text-center mt-1.5">
+                <p className="text-xs text-zinc-500 font-sans text-center mt-1.5">
                   Zero deposit required &bull; Complimentary on-site diagnostic survey confirms final quote
                 </p>
               </div>

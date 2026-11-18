@@ -156,7 +156,7 @@ export default function Testimonials() {
               </span>
             </div>
 
-            <div className="hidden md:flex items-center gap-4 text-xs font-serif text-zinc-600 px-2">
+            <div className="hidden md:flex items-center gap-4 text-xs font-sans text-zinc-600 px-2">
               <span className="flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> 100% On-Time Completion
               </span>
@@ -262,7 +262,7 @@ export default function Testimonials() {
                       <div className="font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm text-zinc-900 leading-tight">
                         {r.author}
                       </div>
-                      <div className="text-[11px] text-zinc-500 font-serif">
+                      <div className="text-[11px] text-zinc-500 font-sans">
                         {r.location}
                       </div>
                     </div>
@@ -272,7 +272,7 @@ export default function Testimonials() {
                     <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-sans font-medium">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Verified
                     </div>
-                    <div className="text-[10px] text-zinc-400 font-serif">
+                    <div className="text-[10px] text-zinc-400 font-sans">
                       {r.timeAgo}
                     </div>
                   </div>

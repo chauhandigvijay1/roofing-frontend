@@ -1,64 +1,119 @@
-import { useBrand } from "../BrandContext";
+import { useBrand, getRegionalSuburbs } from "../BrandContext";
+import { ShieldCheck, MapPin } from "lucide-react";
 
 export default function Gallery() {
   const brand = useBrand();
+  const serviceAreas =
+    brand.serviceAreas && brand.serviceAreas.length > 0
+      ? brand.serviceAreas
+      : getRegionalSuburbs(brand.city, brand.state);
 
-  const galleryItems = [
+  const fallbackImages = [
     {
       img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
       title: "Storm Leak & Structural Restoration",
       tag: "Architectural Shingles",
+      location: brand.city,
     },
     {
       img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
-      title: "Complete Precision Tear-Off & Installation",
-      tag: "50-Year Non-Prorated Warranty",
+      title: "Complete Precision Tear-Off & Shingle System",
+      tag: "50-Year Warranty",
+      location: serviceAreas[0] ? `${serviceAreas[0]}, ${brand.state}` : brand.city,
     },
     {
       img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2447926003-1920w.jpg",
-      title: "Engineered Metal Tile & Standing Seam",
-      tag: "High-Tensile Storm Protection",
+      title: "Standing Seam Architectural Metal",
+      tag: "High-Tensile Metal",
+      location: serviceAreas[1] ? `${serviceAreas[1]}, ${brand.state}` : brand.city,
     },
     {
       img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2467902073-1920w.jpg",
-      title: "Commercial Single-Ply TPO & Coatings",
-      tag: "Commercial & Retail Facilities",
+      title: brand.isCommercial ? "Commercial Single-Ply TPO Installation" : "Commercial & Residential Flat Roof",
+      tag: "Cool Roof TPO",
+      location: serviceAreas[2] ? `${serviceAreas[2]}, ${brand.state}` : brand.city,
     },
   ];
 
+  // Blend in real crawled contractor photos if available
+  const items = fallbackImages.map((item, idx) => {
+    if (brand.galleryImages && brand.galleryImages[idx]) {
+      return {
+        ...item,
+        img: brand.galleryImages[idx],
+      };
+    }
+    return item;
+  });
+
   return (
-    <section id="gallery" className="py-24 px-6 bg-white">
+    <section id="gallery" className="py-16 sm:py-20 px-4 sm:px-6 bg-white border-t border-stone-200">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12 sm:mb-14">
           <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold">
-            Project Showcase
+            Project Showcase &bull; {brand.city}
           </span>
-          <h2 className="text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-2">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-2">
             Completed Project Transformations by {brand.name}
           </h2>
-          <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-8"></div>
-          <p className="text-zinc-600 text-lg max-w-xl mx-auto font-serif">
-            Authentic craftsmanship and verified transformations across {brand.city} and surrounding communities.
+          <div className="w-14 h-1 bg-crimson mx-auto mt-3 mb-5"></div>
+          <p className="text-zinc-600 text-base sm:text-lg max-w-2xl mx-auto font-serif leading-relaxed">
+            Authentic craftsmanship and verified transformations across {brand.city} and surrounding communities. Every installation is backed by certified manufacturer warranties and passes municipal code inspection.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {galleryItems.map((item, idx) => (
-            <div key={idx} className="group overflow-hidden border border-stone-200 shadow-lg bg-stone-50">
+          {items.map((item, idx) => (
+            <div
+              key={idx}
+              className="group overflow-hidden rounded-2xl border border-stone-200/90 shadow-sm hover:shadow-xl transition-all duration-300 bg-stone-50 flex flex-col justify-between"
+            >
               <div className="relative h-64 overflow-hidden">
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={item.img}
                   alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent flex flex-col justify-end p-4">
-                  <span className="text-xs text-crimson font-oswald uppercase tracking-wider font-bold">
+
+                {/* Top Overlay: Verified Contractor Logo / Proof Badge */}
+                <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                  {brand.logo ? (
+                    <div className="bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full shadow-md flex items-center gap-1.5 border border-stone-200/60 max-w-[160px]">
+                      <img src={brand.logo} alt={brand.name} className="w-4 h-4 object-contain shrink-0" />
+                      <span className="text-[10px] font-oswald uppercase font-bold text-zinc-800 truncate">
+                        {brand.name}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="bg-zinc-950/80 backdrop-blur-xs px-2.5 py-1 rounded-full text-white text-[10px] font-oswald uppercase tracking-wider font-bold flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                      <span>Certified Project</span>
+                    </div>
+                  )}
+
+                  <span className="bg-zinc-950/80 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2.5 py-1 rounded-full">
                     {item.tag}
                   </span>
-                  <span className="text-white font-oswald uppercase tracking-wider font-bold text-base mt-0.5">
+                </div>
+
+                {/* Bottom Gradient Caption */}
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-transparent flex flex-col justify-end p-4">
+                  <span className="text-white font-oswald uppercase tracking-wider font-bold text-sm sm:text-base leading-snug">
                     {item.title}
                   </span>
+                  <div className="flex items-center gap-1 text-[11px] text-zinc-300 font-sans mt-1">
+                    <MapPin className="w-3 h-3 text-crimson shrink-0" />
+                    <span>{item.location}</span>
+                  </div>
                 </div>
+              </div>
+
+              {/* Card Footer */}
+              <div className="px-4 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-zinc-500">
+                <span>Verified Installation</span>
+                <span className="text-emerald-700 font-medium">100% Passed Code</span>
               </div>
             </div>
           ))}

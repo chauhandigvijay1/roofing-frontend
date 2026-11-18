@@ -9,7 +9,7 @@ export default function Portfolio() {
       ? brand.serviceAreas
       : getRegionalSuburbs(brand.city, brand.state);
 
-  const projects = [
+  const defaultProjects = [
     {
       title: "Architectural Shingle Replacement",
       location: brand.city,
@@ -47,6 +47,18 @@ export default function Portfolio() {
       scope: "UL 2218 Insurance Qualified",
     },
   ];
+
+  // Blend in contractor's authentic jobsite drone / field imagery if crawled from domain
+  const projects = defaultProjects.map((p, idx) => {
+    if (brand.galleryImages && brand.galleryImages[idx]) {
+      return {
+        ...p,
+        img: brand.galleryImages[idx],
+        isCrawled: true,
+      };
+    }
+    return { ...p, isCrawled: false };
+  });
 
   return (
     <section className="pt-36 pb-24 px-6 bg-stone-50 min-h-screen">
@@ -90,22 +102,28 @@ export default function Portfolio() {
                   <span className="absolute top-3 right-3 bg-zinc-950/80 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2.5 py-1 rounded-full">
                     {p.scope}
                   </span>
+                  {p.isCrawled && (
+                    <span className="absolute bottom-3 left-3 bg-zinc-950/85 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-md flex items-center gap-1 border border-white/10 shadow-xs">
+                      <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                      Field Jobsite Photo &bull; {brand.name}
+                    </span>
+                  )}
                 </div>
                 <div className="p-6">
                   <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-1.5">
                     {p.title}
                   </h3>
-                  <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-serif mb-2">
+                  <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-sans mb-1.5">
                     <MapPin className="w-3.5 h-3.5 text-crimson shrink-0" />
                     <span>{p.location}</span>
                   </div>
-                  <p className="text-xs text-zinc-400 font-serif">
+                  <p className="text-xs text-zinc-400 font-sans">
                     Turnkey project certified by {brand.name}
                   </p>
                 </div>
               </div>
 
-              <div className="px-6 pb-5 pt-2 border-t border-stone-100 flex items-center justify-between text-xs font-serif text-emerald-700">
+              <div className="px-6 pb-5 pt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-emerald-700">
                 <span className="flex items-center gap-1 font-medium">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Manufacturer Warranty
                 </span>

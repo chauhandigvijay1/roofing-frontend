@@ -27,6 +27,13 @@ export interface Brand {
     project?: string;
     timeAgo?: string;
   }>;
+  galleryImages?: string[];
+  structuredServices?: Array<{
+    title: string;
+    slug: string;
+    desc: string;
+    archetype?: string;
+  }>;
   isCommercial?: boolean;
 }
 
@@ -293,6 +300,8 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           services: data.services && data.services.length > 0 ? data.services : prev.services,
           serviceAreas: data.serviceAreas && data.serviceAreas.length > 0 ? data.serviceAreas : prev.serviceAreas,
           reviews: data.reviews && data.reviews.length > 0 ? data.reviews : prev.reviews,
+          galleryImages: data.galleryImages && data.galleryImages.length > 0 ? data.galleryImages : prev.galleryImages,
+          structuredServices: data.structuredServices && data.structuredServices.length > 0 ? data.structuredServices : prev.structuredServices,
           isCommercial: prev.isCommercial || Boolean(data.isCommercial),
         }));
       } catch (err) {
