@@ -1,10 +1,13 @@
 import { type ReactNode } from "react";
-import { Calendar, ShieldCheck, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight, Calculator, Phone } from "lucide-react";
 
 interface FormattedMessageProps {
   content: string;
   isUser: boolean;
   onBookClick?: () => void;
+  onCalcClick?: () => void;
+  brandPhone?: string;
+  brandName?: string;
 }
 
 // Parses inline bold (**text**), italics (*text*), and links ([text](url))
@@ -62,13 +65,19 @@ export default function FormattedMessage({
   content,
   isUser,
   onBookClick,
+  onCalcClick,
+  brandPhone,
+  brandName,
 }: FormattedMessageProps) {
   if (isUser) {
     return <span className="whitespace-pre-wrap">{content}</span>;
   }
 
+  // Strip action markers from the readable message
+  const cleanContent = content.replace(/\[ACTION:(BOOK|CALC|CALL)\]/g, "").trim();
+
   // Pre-process content: normalize line endings
-  const rawLines = content.replace(/\r\n/g, "\n").split("\n");
+  const rawLines = cleanContent.replace(/\r\n/g, "\n").split("\n");
 
   const nodes: ReactNode[] = [];
   let i = 0;
@@ -208,53 +217,84 @@ export default function FormattedMessage({
     i++;
   }
 
-  // Detect conversion handoff or general booking intent
+  // Detect action triggers and lead qualification states
   const lowerContent = content.toLowerCase();
   const isHandoff =
+    content.includes("[ACTION:BOOK]") ||
     lowerContent.includes("priority scheduling") ||
     lowerContent.includes("unlocked priority") ||
     lowerContent.includes("conversion_handoff");
 
+  const hasCalcAction = content.includes("[ACTION:CALC]");
+  const hasCallAction = content.includes("[ACTION:CALL]") || (lowerContent.includes("active leak") && lowerContent.includes("call"));
+
   const hasBookingIntent =
-    isHandoff ||
-    lowerContent.includes("schedule") ||
-    lowerContent.includes("appointment") ||
-    lowerContent.includes("inspection") ||
-    lowerContent.includes("reserve") ||
-    lowerContent.includes("slot");
+    !isHandoff &&
+    (lowerContent.includes("schedule") ||
+      lowerContent.includes("appointment") ||
+      lowerContent.includes("inspection") ||
+      lowerContent.includes("reserve a slot"));
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       {nodes}
 
-      {/* Conversion Handoff Card or 1-Click Action Chip */}
-      {isHandoff && onBookClick ? (
-        <div className="mt-3 p-3.5 bg-zinc-950 text-white rounded-xl shadow-lg border border-red-500/30 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-oswald uppercase tracking-wider font-bold text-crimson">
-            <ShieldCheck className="w-4 h-4 text-crimson" /> VIP Inspection Handoff
+      {/* 1. VIP Inspection Booking Action Card */}
+      {(isHandoff || hasBookingIntent) && onBookClick && (
+        <div className="mt-2.5 p-3.5 bg-stone-50 border border-crimson/30 rounded-xl shadow-xs space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-oswald uppercase tracking-wider font-bold text-crimson">
+            <Calendar className="w-3.5 h-3.5 text-crimson" /> Free 21-Point On-Site Inspection
           </div>
-          <p className="text-xs text-zinc-300 font-serif leading-relaxed">
-            Your inquiry is pre-qualified. Select your preferred morning or afternoon window to reserve on-site dispatch.
+          <p className="text-xs text-zinc-600 font-serif leading-snug">
+            Complimentary drone roof scan & forensic attic survey backed by {brandName || "our certified team"}. Zero deposit required.
           </p>
           <button
             type="button"
             onClick={onBookClick}
-            className="w-full inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-4 py-2.5 rounded-lg text-xs font-oswald uppercase tracking-wider font-bold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+            className="w-full inline-flex items-center justify-center gap-1.5 bg-crimson hover:bg-crimson-dark text-white py-2 px-3 rounded-lg text-xs font-oswald uppercase tracking-wider font-bold shadow-xs hover:scale-[1.01] active:scale-[0.98] transition-all cursor-pointer"
           >
-            <Calendar className="w-3.5 h-3.5" /> Lock Priority Inspection Slot <ArrowRight className="w-3 h-3" />
+            <span>Select Priority Time Window</span>
+            <ArrowRight className="w-3 h-3" />
           </button>
         </div>
-      ) : hasBookingIntent && onBookClick ? (
-        <div className="pt-2">
+      )}
+
+      {/* 2. Instant Roof Calculator Action Card */}
+      {hasCalcAction && onCalcClick && (
+        <div className="mt-2.5 p-3.5 bg-stone-50 border border-stone-200 rounded-xl shadow-xs space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900">
+            <Calculator className="w-3.5 h-3.5 text-crimson" /> Instant Cost Modeling Studio
+          </div>
+          <p className="text-xs text-zinc-600 font-serif leading-snug">
+            Slide to your approximate roof footprint to see live turnkey pricing for shingles, metal, or commercial TPO.
+          </p>
           <button
             type="button"
-            onClick={onBookClick}
-            className="inline-flex items-center gap-1.5 bg-crimson hover:bg-crimson-dark text-white px-3 py-1.5 rounded-lg text-xs font-oswald uppercase tracking-wider font-bold shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
+            onClick={onCalcClick}
+            className="w-full inline-flex items-center justify-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 text-white py-2 px-3 rounded-lg text-xs font-oswald uppercase tracking-wider font-bold shadow-xs hover:scale-[1.01] active:scale-[0.98] transition-all cursor-pointer"
           >
-            <Calendar className="w-3.5 h-3.5" /> Book Inspection Online
+            <Calculator className="w-3 h-3" /> Launch Quick Calculator &rarr;
           </button>
         </div>
-      ) : null}
+      )}
+
+      {/* 3. Emergency Dispatch Hotline Action Card */}
+      {hasCallAction && brandPhone && (
+        <div className="mt-2.5 p-3.5 bg-red-50/80 border border-red-200 rounded-xl shadow-xs space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-oswald uppercase tracking-wider font-bold text-red-900">
+            <Phone className="w-3.5 h-3.5 text-red-600" /> Emergency Rapid Dispatch Hotline
+          </div>
+          <p className="text-xs text-zinc-700 font-serif leading-snug">
+            Water dripping or severe storm breach? Our on-call superintendent provides immediate leak tarping & diagnostic response.
+          </p>
+          <a
+            href={`tel:${brandPhone}`}
+            className="w-full inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white py-2 px-3 rounded-lg text-xs font-oswald uppercase tracking-wider font-bold shadow-xs transition-all cursor-pointer"
+          >
+            <Phone className="w-3 h-3" /> Call Dispatch Desk: {brandPhone}
+          </a>
+        </div>
+      )}
     </div>
   );
 }

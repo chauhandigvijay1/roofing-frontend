@@ -51,10 +51,10 @@ export default function Chatbot() {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const initialMessage = brand.isCommercial
-    ? `Do you need a free commercial flat roof or TPO evaluation in ${brand.city}?`
+    ? `Welcome to ${brand.name}! Are you looking for a commercial flat roof evaluation or single-ply TPO estimate in ${brand.city}?`
     : brand.state === "FL"
-    ? `Do you need a free Florida wind mitigation or storm damage roof inspection in ${brand.city}?`
-    : `Do you need a free 21-point roof inspection or storm estimate in ${brand.city}?`;
+    ? `Welcome to ${brand.name}! Do you need an emergency storm damage inspection or Florida wind mitigation evaluation in ${brand.city}?`
+    : `Welcome to ${brand.name}! Are you dealing with an active roof leak, or planning a replacement estimate in ${brand.city}?`;
 
   useEffect(() => {
     const timer = setTimeout(() => setOpen(true), 2000);
@@ -492,22 +492,22 @@ export default function Chatbot() {
                             setBookingService(undefined);
                             setIsBookingOpen(true);
                           }}
-                          className="inline-flex items-center gap-1 bg-crimson text-white px-2.5 py-1 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs hover:bg-crimson-dark cursor-pointer"
+                          className="inline-flex items-center gap-1 bg-crimson text-white px-3 py-1.5 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs hover:bg-crimson-dark cursor-pointer"
                         >
-                          <Calendar className="w-3 h-3" /> Book Online
+                          <Calendar className="w-3 h-3" /> Book Free Inspection
                         </button>
                         <button
                           type="button"
-                          onClick={() => sendMessage("What are your estimated roof replacement prices in " + brand.city + "?")}
-                          className="inline-flex items-center gap-1 bg-white border border-stone-300 hover:border-stone-400 text-zinc-800 px-2.5 py-1 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs cursor-pointer"
+                          onClick={() => setViewMode("calculator")}
+                          className="inline-flex items-center gap-1 bg-white border border-stone-300 hover:border-stone-400 text-zinc-850 px-3 py-1.5 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs cursor-pointer"
                         >
-                          Pricing Guide
+                          <Calculator className="w-3 h-3 text-crimson" /> Instant Calculator
                         </button>
                         <a
                           href={`tel:${brand.phone}`}
-                          className="inline-flex items-center gap-1 bg-white border border-stone-300 hover:border-stone-400 text-zinc-800 px-2.5 py-1 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs"
+                          className="inline-flex items-center gap-1 bg-white border border-stone-300 hover:border-stone-400 text-zinc-850 px-3 py-1.5 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs"
                         >
-                          <Phone className="w-3 h-3" /> Call
+                          <Phone className="w-3 h-3 text-emerald-600" /> Call {brand.phone}
                         </a>
                       </div>
                     </div>
@@ -560,6 +560,9 @@ export default function Chatbot() {
                             setBookingService(undefined);
                             setIsBookingOpen(true);
                           }}
+                          onCalcClick={() => setViewMode("calculator")}
+                          brandPhone={brand.phone}
+                          brandName={brand.name}
                         />
                       </div>
                     </div>
