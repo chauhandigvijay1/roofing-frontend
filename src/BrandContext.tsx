@@ -19,6 +19,14 @@ export interface Brand {
   yearsInBusiness?: number;
   services?: string[];
   serviceAreas?: string[];
+  reviews?: Array<{
+    author: string;
+    text: string;
+    rating?: number;
+    location?: string;
+    project?: string;
+    timeAgo?: string;
+  }>;
   isCommercial?: boolean;
 }
 
@@ -284,6 +292,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           yearsInBusiness: rawYears ? prev.yearsInBusiness : data.yearsInBusiness || prev.yearsInBusiness,
           services: data.services && data.services.length > 0 ? data.services : prev.services,
           serviceAreas: data.serviceAreas && data.serviceAreas.length > 0 ? data.serviceAreas : prev.serviceAreas,
+          reviews: data.reviews && data.reviews.length > 0 ? data.reviews : prev.reviews,
           isCommercial: prev.isCommercial || Boolean(data.isCommercial),
         }));
       } catch (err) {
