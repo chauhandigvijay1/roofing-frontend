@@ -20,6 +20,7 @@ function App() {
             <Route path="financing" element={<Financing />} />
             <Route path="locations" element={<Locations />} />
             <Route path="book" element={<Book />} />
+            <Route path=":slug" element={<Home />} />
           </Route>
         </Routes>
       </BrowserRouter>

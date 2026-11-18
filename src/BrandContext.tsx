@@ -200,6 +200,97 @@ const defaultBrand: Brand = {
   isCommercial: false,
 };
 
+const VERIFIED_DIRECTORY: Record<string, Partial<Brand>> = {
+  "worleybyrd": {
+    name: "WorleyByrd Roofing & Restoration",
+    domain: "worleybyrdroofing.com",
+    founderName: "Nathan Worley",
+    founderTitle: "Founder & Managing Partner",
+    phone: "(512) 216-8202",
+    email: "Amber.Fowler@WorleyByrdRoofing.com",
+    city: "Austin, TX",
+    state: "TX",
+    isCommercial: true,
+  },
+  "worleybyrdroofing.com": {
+    name: "WorleyByrd Roofing & Restoration",
+    domain: "worleybyrdroofing.com",
+    founderName: "Nathan Worley",
+    founderTitle: "Founder & Managing Partner",
+    phone: "(512) 216-8202",
+    email: "Amber.Fowler@WorleyByrdRoofing.com",
+    city: "Austin, TX",
+    state: "TX",
+    isCommercial: true,
+  },
+  "roofsonly": {
+    name: "RoofsOnly.com",
+    domain: "roofsonly.com",
+    founderName: "Jake Mullin",
+    founderTitle: "Co-Founder and CEO",
+    phone: "+1 817-994-7087",
+    email: "jake@roofsonly.com",
+    city: "Austin, TX",
+    state: "TX",
+    isCommercial: true,
+  },
+  "roofsonly.com": {
+    name: "RoofsOnly.com",
+    domain: "roofsonly.com",
+    founderName: "Jake Mullin",
+    founderTitle: "Co-Founder and CEO",
+    phone: "+1 817-994-7087",
+    email: "jake@roofsonly.com",
+    city: "Austin, TX",
+    state: "TX",
+    isCommercial: true,
+  },
+  "spcroofs": {
+    name: "SPC Construction & Roofing",
+    domain: "spcroofs.com",
+    founderName: "Jonathan Shaw",
+    founderTitle: "CEO/President",
+    phone: "+1 817-505-7957",
+    email: "jshaw@spcgc.com",
+    city: "Grapevine, TX",
+    state: "TX",
+    isCommercial: true,
+  },
+  "spcroofs.com": {
+    name: "SPC Construction & Roofing",
+    domain: "spcroofs.com",
+    founderName: "Jonathan Shaw",
+    founderTitle: "CEO/President",
+    phone: "+1 817-505-7957",
+    email: "jshaw@spcgc.com",
+    city: "Grapevine, TX",
+    state: "TX",
+    isCommercial: true,
+  },
+  "occidentalroofing": {
+    name: "Occidental Roofing",
+    domain: "occidentalroofing.com",
+    founderName: "Fernando Moreno",
+    founderTitle: "Founder & CEO",
+    phone: "+1 480-662-0430",
+    email: "fer@occidentalroofing.com",
+    city: "Tempe, AZ",
+    state: "AZ",
+    isCommercial: true,
+  },
+  "occidentalroofing.com": {
+    name: "Occidental Roofing",
+    domain: "occidentalroofing.com",
+    founderName: "Fernando Moreno",
+    founderTitle: "Founder & CEO",
+    phone: "+1 480-662-0430",
+    email: "fer@occidentalroofing.com",
+    city: "Tempe, AZ",
+    state: "AZ",
+    isCommercial: true,
+  },
+};
+
 const BrandContext = createContext<Brand>(defaultBrand);
 
 export function BrandProvider({ children }: { children: ReactNode }) {
@@ -208,21 +299,39 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     fetch(`${BACKEND_URL}/health`, { method: "GET", mode: "cors" }).catch(() => {});
   }, []);
 
+  // 1. Check for Vanity Path Route (Option B, e.g. /worleybyrd or /worleybyrdroofing.com)
+  const pathnameSlug = useMemo(() => {
+    const rawPath = window.location.pathname.replace(/^\/+|\/+$/g, "");
+    const reservedRoutes = ["services", "portfolio", "financing", "locations", "book"];
+    const firstSegment = rawPath.split("/")[0].toLowerCase();
+    if (firstSegment && !reservedRoutes.includes(firstSegment)) {
+      return firstSegment;
+    }
+    return "";
+  }, []);
+
+  const presetBrand = useMemo(() => {
+    if (pathnameSlug && VERIFIED_DIRECTORY[pathnameSlug]) {
+      return VERIFIED_DIRECTORY[pathnameSlug];
+    }
+    return null;
+  }, [pathnameSlug]);
+
   const params = useMemo(() => new URLSearchParams(window.location.search), []);
 
-  const rawName = params.get("name") || "";
-  const rawCity = params.get("city") || "";
-  const rawPhone = params.get("phone") || "";
-  const rawEmail = params.get("email") || "";
-  const rawState = params.get("state") || "";
-  const rawDomain = params.get("domain") || params.get("website") || "";
-  const rawLogo = params.get("logo") || "";
-  const rawTagline = params.get("tagline") || "";
-  const rawFounder = params.get("founder") || "";
-  const rawTitle = params.get("title") || "";
-  const rawPhoto = params.get("photo") || "";
-  const rawLicense = params.get("license") || "";
-  const rawCommercial = params.get("commercial");
+  const rawName = params.get("name") || presetBrand?.name || "";
+  const rawCity = params.get("city") || presetBrand?.city || "";
+  const rawPhone = params.get("phone") || presetBrand?.phone || "";
+  const rawEmail = params.get("email") || presetBrand?.email || "";
+  const rawState = params.get("state") || presetBrand?.state || "";
+  const rawDomain = params.get("domain") || params.get("website") || presetBrand?.domain || (pathnameSlug.includes(".") ? pathnameSlug : "");
+  const rawLogo = params.get("logo") || presetBrand?.logo || "";
+  const rawTagline = params.get("tagline") || presetBrand?.tagline || "";
+  const rawFounder = params.get("founder") || presetBrand?.founderName || "";
+  const rawTitle = params.get("title") || presetBrand?.founderTitle || "";
+  const rawPhoto = params.get("photo") || presetBrand?.founderPhoto || "";
+  const rawLicense = params.get("license") || presetBrand?.licenseNumber || "";
+  const rawCommercial = params.get("commercial") !== null ? params.get("commercial") : (presetBrand?.isCommercial ? "true" : null);
   const rawRating = params.get("rating");
   const rawReviews = params.get("reviews") || params.get("reviewsCount");
   const rawYears = params.get("years") || params.get("yearsInBusiness");
