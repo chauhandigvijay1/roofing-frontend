@@ -89,7 +89,10 @@ export default function LocalExperts() {
                     referrerPolicy="no-referrer"
                     src={founderPhoto}
                     alt={displayFounderName}
-                    onError={() => setPhotoFailed(true)}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                      setPhotoFailed(true);
+                    }}
                     className="w-full h-full object-cover object-top"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent" />

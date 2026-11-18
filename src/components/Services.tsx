@@ -8,35 +8,70 @@ export default function Services() {
   const { search } = useLocation();
 
   const finalServices = useMemo(() => {
-    const hasCrawled = Boolean(brand.galleryImages && brand.galleryImages.length > 0);
+    const crawledPhotos = brand.galleryImages || [];
+    const usedPhotos = new Set<string>();
+    let crawledIdx = 0;
+
+    const getServiceFallback = (slug: string) => {
+      switch (slug) {
+        case "commercial":
+        case "coatings":
+          return "/service-commercial.jpg";
+        case "metal":
+          return "/service-metal.jpg";
+        case "storm-damage":
+        case "wind-mitigation":
+          return "/service-storm.jpg";
+        case "repair":
+          return "/service-repair.jpg";
+        case "gutters":
+        case "drainage":
+          return "/service-gutters.jpg";
+        default:
+          return "/service-shingle.jpg";
+      }
+    };
+
+    const getServiceTag = (slug: string) => {
+      switch (slug) {
+        case "commercial":
+        case "coatings":
+          return "Commercial Division";
+        case "metal":
+          return "Architectural Metal";
+        case "storm-damage":
+        case "wind-mitigation":
+          return "Insurance Restoration";
+        case "repair":
+          return "24/7 Rapid Dispatch";
+        case "gutters":
+        case "drainage":
+          return "Drainage Systems";
+        default:
+          return "Certified Trade";
+      }
+    };
 
     // If structured services exist for this target contractor
     if (brand.structuredServices && brand.structuredServices.length > 0) {
-      return brand.structuredServices.map((svc, idx) => {
-        let tag = "Certified Trade";
-        let fallbackImg = "/service-shingle.jpg";
+      return brand.structuredServices.map((svc) => {
         const slug = svc.slug || "residential";
+        const fallbackImg = getServiceFallback(slug);
+        const tag = getServiceTag(slug);
 
-        if (slug === "commercial" || slug === "coatings") {
-          tag = "Commercial Division";
-          fallbackImg = "/service-commercial.jpg";
-        } else if (slug === "metal") {
-          tag = "Architectural Metal";
-          fallbackImg = "/service-metal.jpg";
-        } else if (slug === "storm-damage" || slug === "wind-mitigation") {
-          tag = "Insurance Restoration";
-          fallbackImg = "/service-storm.jpg";
-        } else if (slug === "repair") {
-          tag = "24/7 Rapid Dispatch";
-          fallbackImg = "/service-repair.jpg";
-        } else if (slug === "gutters" || slug === "drainage") {
-          tag = "Drainage Systems";
-          fallbackImg = "/service-gutters.jpg";
+        let img = fallbackImg;
+        let isRealPhoto = false;
+
+        // Assign an unused crawled photo if available
+        while (crawledIdx < crawledPhotos.length) {
+          const candidate = crawledPhotos[crawledIdx++];
+          if (candidate && !usedPhotos.has(candidate)) {
+            img = candidate;
+            usedPhotos.add(candidate);
+            isRealPhoto = true;
+            break;
+          }
         }
-
-        const img = hasCrawled
-          ? brand.galleryImages![idx % brand.galleryImages!.length]
-          : fallbackImg;
 
         return {
           slug,
@@ -45,7 +80,7 @@ export default function Services() {
           img,
           fallbackImg,
           tag,
-          isRealPhoto: hasCrawled,
+          isRealPhoto,
         };
       });
     }
@@ -185,13 +220,26 @@ export default function Services() {
           },
         ];
 
-    return baselineList.map((s, idx) => ({
-      ...s,
-      img: hasCrawled
-        ? brand.galleryImages![idx % brand.galleryImages!.length]
-        : s.fallbackImg,
-      isRealPhoto: hasCrawled,
-    }));
+    return baselineList.map((s) => {
+      let img = s.fallbackImg;
+      let isRealPhoto = false;
+
+      while (crawledIdx < crawledPhotos.length) {
+        const candidate = crawledPhotos[crawledIdx++];
+        if (candidate && !usedPhotos.has(candidate)) {
+          img = candidate;
+          usedPhotos.add(candidate);
+          isRealPhoto = true;
+          break;
+        }
+      }
+
+      return {
+        ...s,
+        img,
+        isRealPhoto,
+      };
+    });
   }, [
     brand.structuredServices,
     brand.galleryImages,
@@ -233,10 +281,11 @@ export default function Services() {
                   src={s.img}
                   alt={s.title}
                   onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    if (target.src !== s.fallbackImg) {
-                      target.src = s.fallbackImg;
-                    }
+                    const target = e.currentTarget;
+                    target.onerror = null;
+                    target.src = s.fallbackImg;
+                    const badge = target.parentElement?.querySelector(".drone-photo-badge");
+                    if (badge) (badge as HTMLElement).style.display = "none";
                   }}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
@@ -244,7 +293,7 @@ export default function Services() {
                   {s.tag}
                 </span>
                 {s.isRealPhoto && (
-                  <span className="absolute bottom-2.5 left-2.5 bg-zinc-950/85 backdrop-blur-xs text-white text-[9.5px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-sm flex items-center gap-1 border border-white/10 shadow-xs">
+                  <span className="drone-photo-badge absolute bottom-2.5 left-2.5 bg-zinc-950/85 backdrop-blur-xs text-white text-[9.5px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-sm flex items-center gap-1 border border-white/10 shadow-xs">
                     <ShieldCheck className="w-3 h-3 text-emerald-400" /> Jobsite Drone Photo &bull; {brand.name}
                   </span>
                 )}

@@ -12,25 +12,25 @@ export default function Gallery() {
   const fallbackImages = useMemo(
     () => [
       {
-        img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
+        fallbackImg: "/service-storm.jpg",
         title: "Storm Leak & Structural Restoration",
-        tag: "Architectural Shingles",
+        tag: "Insurance Scoping",
         location: brand.city,
       },
       {
-        img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
+        fallbackImg: "/service-shingle.jpg",
         title: "Complete Precision Tear-Off & Shingle System",
         tag: "50-Year Warranty",
         location: serviceAreas[0] ? formatLocation(serviceAreas[0], brand.state) : brand.city,
       },
       {
-        img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2447926003-1920w.jpg",
+        fallbackImg: "/service-metal.jpg",
         title: "Standing Seam Architectural Metal",
         tag: "High-Tensile Metal",
         location: serviceAreas[1] ? formatLocation(serviceAreas[1], brand.state) : brand.city,
       },
       {
-        img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2467902073-1920w.jpg",
+        fallbackImg: "/service-commercial.jpg",
         title: brand.isCommercial
           ? "Commercial Single-Ply TPO Installation"
           : "Commercial & Residential Flat Roof",
@@ -41,16 +41,27 @@ export default function Gallery() {
     [brand.city, brand.state, brand.isCommercial, serviceAreas]
   );
 
-  // Blend in real crawled contractor photos if available
+  // Blend in real crawled contractor photos without duplicate repetition
   const items = useMemo(() => {
-    const hasCrawled = Boolean(brand.galleryImages && brand.galleryImages.length > 0);
-    return fallbackImages.map((fallback, idx) => {
-      const customPhoto = hasCrawled
-        ? brand.galleryImages![idx % brand.galleryImages!.length]
-        : undefined;
+    const crawledPhotos = brand.galleryImages || [];
+    const usedPhotos = new Set<string>();
+    let crawledIdx = 0;
+
+    return fallbackImages.map((fallback) => {
+      let customPhoto: string | undefined;
+
+      while (crawledIdx < crawledPhotos.length) {
+        const candidate = crawledPhotos[crawledIdx++];
+        if (candidate && !usedPhotos.has(candidate)) {
+          customPhoto = candidate;
+          usedPhotos.add(candidate);
+          break;
+        }
+      }
+
       return {
-        img: customPhoto || fallback.img,
-        fallbackImg: fallback.img,
+        img: customPhoto || fallback.fallbackImg,
+        fallbackImg: fallback.fallbackImg,
         title: fallback.title,
         tag: fallback.tag,
         location: fallback.location,
@@ -89,10 +100,9 @@ export default function Gallery() {
                   src={item.img}
                   alt={item.title}
                   onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    if (target.src !== item.fallbackImg) {
-                      target.src = item.fallbackImg;
-                    }
+                    const target = e.currentTarget;
+                    target.onerror = null;
+                    target.src = item.fallbackImg;
                   }}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />

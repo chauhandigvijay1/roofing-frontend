@@ -20,37 +20,37 @@ export default function Portfolio() {
       {
         title: "Architectural Shingle Replacement",
         location: brand.city,
-        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
+        fallbackImg: "/service-shingle.jpg",
         scope: "50-Yr GAF Timberline HDZ",
       },
       {
         title: "Severe Storm Recovery & Replacement",
         location: serviceAreas[0] ? formatLocation(serviceAreas[0], brand.state) : brand.city,
-        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
+        fallbackImg: "/service-storm.jpg",
         scope: "Full Decking & Synthetic Barrier",
       },
       {
         title: brand.isCommercial ? "Industrial TPO Flat System" : "Commercial Single-Ply Flat Roof",
         location: serviceAreas[1] ? formatLocation(serviceAreas[1], brand.state) : brand.city,
-        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2467902073-1920w.jpg",
+        fallbackImg: "/service-commercial.jpg",
         scope: "60-Mil Heat-Welded Membrane",
       },
       {
         title: "Custom Standing Seam Metal",
         location: serviceAreas[2] ? formatLocation(serviceAreas[2], brand.state) : brand.city,
-        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2447926003-1920w.jpg",
+        fallbackImg: "/service-metal.jpg",
         scope: "24-Gauge Concealed Fastener",
       },
       {
         title: "Emergency Leak & Valley Restoration",
         location: serviceAreas[3] ? formatLocation(serviceAreas[3], brand.state) : brand.city,
-        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
+        fallbackImg: "/service-repair.jpg",
         scope: "Rapid Tarping & Lifetime Repair",
       },
       {
         title: "Class 4 Impact Hail Defense",
         location: serviceAreas[4] ? formatLocation(serviceAreas[4], brand.state) : brand.city,
-        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
+        fallbackImg: "/why-choose-us.jpg",
         scope: "UL 2218 Insurance Qualified",
       },
     ],
@@ -58,11 +58,22 @@ export default function Portfolio() {
   );
 
   const projects = useMemo(() => {
-    const hasCrawled = Boolean(brand.galleryImages && brand.galleryImages.length > 0);
-    return defaultProjects.map((p, idx) => {
-      const customPhoto = hasCrawled
-        ? brand.galleryImages![idx % brand.galleryImages!.length]
-        : undefined;
+    const crawledPhotos = brand.galleryImages || [];
+    const usedPhotos = new Set<string>();
+    let crawledIdx = 0;
+
+    return defaultProjects.map((p) => {
+      let customPhoto: string | undefined;
+
+      while (crawledIdx < crawledPhotos.length) {
+        const candidate = crawledPhotos[crawledIdx++];
+        if (candidate && !usedPhotos.has(candidate)) {
+          customPhoto = candidate;
+          usedPhotos.add(candidate);
+          break;
+        }
+      }
+
       return {
         ...p,
         img: customPhoto || p.fallbackImg,
@@ -111,10 +122,11 @@ export default function Portfolio() {
                       src={p.img}
                       alt={p.title}
                       onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        if (target.src !== p.fallbackImg) {
-                          target.src = p.fallbackImg;
-                        }
+                        const target = e.currentTarget;
+                        target.onerror = null;
+                        target.src = p.fallbackImg;
+                        const badge = target.parentElement?.querySelector(".jobsite-photo-badge");
+                        if (badge) (badge as HTMLElement).style.display = "none";
                       }}
                       className="w-full h-full object-cover"
                     />
@@ -122,7 +134,7 @@ export default function Portfolio() {
                       {p.scope}
                     </span>
                     {p.isCrawled && (
-                      <span className="absolute bottom-3 left-3 bg-zinc-950/85 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-md flex items-center gap-1 border border-white/10 shadow-xs">
+                      <span className="jobsite-photo-badge absolute bottom-3 left-3 bg-zinc-950/85 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-md flex items-center gap-1 border border-white/10 shadow-xs">
                         <ShieldCheck className="w-3 h-3 text-emerald-400" />
                         Field Jobsite Photo &bull; {brand.name}
                       </span>
