@@ -285,6 +285,7 @@ export default function ServiceDetail() {
   })();
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
 
   const pricingGuidance = useMemo(() => {
     if (rawSlug.includes("repair") || rawSlug.includes("leak")) {
@@ -584,14 +585,20 @@ export default function ServiceDetail() {
                   <Phone className="w-3.5 h-3.5 text-crimson" /> Call Dispatch: {brand.phone}
                 </a>
 
-                {/* Link to Bottom Calculator */}
+                {/* Link to Bottom Calculator with Toggle */}
                 <div className="mt-4 pt-3 border-t border-stone-100 text-center">
-                  <a
-                    href="#service-calculator"
-                    className="text-[11px] font-oswald uppercase tracking-wider font-bold text-zinc-500 hover:text-crimson transition-colors inline-flex items-center gap-1"
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsCalculatorOpen(true);
+                      setTimeout(() => {
+                        document.getElementById("service-calculator")?.scrollIntoView({ behavior: "smooth" });
+                      }, 120);
+                    }}
+                    className="text-[11px] font-oswald uppercase tracking-wider font-bold text-zinc-500 hover:text-crimson transition-colors inline-flex items-center gap-1 cursor-pointer"
                   >
-                    Custom Square Footage Calculator ↓
-                  </a>
+                    Custom Square Footage Calculator {isCalculatorOpen ? "▲" : "▼"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -599,21 +606,39 @@ export default function ServiceDetail() {
         </div>
       </section>
 
-      {/* Full-Width Bottom Interactive Cost Calculator */}
-      <section id="service-calculator" className="py-16 sm:py-20 px-4 sm:px-6 bg-stone-100 border-t border-stone-200">
+      {/* On-Demand Interactive Cost Calculator Studio */}
+      <section id="service-calculator" className="py-12 sm:py-16 px-4 sm:px-6 bg-stone-100 border-t border-stone-200">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
+          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-stone-200 shadow-sm text-center">
             <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold">
               Precision Cost Modeling &bull; {brand.city}
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-1">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-1">
               Interactive Investment Estimator
             </h2>
-            <p className="text-zinc-600 text-base sm:text-lg max-w-xl mx-auto font-serif mt-2">
-              Model your estimated surface area and compare certified systems installed by {brand.name}.
+            <p className="text-zinc-600 text-sm sm:text-base max-w-xl mx-auto font-serif mt-2 mb-6">
+              Compare certified materials, calculate square footage, and model manufacturer warranty pricing for {brand.city}.
             </p>
+
+            <button
+              type="button"
+              onClick={() => setIsCalculatorOpen((prev) => !prev)}
+              className="inline-flex items-center gap-2 bg-zinc-900 hover:bg-zinc-800 text-white px-6 py-3.5 rounded-full font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-101 active:scale-98 cursor-pointer"
+            >
+              <span>{isCalculatorOpen ? "Hide Cost Estimator Studio ▲" : "Launch Interactive Cost Calculator ▼"}</span>
+            </button>
+
+            {isCalculatorOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="mt-10 text-left pt-8 border-t border-stone-200"
+              >
+                <EstimateWizard />
+              </motion.div>
+            )}
           </div>
-          <EstimateWizard />
         </div>
       </section>
 
