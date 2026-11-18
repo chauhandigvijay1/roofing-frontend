@@ -84,7 +84,7 @@ export default function LocalExperts() {
                   <span className="text-xs font-oswald uppercase tracking-wider font-bold text-white block">
                     {displayFounderName}
                   </span>
-                  <span className="text-[10px] text-zinc-400 font-serif block mt-0.5">
+                  <span className="text-xs text-zinc-400 font-sans block mt-0.5">
                     {city} Master Authority
                   </span>
                 </div>

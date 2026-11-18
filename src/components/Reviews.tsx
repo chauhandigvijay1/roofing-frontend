@@ -93,7 +93,7 @@ export default function Reviews() {
                   </div>
                   <div className="text-xs text-zinc-500 font-serif">{r.location}</div>
                 </div>
-                <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-serif">
+                <div className="flex items-center gap-1 text-xs text-emerald-700 font-sans font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Verified Owner
                 </div>
               </div>

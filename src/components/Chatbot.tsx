@@ -267,7 +267,7 @@ export default function Chatbot() {
                   <span className="text-zinc-950 font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm block truncate">
                     {brand.name ? `${brand.name} Assistant` : "Roofing Assistant"}
                   </span>
-                  <span className="text-[10px] text-zinc-500 font-serif block">
+                  <span className="text-xs text-zinc-500 font-sans block">
                     {brand.licenseNumber ? `License: ${brand.licenseNumber}` : `Serving ${brand.city}`}
                   </span>
                 </div>
@@ -431,13 +431,13 @@ export default function Chatbot() {
 
                 {/* Dynamic Calculated Price Card */}
                 <div className="bg-white border-2 border-crimson/30 rounded-2xl p-4 text-center shadow-xs">
-                  <span className="text-[10px] font-oswald uppercase tracking-widest text-zinc-500 font-bold block">
+                  <span className="text-xs font-oswald uppercase tracking-widest text-zinc-500 font-bold block">
                     Estimated Investment Range
                   </span>
                   <div className="text-2xl font-oswald uppercase tracking-wider font-bold text-zinc-950 mt-1">
                     ${calcEstimate.low.toLocaleString()} – ${calcEstimate.high.toLocaleString()}
                   </div>
-                  <p className="text-[11px] text-zinc-500 font-serif mt-0.5">
+                  <p className="text-xs text-zinc-600 font-serif leading-relaxed mt-1">
                     {calcEstimate.isFlat
                       ? "Flat dispatch rate for leak containment & temporary seal"
                       : `Based on ~${calcSqFt.toLocaleString()} sq ft • Free on-site measurement confirms final quote`}
