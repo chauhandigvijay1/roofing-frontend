@@ -152,7 +152,7 @@ export default function Testimonials() {
                 ))}
               </div>
               <span className="text-zinc-900 font-oswald uppercase font-bold text-xs">
-                {brand.rating || 4.9} / 5.0 ({brand.reviewsCount || 48}+ Verified)
+                {brand.rating || 4.9} / 5.0 {brand.reviewsCount ? `(${brand.reviewsCount}+ Verified)` : `(${allReviews.length} Verified Reviews)`}
               </span>
             </div>
 
@@ -296,7 +296,7 @@ export default function Testimonials() {
                 </>
               ) : (
                 <>
-                  Show More Verified Client Reviews ({brand.reviewsCount || 42}+ on Google Profile) <ChevronDown className="w-4 h-4" />
+                  Show All Client Reviews ({filteredReviews.length}) <ChevronDown className="w-4 h-4" />
                 </>
               )}
             </button>

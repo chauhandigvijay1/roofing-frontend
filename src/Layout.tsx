@@ -2,7 +2,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import EmergencyBanner from "./components/EmergencyBanner";
 import Navbar from "./components/Navbar";
-import EstimateWizard from "./components/EstimateWizard";
 import MegaFooter from "./components/MegaFooter";
 import Chatbot from "./components/Chatbot";
 import { useBrand } from "./BrandContext";
@@ -31,25 +30,15 @@ function DynamicTitle() {
 }
 
 export default function Layout() {
-  const { pathname } = useLocation();
-  const { city, phone } = useBrand();
-  const isServicePage = pathname.startsWith("/services");
-  const isHomeOrBook = pathname === "/" || pathname === "/book";
-
   return (
     <>
       <ScrollToTop />
       <DynamicTitle />
-      <div className="bg-crimson text-white text-xs py-2 px-4 flex justify-between items-center">
-        <span className="font-oswald uppercase tracking-wider text-xs">Serving {city} and surrounding areas</span>
-        <a href={`tel:${phone}`} className="font-oswald uppercase tracking-wider text-xs hover:underline">Call: {phone}</a>
-      </div>
       <EmergencyBanner />
       <Navbar />
       <main className="min-h-screen bg-white font-serif antialiased">
         <Outlet />
       </main>
-      {!isServicePage && !isHomeOrBook && <EstimateWizard />}
       <MegaFooter />
       <Chatbot />
     </>

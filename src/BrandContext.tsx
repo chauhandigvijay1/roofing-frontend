@@ -219,7 +219,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         : Boolean(name.toLowerCase().includes("commercial") || name.toLowerCase().includes("tpo"));
 
     const parsedRating = rawRating ? Math.min(5.0, Math.max(3.0, parseFloat(rawRating))) : 4.9;
-    const parsedReviews = rawReviews ? parseInt(rawReviews, 10) : 48;
+    const parsedReviews = rawReviews ? parseInt(rawReviews, 10) : undefined;
     const parsedYears = rawYears ? parseInt(rawYears, 10) : 20;
 
     const parsedAreas = rawAreas
