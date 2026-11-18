@@ -84,6 +84,9 @@ export default function LocalExperts() {
                 /* 1. Verified Founder Portrait (When explicit valid photo is provided) */
                 <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-3xl overflow-hidden border-4 border-white shadow-xl bg-stone-100">
                   <img
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
                     src={founderPhoto}
                     alt={displayFounderName}
                     onError={() => setPhotoFailed(true)}
@@ -99,6 +102,9 @@ export default function LocalExperts() {
                 <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-3xl overflow-hidden border-4 border-white shadow-xl bg-white flex flex-col items-center justify-center p-6 text-center">
                   <div className="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
                     <img
+                      loading="lazy"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
                       src={logo}
                       alt={cleanName}
                       onError={() => setLogoFailed(true)}

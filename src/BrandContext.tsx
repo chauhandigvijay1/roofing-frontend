@@ -195,7 +195,7 @@ const defaultBrand: Brand = {
 /**
  * Verified Directory - EXCLUSIVELY for WorleyByrd Roofing & Restoration.
  * As explicitly instructed: Only WorleyByrd has the special vanity URL.
- * All other contractors worldwide load dynamically via query parameters.
+ * Pre-loaded with authentic DJI drone photography from worleybyrdroofing.com.
  */
 export const VERIFIED_DIRECTORY: Record<string, Partial<Brand>> = {
   "worleybyrd": {
@@ -210,6 +210,11 @@ export const VERIFIED_DIRECTORY: Record<string, Partial<Brand>> = {
     isCommercial: true,
     tagline: "Central Texas Commercial TPO & Architectural Roof Restoration Authority",
     aboutText: "WorleyByrd Roofing & Restoration is an Austin-based commercial and residential roofing authority founded by Nathan Worley and Eric Worley. We engineer precision TPO flat roofs, standing seam metal systems, and hurricane-rated shingle replacements backed by comprehensive non-prorated warranties.",
+    galleryImages: [
+      "https://worleybyrdroofing.com/wp-content/uploads/2025/04/DJI_0485-e1743594912860.webp",
+      "https://worleybyrdroofing.com/wp-content/uploads/2025/04/DJI_0519-e1743592444811.webp",
+      "https://worleybyrdroofing.com/wp-content/uploads/2023/02/DJI_0533-e1743592580422.jpg",
+    ],
   },
   "worleybyrdroofing.com": {
     name: "WorleyByrd Roofing & Restoration",
@@ -223,6 +228,11 @@ export const VERIFIED_DIRECTORY: Record<string, Partial<Brand>> = {
     isCommercial: true,
     tagline: "Central Texas Commercial TPO & Architectural Roof Restoration Authority",
     aboutText: "WorleyByrd Roofing & Restoration is an Austin-based commercial and residential roofing authority founded by Nathan Worley and Eric Worley. We engineer precision TPO flat roofs, standing seam metal systems, and hurricane-rated shingle replacements backed by comprehensive non-prorated warranties.",
+    galleryImages: [
+      "https://worleybyrdroofing.com/wp-content/uploads/2025/04/DJI_0485-e1743594912860.webp",
+      "https://worleybyrdroofing.com/wp-content/uploads/2025/04/DJI_0519-e1743592444811.webp",
+      "https://worleybyrdroofing.com/wp-content/uploads/2023/02/DJI_0533-e1743592580422.jpg",
+    ],
   },
 };
 
@@ -318,6 +328,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       rating: parsedRating,
       reviewsCount: parsedReviews || 48,
       yearsInBusiness: parsedYears,
+      galleryImages: presetBrand?.galleryImages || undefined,
       services: isCommercial
         ? [
             "Commercial TPO Single-Ply Membrane",

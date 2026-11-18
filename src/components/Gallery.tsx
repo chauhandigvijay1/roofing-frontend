@@ -1,95 +1,6 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useBrand, getRegionalSuburbs, formatLocation } from "../BrandContext";
 import { ShieldCheck, MapPin } from "lucide-react";
-
-interface GalleryItemData {
-  img: string;
-  fallbackImg: string;
-  title: string;
-  tag: string;
-  location: string;
-  isCustomPhoto: boolean;
-}
-
-function GalleryCard({
-  item,
-  brandName,
-  brandLogo,
-}: {
-  item: GalleryItemData;
-  brandName: string;
-  brandLogo?: string;
-}) {
-  const [currentSrc, setCurrentSrc] = useState(item.img);
-  const [loadFailed, setLoadFailed] = useState(false);
-
-  const handleImageError = () => {
-    if (!loadFailed) {
-      setLoadFailed(true);
-      setCurrentSrc(item.fallbackImg);
-    }
-  };
-
-  return (
-    <div className="group overflow-hidden rounded-2xl border border-stone-200/90 shadow-sm hover:shadow-xl transition-all duration-300 bg-stone-50 flex flex-col justify-between">
-      <div className="relative h-64 overflow-hidden bg-stone-900">
-        <img
-          loading="lazy"
-          decoding="async"
-          src={currentSrc}
-          alt={item.title}
-          onError={handleImageError}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-
-        {/* Top Overlay: Verified Contractor Logo / Proof Badge */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-          {brandLogo ? (
-            <div className="bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full shadow-md flex items-center gap-1.5 border border-stone-200/60 max-w-[160px]">
-              <img
-                src={brandLogo}
-                alt={brandName}
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = "none";
-                }}
-                className="w-4 h-4 object-contain shrink-0"
-              />
-              <span className="text-[10px] font-oswald uppercase font-bold text-zinc-800 truncate">
-                {brandName}
-              </span>
-            </div>
-          ) : (
-            <div className="bg-zinc-950/80 backdrop-blur-xs px-2.5 py-1 rounded-full text-white text-[10px] font-oswald uppercase tracking-wider font-bold flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-emerald-400" />
-              <span>Certified Project</span>
-            </div>
-          )}
-
-          <span className="bg-zinc-950/80 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2.5 py-1 rounded-full">
-            {item.tag}
-          </span>
-        </div>
-
-        {/* Bottom Gradient Caption */}
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-transparent flex flex-col justify-end p-4">
-          <span className="text-white font-oswald uppercase tracking-wider font-bold text-sm sm:text-base leading-snug">
-            {item.title}
-          </span>
-          <div className="flex items-center gap-1 text-[11px] text-zinc-300 font-sans mt-1">
-            <MapPin className="w-3 h-3 text-crimson shrink-0" />
-            <span>{item.location}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Card Footer */}
-      <div className="px-4 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-zinc-500">
-        <span>Verified Installation</span>
-        <span className="text-emerald-700 font-medium">Lifetime Warranty</span>
-      </div>
-    </div>
-  );
-}
 
 export default function Gallery() {
   const brand = useBrand();
@@ -130,40 +41,13 @@ export default function Gallery() {
     [brand.city, brand.state, brand.isCommercial, serviceAreas]
   );
 
-  // Filter out any crawled images that are logos, icons, seals, badges, or social media icons
-  const cleanCrawledPhotos = useMemo(() => {
-    if (!brand.galleryImages || brand.galleryImages.length === 0) return [];
-    const bannedPatterns = [
-      "logo",
-      "icon",
-      "seal",
-      "badge",
-      "award",
-      "bbb",
-      "banner",
-      "header",
-      "member",
-      "wpconsent",
-      "facebook",
-      "twitter",
-      "instagram",
-      "youtube",
-      "wp-includes",
-      "avatar",
-      "lockup",
-      "ommuniti",
-      "chamber",
-    ];
-    return brand.galleryImages.filter((url) => {
-      if (!url || typeof url !== "string") return false;
-      const lower = url.toLowerCase();
-      return !bannedPatterns.some((pattern) => lower.includes(pattern));
-    });
-  }, [brand.galleryImages]);
-
-  const items: GalleryItemData[] = useMemo(() => {
+  // Blend in real crawled contractor photos if available
+  const items = useMemo(() => {
+    const hasCrawled = Boolean(brand.galleryImages && brand.galleryImages.length > 0);
     return fallbackImages.map((fallback, idx) => {
-      const customPhoto = cleanCrawledPhotos[idx];
+      const customPhoto = hasCrawled
+        ? brand.galleryImages![idx % brand.galleryImages!.length]
+        : undefined;
       return {
         img: customPhoto || fallback.img,
         fallbackImg: fallback.img,
@@ -173,7 +57,7 @@ export default function Gallery() {
         isCustomPhoto: Boolean(customPhoto),
       };
     });
-  }, [fallbackImages, cleanCrawledPhotos]);
+  }, [fallbackImages, brand.galleryImages]);
 
   return (
     <section id="gallery" className="py-16 sm:py-20 px-4 sm:px-6 bg-white border-t border-stone-200">
@@ -193,12 +77,73 @@ export default function Gallery() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {items.map((item, idx) => (
-            <GalleryCard
+            <div
               key={`${item.title}-${idx}`}
-              item={item}
-              brandName={brand.name}
-              brandLogo={brand.logo}
-            />
+              className="group overflow-hidden rounded-2xl border border-stone-200/90 shadow-sm hover:shadow-xl transition-all duration-300 bg-stone-50 flex flex-col justify-between"
+            >
+              <div className="relative h-64 overflow-hidden bg-stone-900">
+                <img
+                  loading="lazy"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  src={item.img}
+                  alt={item.title}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    if (target.src !== item.fallbackImg) {
+                      target.src = item.fallbackImg;
+                    }
+                  }}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+
+                {/* Top Overlay: Verified Contractor Logo / Proof Badge */}
+                <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                  {brand.logo ? (
+                    <div className="bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full shadow-md flex items-center gap-1.5 border border-stone-200/60 max-w-[160px]">
+                      <img
+                        referrerPolicy="no-referrer"
+                        src={brand.logo}
+                        alt={brand.name}
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = "none";
+                        }}
+                        className="w-4 h-4 object-contain shrink-0"
+                      />
+                      <span className="text-[10px] font-oswald uppercase font-bold text-zinc-800 truncate">
+                        {brand.name}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="bg-zinc-950/80 backdrop-blur-xs px-2.5 py-1 rounded-full text-white text-[10px] font-oswald uppercase tracking-wider font-bold flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                      <span>Certified Project</span>
+                    </div>
+                  )}
+
+                  <span className="bg-zinc-950/80 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2.5 py-1 rounded-full">
+                    {item.tag}
+                  </span>
+                </div>
+
+                {/* Bottom Gradient Caption */}
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-transparent flex flex-col justify-end p-4">
+                  <span className="text-white font-oswald uppercase tracking-wider font-bold text-sm sm:text-base leading-snug">
+                    {item.title}
+                  </span>
+                  <div className="flex items-center gap-1 text-[11px] text-zinc-300 font-sans mt-1">
+                    <MapPin className="w-3 h-3 text-crimson shrink-0" />
+                    <span>{item.location}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card Footer */}
+              <div className="px-4 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-zinc-500">
+                <span>Verified Installation</span>
+                <span className="text-emerald-700 font-medium">Lifetime Warranty</span>
+              </div>
+            </div>
           ))}
         </div>
       </div>

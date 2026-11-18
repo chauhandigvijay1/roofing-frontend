@@ -1,118 +1,16 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useBrand } from "../BrandContext";
-
-interface ServiceItem {
-  slug: string;
-  title: string;
-  desc: string;
-  img: string;
-  fallbackImg: string;
-  tag: string;
-  isRealPhoto?: boolean;
-}
-
-function ServiceCard({ s, brandName, search }: { s: ServiceItem; brandName: string; search: string }) {
-  const [currentImg, setCurrentImg] = useState(s.img);
-  const [imgFailed, setImgFailed] = useState(false);
-
-  const handleImgError = () => {
-    if (!imgFailed) {
-      setImgFailed(true);
-      setCurrentImg(s.fallbackImg);
-    }
-  };
-
-  const showRealBadge = s.isRealPhoto && !imgFailed;
-
-  return (
-    <div className="bg-white overflow-hidden shadow-lg border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between group rounded-b-2xl">
-      <Link
-        to={{ pathname: `/services/${s.slug}`, search }}
-        className="block relative h-52 overflow-hidden bg-stone-900 cursor-pointer"
-      >
-        <img
-          loading="lazy"
-          src={currentImg}
-          alt={s.title}
-          onError={handleImgError}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <span className="absolute top-3 right-3 bg-zinc-950/80 backdrop-blur-sm text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2.5 py-1 shadow">
-          {s.tag}
-        </span>
-        {showRealBadge && (
-          <span className="absolute bottom-2.5 left-2.5 bg-zinc-950/85 backdrop-blur-xs text-white text-[9.5px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-sm flex items-center gap-1 border border-white/10 shadow-xs">
-            <ShieldCheck className="w-3 h-3 text-emerald-400" /> Jobsite Drone Photo &bull; {brandName}
-          </span>
-        )}
-      </Link>
-      <div className="p-6 flex-1 flex flex-col justify-between">
-        <div>
-          <Link to={{ pathname: `/services/${s.slug}`, search }}>
-            <h3 className="text-xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-2 hover:text-crimson transition-colors leading-snug">
-              {s.title}
-            </h3>
-          </Link>
-          <p className="text-zinc-600 text-sm leading-relaxed font-serif">{s.desc}</p>
-        </div>
-        <div className="pt-5 mt-4 border-t border-stone-100 flex items-center justify-between gap-3">
-          <Link
-            to={{ pathname: `/services/${s.slug}`, search }}
-            className="inline-flex items-center gap-1.5 text-crimson hover:text-crimson-dark font-oswald uppercase tracking-wider font-bold text-xs transition-colors"
-          >
-            Explore Service Scope <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-          <a
-            href="#estimate"
-            className="text-[11px] font-oswald uppercase tracking-wider font-medium text-zinc-400 hover:text-zinc-800 transition-colors"
-          >
-            Instant Estimate ↓
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function Services() {
   const brand = useBrand();
   const { search } = useLocation();
 
-  // Filter out any crawled images that are logos, icons, seals, badges, or social media icons
-  const cleanCrawledPhotos = useMemo(() => {
-    if (!brand.galleryImages || brand.galleryImages.length === 0) return [];
-    const bannedPatterns = [
-      "logo",
-      "icon",
-      "seal",
-      "badge",
-      "award",
-      "bbb",
-      "banner",
-      "header",
-      "member",
-      "wpconsent",
-      "facebook",
-      "twitter",
-      "instagram",
-      "youtube",
-      "wp-includes",
-      "avatar",
-      "lockup",
-      "ommuniti",
-      "chamber",
-    ];
-    return brand.galleryImages.filter((url) => {
-      if (!url || typeof url !== "string") return false;
-      const lower = url.toLowerCase();
-      return !bannedPatterns.some((pattern) => lower.includes(pattern));
-    });
-  }, [brand.galleryImages]);
-
   const finalServices = useMemo(() => {
-    // If structured services exist
+    const hasCrawled = Boolean(brand.galleryImages && brand.galleryImages.length > 0);
+
+    // If structured services exist for this target contractor
     if (brand.structuredServices && brand.structuredServices.length > 0) {
       return brand.structuredServices.map((svc, idx) => {
         let tag = "Certified Trade";
@@ -136,10 +34,9 @@ export default function Services() {
           fallbackImg = "/service-gutters.jpg";
         }
 
-        // Only assign distinct photo to distinct card
-        const customPhoto = cleanCrawledPhotos[idx];
-        const img = customPhoto || fallbackImg;
-        const isRealPhoto = Boolean(customPhoto);
+        const img = hasCrawled
+          ? brand.galleryImages![idx % brand.galleryImages!.length]
+          : fallbackImg;
 
         return {
           slug,
@@ -148,7 +45,7 @@ export default function Services() {
           img,
           fallbackImg,
           tag,
-          isRealPhoto,
+          isRealPhoto: hasCrawled,
         };
       });
     }
@@ -288,17 +185,16 @@ export default function Services() {
           },
         ];
 
-    return baselineList.map((s, idx) => {
-      const customPhoto = cleanCrawledPhotos[idx];
-      return {
-        ...s,
-        img: customPhoto || s.fallbackImg,
-        isRealPhoto: Boolean(customPhoto),
-      };
-    });
+    return baselineList.map((s, idx) => ({
+      ...s,
+      img: hasCrawled
+        ? brand.galleryImages![idx % brand.galleryImages!.length]
+        : s.fallbackImg,
+      isRealPhoto: hasCrawled,
+    }));
   }, [
     brand.structuredServices,
-    cleanCrawledPhotos,
+    brand.galleryImages,
     brand.isCommercial,
     brand.state,
     brand.city,
@@ -322,12 +218,62 @@ export default function Services() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {finalServices.map((s) => (
-            <ServiceCard
+            <div
               key={s.slug}
-              s={s}
-              brandName={brand.name}
-              search={search}
-            />
+              className="bg-white overflow-hidden shadow-lg border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between group rounded-b-2xl"
+            >
+              <Link
+                to={{ pathname: `/services/${s.slug}`, search }}
+                className="block relative h-52 overflow-hidden bg-stone-900 cursor-pointer"
+              >
+                <img
+                  loading="lazy"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  src={s.img}
+                  alt={s.title}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    if (target.src !== s.fallbackImg) {
+                      target.src = s.fallbackImg;
+                    }
+                  }}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <span className="absolute top-3 right-3 bg-zinc-950/80 backdrop-blur-sm text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2.5 py-1 shadow">
+                  {s.tag}
+                </span>
+                {s.isRealPhoto && (
+                  <span className="absolute bottom-2.5 left-2.5 bg-zinc-950/85 backdrop-blur-xs text-white text-[9.5px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-sm flex items-center gap-1 border border-white/10 shadow-xs">
+                    <ShieldCheck className="w-3 h-3 text-emerald-400" /> Jobsite Drone Photo &bull; {brand.name}
+                  </span>
+                )}
+              </Link>
+              <div className="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <Link to={{ pathname: `/services/${s.slug}`, search }}>
+                    <h3 className="text-xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-2 hover:text-crimson transition-colors leading-snug">
+                      {s.title}
+                    </h3>
+                  </Link>
+                  <p className="text-zinc-600 text-sm leading-relaxed font-serif">{s.desc}</p>
+                </div>
+                <div className="pt-5 mt-4 border-t border-stone-100 flex items-center justify-between gap-3">
+                  <Link
+                    to={{ pathname: `/services/${s.slug}`, search }}
+                    className="inline-flex items-center gap-1.5 text-crimson hover:text-crimson-dark font-oswald uppercase tracking-wider font-bold text-xs transition-colors"
+                  >
+                    Explore Service Scope <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                  <a
+                    href="#estimate"
+                    className="text-[11px] font-oswald uppercase tracking-wider font-medium text-zinc-400 hover:text-zinc-800 transition-colors"
+                  >
+                    Instant Estimate ↓
+                  </a>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>

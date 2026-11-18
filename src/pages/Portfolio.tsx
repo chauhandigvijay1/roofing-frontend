@@ -5,79 +5,6 @@ import { useBrand, getRegionalSuburbs, formatLocation } from "../BrandContext";
 import BookingModal from "../components/BookingModal";
 import EstimateWizard from "../components/EstimateWizard";
 
-interface PortfolioProjectItem {
-  title: string;
-  location: string;
-  img: string;
-  fallbackImg: string;
-  scope: string;
-  isCrawled: boolean;
-}
-
-function PortfolioCard({ p, brandName, idx }: { p: PortfolioProjectItem; brandName: string; idx: number }) {
-  const [currentImg, setCurrentImg] = useState(p.img);
-  const [failed, setFailed] = useState(false);
-
-  const handleError = () => {
-    if (!failed) {
-      setFailed(true);
-      setCurrentImg(p.fallbackImg);
-    }
-  };
-
-  const showBadge = p.isCrawled && !failed;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: idx * 0.08 }}
-      className="bg-white rounded-2xl overflow-hidden shadow-md border border-stone-200 border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl flex flex-col justify-between"
-    >
-      <div>
-        <div className="overflow-hidden bg-stone-900 h-56 relative">
-          <img
-            loading="lazy"
-            decoding="async"
-            src={currentImg}
-            alt={p.title}
-            onError={handleError}
-            className="w-full h-full object-cover"
-          />
-          <span className="absolute top-3 right-3 bg-zinc-950/80 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2.5 py-1 rounded-full">
-            {p.scope}
-          </span>
-          {showBadge && (
-            <span className="absolute bottom-3 left-3 bg-zinc-950/85 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-md flex items-center gap-1 border border-white/10 shadow-xs">
-              <ShieldCheck className="w-3 h-3 text-emerald-400" />
-              Field Jobsite Photo &bull; {brandName}
-            </span>
-          )}
-        </div>
-        <div className="p-6">
-          <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-1.5">
-            {p.title}
-          </h3>
-          <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-sans mb-1.5">
-            <MapPin className="w-3.5 h-3.5 text-crimson shrink-0" />
-            <span>{p.location}</span>
-          </div>
-          <p className="text-xs text-zinc-400 font-sans">
-            Turnkey project certified by {brandName}
-          </p>
-        </div>
-      </div>
-
-      <div className="px-6 pb-5 pt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-emerald-700">
-        <span className="flex items-center gap-1 font-medium">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Manufacturer Warranty
-        </span>
-        <span className="text-zinc-400">Verified Craftsmanship</span>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function Portfolio() {
   const brand = useBrand();
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -130,47 +57,19 @@ export default function Portfolio() {
     [brand.city, brand.state, brand.isCommercial, serviceAreas]
   );
 
-  // Filter out any crawled images that are logos, icons, seals, badges, or social media icons
-  const cleanCrawledPhotos = useMemo(() => {
-    if (!brand.galleryImages || brand.galleryImages.length === 0) return [];
-    const bannedPatterns = [
-      "logo",
-      "icon",
-      "seal",
-      "badge",
-      "award",
-      "bbb",
-      "banner",
-      "header",
-      "member",
-      "wpconsent",
-      "facebook",
-      "twitter",
-      "instagram",
-      "youtube",
-      "wp-includes",
-      "avatar",
-      "lockup",
-      "ommuniti",
-      "chamber",
-    ];
-    return brand.galleryImages.filter((url) => {
-      if (!url || typeof url !== "string") return false;
-      const lower = url.toLowerCase();
-      return !bannedPatterns.some((pattern) => lower.includes(pattern));
-    });
-  }, [brand.galleryImages]);
-
-  const projects: PortfolioProjectItem[] = useMemo(() => {
+  const projects = useMemo(() => {
+    const hasCrawled = Boolean(brand.galleryImages && brand.galleryImages.length > 0);
     return defaultProjects.map((p, idx) => {
-      const customPhoto = cleanCrawledPhotos[idx];
+      const customPhoto = hasCrawled
+        ? brand.galleryImages![idx % brand.galleryImages!.length]
+        : undefined;
       return {
         ...p,
         img: customPhoto || p.fallbackImg,
         isCrawled: Boolean(customPhoto),
       };
     });
-  }, [defaultProjects, cleanCrawledPhotos]);
+  }, [defaultProjects, brand.galleryImages]);
 
   return (
     <>
@@ -196,12 +95,60 @@ export default function Portfolio() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((p, idx) => (
-              <PortfolioCard
+              <motion.div
                 key={p.title}
-                p={p}
-                brandName={brand.name}
-                idx={idx}
-              />
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.08 }}
+                className="bg-white rounded-2xl overflow-hidden shadow-md border border-stone-200 border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl flex flex-col justify-between"
+              >
+                <div>
+                  <div className="overflow-hidden bg-stone-900 h-56 relative">
+                    <img
+                      loading="lazy"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                      src={p.img}
+                      alt={p.title}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        if (target.src !== p.fallbackImg) {
+                          target.src = p.fallbackImg;
+                        }
+                      }}
+                      className="w-full h-full object-cover"
+                    />
+                    <span className="absolute top-3 right-3 bg-zinc-950/80 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2.5 py-1 rounded-full">
+                      {p.scope}
+                    </span>
+                    {p.isCrawled && (
+                      <span className="absolute bottom-3 left-3 bg-zinc-950/85 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-md flex items-center gap-1 border border-white/10 shadow-xs">
+                        <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                        Field Jobsite Photo &bull; {brand.name}
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-1.5">
+                      {p.title}
+                    </h3>
+                    <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-sans mb-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-crimson shrink-0" />
+                      <span>{p.location}</span>
+                    </div>
+                    <p className="text-xs text-zinc-400 font-sans">
+                      Turnkey project certified by {brand.name}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="px-6 pb-5 pt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-emerald-700">
+                  <span className="flex items-center gap-1 font-medium">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Manufacturer Warranty
+                  </span>
+                  <span className="text-zinc-400">Verified Craftsmanship</span>
+                </div>
+              </motion.div>
             ))}
           </div>
 
