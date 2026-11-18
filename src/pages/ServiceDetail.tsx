@@ -92,13 +92,13 @@ export default function ServiceDetail() {
     if (rawSlug.includes("storm") || rawSlug.includes("hail") || rawSlug.includes("tornado") || rawSlug.includes("insurance")) {
       return {
         title: "Severe Storm & Hail Damage Restoration",
-        subtitle: `Forensic drone damage assessment and comprehensive insurance claim coordination in ${brand.city}.`,
-        description: `When severe wind, hail, or tornado weather strikes ${brand.city}, ${brand.name} mobilizes immediately. Our certified restoration specialists conduct high-resolution thermal drone inspections, document structural wind uplift and shingle bruising, and coordinate directly with your insurance adjuster to secure complete replacement approval without out-of-pocket deductible surprises.`,
+        subtitle: `High-definition drone damage assessment and comprehensive insurance claim coordination in ${brand.city}.`,
+        description: `When severe wind, hail, or storm weather strikes ${brand.city}, ${brand.name} mobilizes immediately. Our certified restoration specialists conduct high-resolution aerial drone inspections, document structural wind uplift and shingle damage, and coordinate directly with your insurance adjuster to secure complete replacement approval without out-of-pocket deductible surprises.`,
         highlights: [
-          "High-definition thermal drone roof scans and forensic attic inspections",
-          "Itemized Xactimate line-item damage scoping for insurance adjusters",
+          "High-definition aerial drone roof scans and comprehensive attic inspections",
+          "Detailed itemized damage reports prepared for insurance adjuster meetings",
           "Emergency temporary tarping within 2 hours of post-storm dispatch",
-          "Strict Texas HB 2102 and state compliance: zero illegal deductible games",
+          "100% honest and transparent estimates with zero deductible gimmicks",
           "Complete manufacturer warranty restoration with lifetime materials",
         ],
         faqs: [
@@ -108,7 +108,7 @@ export default function ServiceDetail() {
           },
           {
             q: "Will my insurance cover a complete roof replacement?",
-            a: "If your roof has documented hail bruising or wind uplift exceeding policy thresholds, insurance policies cover full replacement minus your deductible. We provide complete forensic photo documentation to support your adjuster walk-through.",
+            a: "If your roof has documented hail bruising or wind uplift exceeding policy thresholds, insurance policies cover full replacement minus your deductible. We provide complete high-resolution photo documentation to support your adjuster walk-through.",
           },
           {
             q: "Is there any cost for the storm inspection?",
@@ -128,7 +128,7 @@ export default function ServiceDetail() {
         description: `From active ceiling drips during torrential rains to compromised valley flashing and deteriorated pipe boots, ${brand.name} delivers immediate, permanent roofing repairs throughout ${brand.city}. Our diagnostic technicians locate the hidden source of moisture, prevent mold growth, and execute flawless color-matched shingle repairs with zero price gouging.`,
         highlights: [
           "Under 2-hour priority emergency dispatch across the greater metropolitan area",
-          "Forensic moisture-meter detection to pinpoint interior leak entry points",
+          "Precision moisture-meter detection to pinpoint hidden water entry points",
           "Commercial and residential chimney, skylight, and valley flashing rebuilds",
           "Full pipe-boot neoprene collar replacement and ice/water barrier sealing",
           "Written leak-free repair warranty backed by certified technicians",
@@ -257,7 +257,7 @@ export default function ServiceDetail() {
     return {
       title: formattedTitle.includes("Roof") ? formattedTitle : `${formattedTitle} Roofing Systems`,
       subtitle: `Certified craftsmanship and non-prorated manufacturer warranties across ${brand.city}.`,
-      description: `${brand.name} delivers precision roof replacement and restoration throughout ${brand.city}. Every project begins with a complimentary 21-point forensic diagnostic survey, structural deck inspection, synthetic underlayment installation, and non-prorated manufacturer warranty coverage with zero deposit required upfront.`,
+      description: `${brand.name} delivers precision roof replacement and restoration throughout ${brand.city}. Every project begins with a complimentary 21-point on-site roof inspection, structural deck check, synthetic underlayment installation, and non-prorated manufacturer warranty coverage with zero deposit required upfront.`,
       highlights: [
         "Certified GAF Timberline HDZ and Owens Corning Duration lifetime systems",
         "Full structural deck tear-off, rot replacement, and synthetic moisture barrier",
@@ -292,7 +292,7 @@ export default function ServiceDetail() {
       return {
         range: "$350 – $1,250",
         label: "Localized Leak Repair Scope",
-        sub: "Forensic leak stop, pipe boot replacement, or valley flashing rebuild.",
+        sub: "Complete leak stop, pipe boot replacement, or valley flashing rebuild.",
       };
     }
     if (rawSlug.includes("metal")) {

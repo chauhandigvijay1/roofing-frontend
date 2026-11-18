@@ -246,7 +246,7 @@ export default function FormattedMessage({
             <Calendar className="w-3.5 h-3.5 text-crimson" /> Free 21-Point On-Site Inspection
           </div>
           <p className="text-xs text-zinc-600 font-serif leading-snug">
-            Complimentary drone roof scan & forensic attic survey backed by {brandName || "our certified team"}. Zero deposit required.
+            Complimentary aerial roof scan & attic moisture survey backed by {brandName || "our certified team"}. Zero deposit required.
           </p>
           <button
             type="button"

@@ -39,7 +39,7 @@ export default function Stats() {
   const brand = useBrand();
 
   const statsList = [
-    { value: brand.reviewsCount || 48, suffix: "+", label: "Verified 5-Star Reviews" },
+    { value: brand.reviewsCount || (brand.reviews?.length ? brand.reviews.length : 100), suffix: brand.reviewsCount || brand.reviews?.length ? "+" : "%", label: brand.reviewsCount || brand.reviews?.length ? "Verified Customer Reviews" : "Customer Satisfaction" },
     { value: brand.yearsInBusiness || 20, suffix: "+", label: `Years Serving ${brand.city}` },
     { value: brand.rating || 4.9, suffix: "", label: "Google Customer Rating", decimals: 1 },
     { value: 100, suffix: "%", label: "Licensed & Guaranteed" },

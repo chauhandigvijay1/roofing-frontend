@@ -51,14 +51,13 @@ export default function Chatbot() {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const initialMessage = brand.isCommercial
-    ? `Welcome to ${brand.name}! Are you looking for a commercial flat roof evaluation or single-ply TPO estimate in ${brand.city}?`
+    ? `Hi! Welcome to ${brand.name}. How can our commercial team assist with your facility in ${brand.city}?`
     : brand.state === "FL"
-    ? `Welcome to ${brand.name}! Do you need an emergency storm damage inspection or Florida wind mitigation evaluation in ${brand.city}?`
-    : `Welcome to ${brand.name}! Are you dealing with an active roof leak, or planning a replacement estimate in ${brand.city}?`;
+    ? `Hi! Welcome to ${brand.name}. Are you looking for a storm inspection, roof estimate, or repair in ${brand.city}?`
+    : `Hi! Welcome to ${brand.name}. How can our team help with your roof in ${brand.city} today?`;
 
   useEffect(() => {
-    const timer = setTimeout(() => setOpen(true), 2000);
-    return () => clearTimeout(timer);
+    // Keep closed initially so the hero and page content remain unobstructed
   }, []);
 
   useEffect(() => {
@@ -248,7 +247,7 @@ export default function Chatbot() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-1.5rem)] sm:w-[410px] max-w-[430px] h-[560px] max-h-[calc(100dvh-2.5rem)] flex flex-col backdrop-blur-xl bg-white/95 border border-zinc-200/80 shadow-2xl rounded-3xl overflow-hidden"
+            className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-1.5rem)] sm:w-[350px] max-w-[360px] h-[480px] max-h-[calc(100dvh-3rem)] flex flex-col backdrop-blur-xl bg-white/98 border border-zinc-200/90 shadow-2xl rounded-3xl overflow-hidden"
           >
             {/* Mobile Drag / Swipe-Down Indicator */}
             <div
@@ -257,29 +256,26 @@ export default function Chatbot() {
               title="Swipe or tap to close"
             />
 
-            {/* Header: Assistant Info & Controls */}
-            <div className="shrink-0 flex items-center justify-between px-3.5 sm:px-4 py-2.5 sm:py-3 border-b border-zinc-200 bg-white/90 backdrop-blur-md">
+            {/* Header: Human Customer Care & Dispatch */}
+            <div className="shrink-0 flex items-center justify-between px-3.5 sm:px-4 py-2.5 sm:py-3 border-b border-zinc-200 bg-white/95 backdrop-blur-md">
               <div className="flex items-center gap-2.5 min-w-0 flex-1 pr-1.5">
-                <div className="w-8 h-8 rounded-full bg-crimson text-white flex items-center justify-center shadow-md shrink-0">
-                  <MessageCircle className="w-4 h-4" />
+                <div className="relative shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-crimson text-white flex items-center justify-center shadow-xs">
+                    <MessageCircle className="w-4 h-4" />
+                  </div>
+                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <h3
-                    className="text-zinc-950 font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm leading-tight line-clamp-2"
+                    className="text-zinc-950 font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm leading-tight truncate"
                     title={brand.name}
                   >
-                    {brand.name || "Roofing Concierge"}
+                    {brand.name ? `${brand.name.split(" ")[0]} Care & Dispatch` : "Customer Care & Dispatch"}
                   </h3>
-                  {brand.licenseNumber && /^(?:#|[A-Z]{2,4}\s*[-#]?\s*\d|\d)/i.test(brand.licenseNumber.trim()) ? (
-                    <span className="text-[11px] text-zinc-500 font-sans font-medium block truncate mt-0.5">
-                      Lic #{brand.licenseNumber.replace(/^#/, "")} &bull; Serving {brand.city}
-                    </span>
-                  ) : (
-                    <span className="text-[11px] text-emerald-700 font-sans font-medium flex items-center gap-1.5 mt-0.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                      <span className="truncate">Active Dispatch &bull; {brand.city}</span>
-                    </span>
-                  )}
+                  <span className="text-[11px] text-zinc-500 font-sans font-medium flex items-center gap-1 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                    <span className="truncate">Active Dispatch &bull; {brand.city}</span>
+                  </span>
                 </div>
               </div>
 
@@ -488,29 +484,22 @@ export default function Chatbot() {
                         <X className="w-3.5 h-3.5" />
                       </button>
                       <p className="font-medium pr-6 text-zinc-900">{initialMessage}</p>
-                      <div className="flex flex-wrap gap-1.5 mt-3 pt-2.5 border-t border-zinc-100">
+                      <div className="flex flex-wrap gap-2 mt-3 pt-2.5 border-t border-zinc-100">
                         <button
                           type="button"
                           onClick={() => {
                             setBookingService(undefined);
                             setIsBookingOpen(true);
                           }}
-                          className="inline-flex items-center gap-1 bg-crimson text-white px-3 py-1.5 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs hover:bg-crimson-dark cursor-pointer"
+                          className="inline-flex items-center gap-1.5 bg-crimson text-white px-3.5 py-1.5 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs hover:bg-crimson-dark cursor-pointer"
                         >
                           <Calendar className="w-3 h-3" /> Book Free Inspection
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => setViewMode("calculator")}
-                          className="inline-flex items-center gap-1 bg-white border border-stone-300 hover:border-stone-400 text-zinc-850 px-3 py-1.5 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs cursor-pointer"
-                        >
-                          <Calculator className="w-3 h-3 text-crimson" /> Instant Calculator
-                        </button>
                         <a
                           href={`tel:${brand.phone}`}
-                          className="inline-flex items-center gap-1 bg-white border border-stone-300 hover:border-stone-400 text-zinc-850 px-3 py-1.5 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs"
+                          className="inline-flex items-center gap-1.5 bg-stone-100 hover:bg-stone-200 text-zinc-800 px-3.5 py-1.5 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all"
                         >
-                          <Phone className="w-3 h-3 text-emerald-600" /> Call {brand.phone}
+                          <Phone className="w-3 h-3 text-crimson" /> Call: {brand.phone}
                         </a>
                       </div>
                     </div>
@@ -600,7 +589,7 @@ export default function Chatbot() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                    placeholder="Ask a question or type 'Book'..."
+                    placeholder="Ask a question or describe your roof..."
                     className="flex-1 bg-stone-100/70 border border-zinc-200 rounded-full px-4 py-2 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-crimson focus:bg-white transition-colors font-serif"
                   />
                   <button
@@ -626,16 +615,16 @@ export default function Chatbot() {
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
           onClick={handleToggle}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 bg-crimson hover:bg-crimson-dark text-white px-5 py-3.5 rounded-full shadow-2xl font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm cursor-pointer hover:scale-105 active:scale-95 transition-all"
-          aria-label="Open roofing assistant"
+          className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 bg-crimson hover:bg-crimson-dark text-white px-4 py-3 rounded-full shadow-2xl font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm cursor-pointer hover:scale-105 active:scale-95 transition-all"
+          aria-label="Open dispatch chat"
         >
           <div className="relative">
-            <MessageCircle className="w-5 h-5" />
+            <MessageCircle className="w-4 h-4" />
             {showDot && (
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-crimson" />
             )}
           </div>
-          <span>{brand.name ? `${brand.name.split(" ")[0]} Concierge` : "Chat & Estimate"}</span>
+          <span>{brand.name ? `${brand.name.split(" ")[0]} Dispatch` : "Live Support"}</span>
         </motion.button>
       )}
 

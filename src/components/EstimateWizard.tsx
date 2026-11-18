@@ -399,7 +399,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                 <div className="flex items-start gap-2">
                   <CheckCircle className="w-3.5 h-3.5 text-crimson shrink-0 mt-0.5" />
                   <span className="text-zinc-700 text-xs leading-snug">
-                    Complete tear-off & forensic structural deck inspection
+                    Complete tear-off & structural deck inspection
                   </span>
                 </div>
                 <div className="flex items-start gap-2">

@@ -14,8 +14,8 @@ const values = [
   },
   {
     icon: Award,
-    label: "Forensic Integrity",
-    desc: "Detailed photographic diagnostics, transparent line-item scoping, and licensed oversight.",
+    label: "Transparent Pricing",
+    desc: "Clear upfront quotes, detailed photographic reports, and honest recommendations with zero hidden fees.",
   },
 ];
 

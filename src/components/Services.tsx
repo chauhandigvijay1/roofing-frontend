@@ -124,7 +124,7 @@ export default function Services() {
           {
             slug: "repair",
             title: "Emergency Storm Damage & Leak Tarping",
-            desc: "Immediate 24/7 post-storm emergency dispatch, forensic documentation for insurance adjusters, and watertight structural tarping.",
+            desc: "Immediate 24/7 post-storm emergency dispatch, thorough photo documentation for insurance adjusters, and watertight structural tarping.",
             img: "/service-repair.jpg",
             tag: "24/7 Rapid Response",
           },
@@ -168,7 +168,7 @@ export default function Services() {
           {
             slug: "storm-damage",
             title: "Hail & Windstorm Restoration",
-            desc: "Comprehensive forensic roof inspection and insurance claim assistance with 100% legal and deductible integrity.",
+            desc: "Comprehensive 21-point roof inspection and insurance claim assistance with 100% transparency and honest estimates.",
             img: "/service-storm.jpg",
             tag: "Insurance Scoping",
           },
