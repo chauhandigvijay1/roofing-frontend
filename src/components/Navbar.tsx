@@ -38,9 +38,12 @@ export default function Navbar() {
         onMouseLeave={() => setOpenDropdown(null)}
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to={{ pathname: "/", search }} className="flex items-center gap-2">
+          <Link to={{ pathname: "/", search }} className="flex items-center gap-2.5">
             {logo ? (
-              <img src={logo} alt={name} className="h-10 max-w-[220px] object-contain" />
+              <div className="flex items-center gap-2.5">
+                <img src={logo} alt={name} className="h-9 w-auto max-w-[180px] object-contain rounded-md" />
+                <span className="text-xl font-oswald uppercase tracking-wider font-black text-zinc-900 hidden sm:inline">{name}</span>
+              </div>
             ) : (
               <span className="text-2xl font-oswald uppercase tracking-wider font-black text-zinc-900">{name}</span>
             )}

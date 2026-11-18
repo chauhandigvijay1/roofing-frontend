@@ -74,7 +74,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   const rawPhone = params.get("phone") || "";
   const rawEmail = params.get("email") || "";
   const rawState = params.get("state") || "";
-  const rawDomain = params.get("domain") || "";
+  const rawDomain = params.get("domain") || params.get("website") || "";
   const rawLogo = params.get("logo") || "";
   const rawTagline = params.get("tagline") || "";
   const rawFounder = params.get("founder") || "";

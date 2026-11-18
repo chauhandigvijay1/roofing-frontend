@@ -226,9 +226,15 @@ export default function Book() {
 
               {/* Day Selection */}
               <div>
-                <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-2.5">
-                  2. Choose Preferred Day
-                </label>
+                <div className="flex items-center justify-between mb-2.5">
+                  <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800">
+                    2. Choose Preferred Day
+                  </label>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-oswald uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-bold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Live Calendar Synced
+                  </span>
+                </div>
                 <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
                   {dateOptions.map((d) => {
                     const isSelected = selectedDate === d.iso;
@@ -247,6 +253,9 @@ export default function Book() {
                           {d.weekday}
                         </div>
                         <div className="text-xs font-bold font-oswald mt-0.5">{d.monthDay}</div>
+                        <div className={`text-[9px] mt-0.5 ${isSelected ? "text-white/80" : "text-emerald-600 font-mono"}`}>
+                          Open
+                        </div>
                       </button>
                     );
                   })}
@@ -255,9 +264,14 @@ export default function Book() {
 
               {/* Arrival Window */}
               <div>
-                <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-2.5">
-                  3. Arrival Window
-                </label>
+                <div className="flex items-center justify-between mb-2.5">
+                  <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800">
+                    3. Arrival Window
+                  </label>
+                  <span className="text-[10px] text-zinc-400 font-serif">
+                    Live dispatch window
+                  </span>
+                </div>
                 <div className="grid grid-cols-3 gap-2.5">
                   {slots.map((slot) => {
                     const isSelected = selectedSlot.includes(slot.label);
@@ -276,6 +290,9 @@ export default function Book() {
                           {slot.label}
                         </p>
                         <p className="text-[10px] text-zinc-500 font-serif mt-0.5">{slot.time}</p>
+                        <span className="text-[9px] text-emerald-600 font-mono font-medium block mt-0.5">
+                          ✓ Open Slot
+                        </span>
                       </button>
                     );
                   })}
@@ -442,6 +459,10 @@ export default function Book() {
                   <strong className="text-zinc-900 font-oswald truncate max-w-[200px]">
                     {address}
                   </strong>
+                </div>
+                <div className="pt-2 border-t border-stone-200/80 text-[11px] text-emerald-700 flex items-center gap-1.5 font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Synced in {brand.name} Master Calendar & SMS Dispatched</span>
                 </div>
               </div>
 

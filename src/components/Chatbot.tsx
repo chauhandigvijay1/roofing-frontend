@@ -263,12 +263,12 @@ export default function Chatbot() {
                 <div className="w-8 h-8 rounded-full bg-crimson text-white flex items-center justify-center shadow-md shrink-0">
                   <MessageCircle className="w-4 h-4" />
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <span className="text-zinc-950 font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm block truncate">
                     {brand.name ? `${brand.name} Assistant` : "Roofing Assistant"}
                   </span>
-                  <span className="text-[10px] text-zinc-500 font-serif block truncate">
-                    {brand.licenseNumber || `Serving ${brand.city}`}
+                  <span className="text-[10px] text-zinc-500 font-serif block">
+                    {brand.licenseNumber ? `License: ${brand.licenseNumber}` : `Serving ${brand.city}`}
                   </span>
                 </div>
               </div>
@@ -491,10 +491,10 @@ export default function Chatbot() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => setViewMode("calculator")}
+                          onClick={() => sendMessage("What are your estimated roof replacement prices in " + brand.city + "?")}
                           className="inline-flex items-center gap-1 bg-white border border-stone-300 hover:border-stone-400 text-zinc-800 px-2.5 py-1 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs cursor-pointer"
                         >
-                          <Calculator className="w-3 h-3 text-crimson" /> Estimate Calculator
+                          Pricing Guide
                         </button>
                         <a
                           href={`tel:${brand.phone}`}
@@ -581,15 +581,6 @@ export default function Chatbot() {
                     aria-label="Open Calendar Booking"
                   >
                     <Calendar className="w-4 h-4 text-crimson" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setViewMode("calculator")}
-                    title="Open Quick Cost Calculator"
-                    className="p-2 rounded-full bg-stone-100 hover:bg-stone-200 text-zinc-700 transition-colors cursor-pointer"
-                    aria-label="Open Quick Cost Calculator"
-                  >
-                    <Calculator className="w-4 h-4 text-zinc-600" />
                   </button>
                   <input
                     type="text"
