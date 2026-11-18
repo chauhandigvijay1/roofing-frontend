@@ -50,37 +50,6 @@ export default function Chatbot() {
   const warmedUp = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const initialMessage = brand.isCommercial
-    ? `Hi! Welcome to ${brand.name}. How can our commercial team assist with your facility in ${brand.city}?`
-    : brand.state === "FL"
-    ? `Hi! Welcome to ${brand.name}. Are you looking for a storm inspection, roof estimate, or repair in ${brand.city}?`
-    : `Hi! Welcome to ${brand.name}. How can our team help with your roof in ${brand.city} today?`;
-
-  useEffect(() => {
-    // Keep closed initially so the hero and page content remain unobstructed
-  }, []);
-
-  useEffect(() => {
-    if (open) setShowDot(false);
-  }, [open]);
-
-  useEffect(() => {
-    if (viewMode === "chat") {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages, loading, viewMode]);
-
-  // Keyboard shortcut: Close on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) {
-        setOpen(false);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open]);
-
   const prewarm = useCallback(() => {
     if (warmedUp.current) return;
     warmedUp.current = true;
@@ -107,6 +76,38 @@ export default function Chatbot() {
       }),
     }).catch(() => {});
   }, [brand]);
+
+  const initialMessage = brand.isCommercial
+    ? `Hi! Welcome to ${brand.name}. How can our commercial team assist with your facility in ${brand.city}?`
+    : brand.state === "FL"
+    ? `Hi! Welcome to ${brand.name}. Are you looking for a storm inspection, roof estimate, or repair in ${brand.city}?`
+    : `Hi! Welcome to ${brand.name}. How can our team help with your roof in ${brand.city} today?`;
+
+  useEffect(() => {
+    // Silently pre-warm backend in background on page mount while keeping UI clean & closed
+    prewarm();
+  }, [prewarm]);
+
+  useEffect(() => {
+    if (open) setShowDot(false);
+  }, [open]);
+
+  useEffect(() => {
+    if (viewMode === "chat") {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, loading, viewMode]);
+
+  // Keyboard shortcut: Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) {
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   const sendMessage = async (overrideText?: string) => {
     const text = (overrideText !== undefined ? overrideText : input).trim();
