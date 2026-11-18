@@ -264,12 +264,19 @@ export default function Chatbot() {
                   <MessageCircle className="w-4 h-4" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="text-zinc-950 font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm block truncate">
-                    {brand.name ? `${brand.name} Assistant` : "Roofing Assistant"}
-                  </span>
-                  <span className="text-xs text-zinc-500 font-sans block">
-                    {brand.licenseNumber ? `License: ${brand.licenseNumber}` : `Serving ${brand.city}`}
-                  </span>
+                  <h3 className="text-zinc-950 font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm leading-tight line-clamp-2">
+                    {brand.name || "Roofing Concierge"}
+                  </h3>
+                  {brand.licenseNumber ? (
+                    <span className="text-[11px] text-zinc-500 font-sans font-medium block truncate mt-0.5">
+                      Lic: #{brand.licenseNumber} &bull; Serving {brand.city}
+                    </span>
+                  ) : (
+                    <span className="text-[11px] text-emerald-700 font-sans font-medium flex items-center gap-1.5 mt-0.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                      <span className="truncate">Serving {brand.city} &bull; 24/7 Verified</span>
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -622,7 +629,7 @@ export default function Chatbot() {
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-crimson" />
             )}
           </div>
-          <span>{brand.name ? `${brand.name} Concierge` : "Chat & Estimate"}</span>
+          <span>{brand.name ? `${brand.name.split(" ")[0]} Concierge` : "Chat & Estimate"}</span>
         </motion.button>
       )}
 

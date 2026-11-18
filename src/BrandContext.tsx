@@ -123,8 +123,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       founderName: rawFounder || undefined,
       founderTitle: rawTitle || (rawFounder ? "Founder & Certified Roofing Master" : undefined),
       founderPhoto: rawPhoto || undefined,
-      licenseNumber:
-        rawLicense || (resolvedState === "FL" ? "Florida DBPR Certified Contractor" : "Licensed, Bonded & Fully Insured"),
+      licenseNumber: rawLicense ? rawLicense.trim() : undefined,
       rating: parsedRating,
       reviewsCount: parsedReviews,
       yearsInBusiness: parsedYears,
