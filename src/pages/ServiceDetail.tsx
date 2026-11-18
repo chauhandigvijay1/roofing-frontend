@@ -332,6 +332,9 @@ export default function ServiceDetail() {
           decoding="async"
           src={serviceData.img}
           alt={serviceData.title}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "/service-commercial.jpg";
+          }}
           className="absolute inset-0 w-full h-full object-cover opacity-35"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent" />

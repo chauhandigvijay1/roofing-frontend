@@ -41,7 +41,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://roofing-backend
 
 /**
  * Multi-pass recursive HTML entity decoder.
- * Completely handles double-encoded entities (e.g. &amp;amp; -> &amp; -> &).
+ * Handles double-encoded entities (e.g. &amp;amp; -> &amp; -> &).
  */
 export function decodeHtmlEntities(str?: string | null): string {
   if (!str) return "";
@@ -157,17 +157,6 @@ function extractDomain(email: string, domainParam: string, nameParam?: string): 
   if (nameParam) {
     const norm = nameParam.toLowerCase();
     if (norm.includes("worleybyrd") || norm.includes("worley byrd")) return "worleybyrdroofing.com";
-    if (norm.includes("roofsonly")) return "roofsonly.com";
-    if (norm.includes("spc")) return "spcroofs.com";
-    if (norm.includes("occidental")) return "occidentalroofing.com";
-    if (norm.includes("shrum")) return "shrumsroofing.com";
-    if (norm.includes("a&w") || norm.includes("a-w")) return "a-wcontracting.com";
-    if (norm.includes("trueworks")) return "trueworksroofinghoustontx.com";
-    if (norm.includes("commercial roofing contractor") || norm.includes("crc")) return "yourcommercialroofer.com";
-    if (norm.includes("superior roofing")) return "superiorroofingtexas.com";
-    if (norm.includes("tmc")) return "tmcroofing.com";
-    if (norm.includes("pitch")) return "pitchroofing.com";
-    if (norm.includes("bird's eye") || norm.includes("birdseye")) return "birdseyeroofing.com";
   }
   return "";
 }
@@ -204,12 +193,11 @@ const defaultBrand: Brand = {
 };
 
 /**
- * 100% Pre-loaded Verified Contractor Directory.
- * Supports instant vanity routing: /worleybyrd, /roofsonly, /spcroofs, etc.
- * Zero query parameters required. Full backward compatibility maintained.
+ * Verified Directory - EXCLUSIVELY for WorleyByrd Roofing & Restoration.
+ * As explicitly instructed: Only WorleyByrd has the special vanity URL.
+ * All other contractors worldwide load dynamically via query parameters.
  */
 export const VERIFIED_DIRECTORY: Record<string, Partial<Brand>> = {
-  // 0. WorleyByrd Roofing & Restoration (Target Account)
   "worleybyrd": {
     name: "WorleyByrd Roofing & Restoration",
     domain: "worleybyrdroofing.com",
@@ -236,270 +224,6 @@ export const VERIFIED_DIRECTORY: Record<string, Partial<Brand>> = {
     tagline: "Central Texas Commercial TPO & Architectural Roof Restoration Authority",
     aboutText: "WorleyByrd Roofing & Restoration is an Austin-based commercial and residential roofing authority founded by Nathan Worley and Eric Worley. We engineer precision TPO flat roofs, standing seam metal systems, and hurricane-rated shingle replacements backed by comprehensive non-prorated warranties.",
   },
-
-  // 1. RoofsOnly.com (Austin, TX)
-  "roofsonly": {
-    name: "RoofsOnly.com",
-    domain: "roofsonly.com",
-    founderName: "Jake Mullin",
-    founderTitle: "Co-Founder and CEO",
-    phone: "+1 817-994-7087",
-    email: "jake@roofsonly.com",
-    city: "Austin, TX",
-    state: "TX",
-    isCommercial: true,
-  },
-  "roofsonly.com": {
-    name: "RoofsOnly.com",
-    domain: "roofsonly.com",
-    founderName: "Jake Mullin",
-    founderTitle: "Co-Founder and CEO",
-    phone: "+1 817-994-7087",
-    email: "jake@roofsonly.com",
-    city: "Austin, TX",
-    state: "TX",
-    isCommercial: true,
-  },
-
-  // 2. SPC Construction & Roofing (Grapevine, TX)
-  "spcroofs": {
-    name: "SPC Construction & Roofing",
-    domain: "spcroofs.com",
-    founderName: "Jonathan Shaw",
-    founderTitle: "CEO/President",
-    phone: "+1 817-505-7957",
-    email: "jshaw@spcgc.com",
-    city: "Grapevine, TX",
-    state: "TX",
-    isCommercial: true,
-  },
-  "spcroofs.com": {
-    name: "SPC Construction & Roofing",
-    domain: "spcroofs.com",
-    founderName: "Jonathan Shaw",
-    founderTitle: "CEO/President",
-    phone: "+1 817-505-7957",
-    email: "jshaw@spcgc.com",
-    city: "Grapevine, TX",
-    state: "TX",
-    isCommercial: true,
-  },
-
-  // 3. Occidental Roofing (Tempe, AZ)
-  "occidentalroofing": {
-    name: "Occidental Roofing",
-    domain: "occidentalroofing.com",
-    founderName: "Fernando Moreno",
-    founderTitle: "Founder & CEO",
-    phone: "+1 480-662-0430",
-    email: "fer@occidentalroofing.com",
-    city: "Tempe, AZ",
-    state: "AZ",
-    isCommercial: true,
-  },
-  "occidentalroofing.com": {
-    name: "Occidental Roofing",
-    domain: "occidentalroofing.com",
-    founderName: "Fernando Moreno",
-    founderTitle: "Founder & CEO",
-    phone: "+1 480-662-0430",
-    email: "fer@occidentalroofing.com",
-    city: "Tempe, AZ",
-    state: "AZ",
-    isCommercial: true,
-  },
-
-  // 4. Shrum's Roofing Company (Gallatin, TN)
-  "shrumsroofing": {
-    name: "Shrum's Roofing Company",
-    domain: "shrumsroofing.com",
-    founderName: "Billy Shrum",
-    founderTitle: "Owner",
-    phone: "+1 615-417-3977",
-    email: "billy@shrumsroofing.com",
-    city: "Gallatin, TN",
-    state: "TN",
-    isCommercial: true,
-  },
-  "shrumsroofing.com": {
-    name: "Shrum's Roofing Company",
-    domain: "shrumsroofing.com",
-    founderName: "Billy Shrum",
-    founderTitle: "Owner",
-    phone: "+1 615-417-3977",
-    email: "billy@shrumsroofing.com",
-    city: "Gallatin, TN",
-    state: "TN",
-    isCommercial: true,
-  },
-
-  // 5. A&W Contracting (Naples, FL)
-  "a-wcontracting": {
-    name: "A&W Contracting",
-    domain: "a-wcontracting.com",
-    founderName: "Devin Wills",
-    founderTitle: "President & Chief Executive Officer",
-    phone: "+1 267-528-6161",
-    email: "devin@a-winc.com",
-    city: "Naples, FL",
-    state: "FL",
-    isCommercial: true,
-  },
-  "a-wcontracting.com": {
-    name: "A&W Contracting",
-    domain: "a-wcontracting.com",
-    founderName: "Devin Wills",
-    founderTitle: "President & Chief Executive Officer",
-    phone: "+1 267-528-6161",
-    email: "devin@a-winc.com",
-    city: "Naples, FL",
-    state: "FL",
-    isCommercial: true,
-  },
-
-  // 6. Trueworks Roofing (Houston, TX)
-  "trueworksroofing": {
-    name: "Trueworks Roofing",
-    domain: "trueworksroofinghoustontx.com",
-    founderName: "Joel Patzke",
-    founderTitle: "Founder & CEO",
-    phone: "+1 904-704-4076",
-    email: "joel@trueworksroofing.com",
-    city: "Houston, TX",
-    state: "TX",
-    isCommercial: true,
-  },
-  "trueworksroofinghoustontx.com": {
-    name: "Trueworks Roofing",
-    domain: "trueworksroofinghoustontx.com",
-    founderName: "Joel Patzke",
-    founderTitle: "Founder & CEO",
-    phone: "+1 904-704-4076",
-    email: "joel@trueworksroofing.com",
-    city: "Houston, TX",
-    state: "TX",
-    isCommercial: true,
-  },
-
-  // 7. Commercial Roofing Contractor (Denver, CO)
-  "crc": {
-    name: "Commercial Roofing Contractor",
-    domain: "yourcommercialroofer.com",
-    founderName: "Christopher Sanchez",
-    founderTitle: "Business Owner/CEO",
-    phone: "+1 720-301-6472",
-    email: "csanchez@crcinbox.com",
-    city: "Denver, CO",
-    state: "CO",
-    isCommercial: true,
-  },
-  "yourcommercialroofer.com": {
-    name: "Commercial Roofing Contractor",
-    domain: "yourcommercialroofer.com",
-    founderName: "Christopher Sanchez",
-    founderTitle: "Business Owner/CEO",
-    phone: "+1 720-301-6472",
-    email: "csanchez@crcinbox.com",
-    city: "Denver, CO",
-    state: "CO",
-    isCommercial: true,
-  },
-
-  // 8. Superior Roofing & Restoration (Atlanta, GA)
-  "superiorroofing": {
-    name: "Superior Roofing & Restoration",
-    domain: "superiorroofingtexas.com",
-    founderName: "Jonathan Mills",
-    founderTitle: "Founder & CEO",
-    phone: "+1 256-499-2773",
-    email: "jonathan@allensprinters.com",
-    city: "Atlanta, GA",
-    state: "GA",
-    isCommercial: true,
-  },
-  "superiorroofingtexas.com": {
-    name: "Superior Roofing & Restoration",
-    domain: "superiorroofingtexas.com",
-    founderName: "Jonathan Mills",
-    founderTitle: "Founder & CEO",
-    phone: "+1 256-499-2773",
-    email: "jonathan@allensprinters.com",
-    city: "Atlanta, GA",
-    state: "GA",
-    isCommercial: true,
-  },
-
-  // 9. TMC Roofing Company (Perris, CA)
-  "tmcroofing": {
-    name: "TMC Roofing Company",
-    domain: "tmcroofing.com",
-    founderName: "Travis Christensen",
-    founderTitle: "Owner",
-    phone: "+1 951-330-0191",
-    email: "travis@tmcroofingco.com",
-    city: "Perris, CA",
-    state: "CA",
-    isCommercial: true,
-  },
-  "tmcroofing.com": {
-    name: "TMC Roofing Company",
-    domain: "tmcroofing.com",
-    founderName: "Travis Christensen",
-    founderTitle: "Owner",
-    phone: "+1 951-330-0191",
-    email: "travis@tmcroofingco.com",
-    city: "Perris, CA",
-    state: "CA",
-    isCommercial: true,
-  },
-
-  // 10. PITCH (Seminole, FL)
-  "pitch": {
-    name: "PITCH",
-    domain: "pitchroofing.com",
-    founderName: "Ron Olson",
-    founderTitle: "President & CEO",
-    phone: "+1 910-206-2863",
-    email: "ron@pitchroofing.com",
-    city: "Seminole, FL",
-    state: "FL",
-    isCommercial: true,
-  },
-  "pitchroofing.com": {
-    name: "PITCH",
-    domain: "pitchroofing.com",
-    founderName: "Ron Olson",
-    founderTitle: "President & CEO",
-    phone: "+1 910-206-2863",
-    email: "ron@pitchroofing.com",
-    city: "Seminole, FL",
-    state: "FL",
-    isCommercial: true,
-  },
-
-  // 11. Bird's Eye Roofing Company (Alpharetta, GA)
-  "birdseye": {
-    name: "Bird's Eye Roofing Company",
-    domain: "birdseyeroofing.com",
-    founderName: "Brandon Marsh",
-    founderTitle: "President & Owner",
-    phone: "+1 404-655-8868",
-    email: "brandon@birdseyeroofing.com",
-    city: "Alpharetta, GA",
-    state: "GA",
-    isCommercial: true,
-  },
-  "birdseyeroofing.com": {
-    name: "Bird's Eye Roofing Company",
-    domain: "birdseyeroofing.com",
-    founderName: "Brandon Marsh",
-    founderTitle: "President & Owner",
-    phone: "+1 404-655-8868",
-    email: "brandon@birdseyeroofing.com",
-    city: "Alpharetta, GA",
-    state: "GA",
-    isCommercial: true,
-  },
 };
 
 const BrandContext = createContext<Brand>(defaultBrand);
@@ -510,7 +234,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     fetch(`${BACKEND_URL}/health`, { method: "GET", mode: "cors" }).catch(() => {});
   }, []);
 
-  // 1. Check for Vanity Path Route (Option B, e.g. /worleybyrd, /roofsonly.com)
+  // Check for Vanity Path Route (ONLY WorleyByrd has vanity slug /worleybyrd)
   const pathnameSlug = useMemo(() => {
     const rawPath = window.location.pathname.replace(/^\/+|\/+$/g, "");
     const reservedRoutes = ["services", "portfolio", "financing", "locations", "book"];
@@ -535,7 +259,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   const rawPhone = params.get("phone") || presetBrand?.phone || "";
   const rawEmail = params.get("email") || presetBrand?.email || "";
   const rawState = params.get("state") || presetBrand?.state || "";
-  const rawDomain = params.get("domain") || params.get("website") || presetBrand?.domain || (pathnameSlug.includes(".") ? pathnameSlug : "");
+  const rawDomain = params.get("domain") || params.get("website") || presetBrand?.domain || "";
   const rawLogo = params.get("logo") || presetBrand?.logo || "";
   const rawTagline = params.get("tagline") || presetBrand?.tagline || "";
   const rawFounder = params.get("founder") || presetBrand?.founderName || "";
@@ -659,7 +383,6 @@ export function BrandProvider({ children }: { children: ReactNode }) {
 
   const [brand, setBrand] = useState<Brand>(initialBrand);
 
-  // Sync state whenever URL or route changes
   useEffect(() => {
     setBrand(initialBrand);
   }, [initialBrand]);
@@ -723,10 +446,8 @@ export function BrandProvider({ children }: { children: ReactNode }) {
 
   // Dynamic SEO, AEO & GEO Structured Schema Injection
   useEffect(() => {
-    // 1. Dynamic Document Title
     document.title = `${brand.name} | ${brand.city} Premier Roofing & Commercial Restoration`;
 
-    // 2. Dynamic Meta Description
     let metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) {
       metaDesc = document.createElement("meta");
@@ -735,7 +456,6 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     }
     metaDesc.setAttribute("content", brand.aboutText || `${brand.name} provides certified residential roof replacements, commercial TPO systems, and emergency storm restorations across ${brand.city}.`);
 
-    // 3. Dynamic JSON-LD Schema (Google, Perplexity & ChatGPT Knowledge Graph)
     let schemaScript = document.getElementById("contractor-schema");
     if (!schemaScript) {
       schemaScript = document.createElement("script");

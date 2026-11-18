@@ -1,9 +1,82 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { MapPin, ShieldCheck, Calendar, Phone, Calculator } from "lucide-react";
 import { useBrand, getRegionalSuburbs, formatLocation } from "../BrandContext";
 import BookingModal from "../components/BookingModal";
 import EstimateWizard from "../components/EstimateWizard";
+
+interface PortfolioProjectItem {
+  title: string;
+  location: string;
+  img: string;
+  fallbackImg: string;
+  scope: string;
+  isCrawled: boolean;
+}
+
+function PortfolioCard({ p, brandName, idx }: { p: PortfolioProjectItem; brandName: string; idx: number }) {
+  const [currentImg, setCurrentImg] = useState(p.img);
+  const [failed, setFailed] = useState(false);
+
+  const handleError = () => {
+    if (!failed) {
+      setFailed(true);
+      setCurrentImg(p.fallbackImg);
+    }
+  };
+
+  const showBadge = p.isCrawled && !failed;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: idx * 0.08 }}
+      className="bg-white rounded-2xl overflow-hidden shadow-md border border-stone-200 border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl flex flex-col justify-between"
+    >
+      <div>
+        <div className="overflow-hidden bg-stone-900 h-56 relative">
+          <img
+            loading="lazy"
+            decoding="async"
+            src={currentImg}
+            alt={p.title}
+            onError={handleError}
+            className="w-full h-full object-cover"
+          />
+          <span className="absolute top-3 right-3 bg-zinc-950/80 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2.5 py-1 rounded-full">
+            {p.scope}
+          </span>
+          {showBadge && (
+            <span className="absolute bottom-3 left-3 bg-zinc-950/85 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-md flex items-center gap-1 border border-white/10 shadow-xs">
+              <ShieldCheck className="w-3 h-3 text-emerald-400" />
+              Field Jobsite Photo &bull; {brandName}
+            </span>
+          )}
+        </div>
+        <div className="p-6">
+          <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-1.5">
+            {p.title}
+          </h3>
+          <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-sans mb-1.5">
+            <MapPin className="w-3.5 h-3.5 text-crimson shrink-0" />
+            <span>{p.location}</span>
+          </div>
+          <p className="text-xs text-zinc-400 font-sans">
+            Turnkey project certified by {brandName}
+          </p>
+        </div>
+      </div>
+
+      <div className="px-6 pb-5 pt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-emerald-700">
+        <span className="flex items-center gap-1 font-medium">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Manufacturer Warranty
+        </span>
+        <span className="text-zinc-400">Verified Craftsmanship</span>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Portfolio() {
   const brand = useBrand();
@@ -15,56 +88,89 @@ export default function Portfolio() {
       ? brand.serviceAreas
       : getRegionalSuburbs(brand.city, brand.state);
 
-  const defaultProjects = [
-    {
-      title: "Architectural Shingle Replacement",
-      location: brand.city,
-      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
-      scope: "50-Yr GAF Timberline HDZ",
-    },
-    {
-      title: "Severe Storm Recovery & Replacement",
-      location: serviceAreas[0] ? formatLocation(serviceAreas[0], brand.state) : brand.city,
-      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
-      scope: "Full Decking & Synthetic Barrier",
-    },
-    {
-      title: brand.isCommercial ? "Industrial TPO Flat System" : "Commercial Single-Ply Flat Roof",
-      location: serviceAreas[1] ? formatLocation(serviceAreas[1], brand.state) : brand.city,
-      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2467902073-1920w.jpg",
-      scope: "60-Mil Heat-Welded Membrane",
-    },
-    {
-      title: "Custom Standing Seam Metal",
-      location: serviceAreas[2] ? formatLocation(serviceAreas[2], brand.state) : brand.city,
-      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2447926003-1920w.jpg",
-      scope: "24-Gauge Concealed Fastener",
-    },
-    {
-      title: "Emergency Leak & Valley Restoration",
-      location: serviceAreas[3] ? formatLocation(serviceAreas[3], brand.state) : brand.city,
-      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
-      scope: "Rapid Tarping & Lifetime Repair",
-    },
-    {
-      title: "Class 4 Impact Hail Defense",
-      location: serviceAreas[4] ? formatLocation(serviceAreas[4], brand.state) : brand.city,
-      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
-      scope: "UL 2218 Insurance Qualified",
-    },
-  ];
+  const defaultProjects = useMemo(
+    () => [
+      {
+        title: "Architectural Shingle Replacement",
+        location: brand.city,
+        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
+        scope: "50-Yr GAF Timberline HDZ",
+      },
+      {
+        title: "Severe Storm Recovery & Replacement",
+        location: serviceAreas[0] ? formatLocation(serviceAreas[0], brand.state) : brand.city,
+        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
+        scope: "Full Decking & Synthetic Barrier",
+      },
+      {
+        title: brand.isCommercial ? "Industrial TPO Flat System" : "Commercial Single-Ply Flat Roof",
+        location: serviceAreas[1] ? formatLocation(serviceAreas[1], brand.state) : brand.city,
+        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2467902073-1920w.jpg",
+        scope: "60-Mil Heat-Welded Membrane",
+      },
+      {
+        title: "Custom Standing Seam Metal",
+        location: serviceAreas[2] ? formatLocation(serviceAreas[2], brand.state) : brand.city,
+        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2447926003-1920w.jpg",
+        scope: "24-Gauge Concealed Fastener",
+      },
+      {
+        title: "Emergency Leak & Valley Restoration",
+        location: serviceAreas[3] ? formatLocation(serviceAreas[3], brand.state) : brand.city,
+        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
+        scope: "Rapid Tarping & Lifetime Repair",
+      },
+      {
+        title: "Class 4 Impact Hail Defense",
+        location: serviceAreas[4] ? formatLocation(serviceAreas[4], brand.state) : brand.city,
+        fallbackImg: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
+        scope: "UL 2218 Insurance Qualified",
+      },
+    ],
+    [brand.city, brand.state, brand.isCommercial, serviceAreas]
+  );
 
-  // Blend in contractor's authentic jobsite drone / field imagery if crawled from domain
-  const projects = defaultProjects.map((p, idx) => {
-    if (brand.galleryImages && brand.galleryImages[idx]) {
+  // Filter out any crawled images that are logos, icons, seals, badges, or social media icons
+  const cleanCrawledPhotos = useMemo(() => {
+    if (!brand.galleryImages || brand.galleryImages.length === 0) return [];
+    const bannedPatterns = [
+      "logo",
+      "icon",
+      "seal",
+      "badge",
+      "award",
+      "bbb",
+      "banner",
+      "header",
+      "member",
+      "wpconsent",
+      "facebook",
+      "twitter",
+      "instagram",
+      "youtube",
+      "wp-includes",
+      "avatar",
+      "lockup",
+      "ommuniti",
+      "chamber",
+    ];
+    return brand.galleryImages.filter((url) => {
+      if (!url || typeof url !== "string") return false;
+      const lower = url.toLowerCase();
+      return !bannedPatterns.some((pattern) => lower.includes(pattern));
+    });
+  }, [brand.galleryImages]);
+
+  const projects: PortfolioProjectItem[] = useMemo(() => {
+    return defaultProjects.map((p, idx) => {
+      const customPhoto = cleanCrawledPhotos[idx];
       return {
         ...p,
-        img: brand.galleryImages[idx],
-        isCrawled: true,
+        img: customPhoto || p.fallbackImg,
+        isCrawled: Boolean(customPhoto),
       };
-    }
-    return { ...p, isCrawled: false };
-  });
+    });
+  }, [defaultProjects, cleanCrawledPhotos]);
 
   return (
     <>
@@ -90,53 +196,12 @@ export default function Portfolio() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((p, idx) => (
-              <motion.div
+              <PortfolioCard
                 key={p.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.08 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-md border border-stone-200 border-t-4 border-t-crimson transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl flex flex-col justify-between"
-              >
-                <div>
-                  <div className="overflow-hidden bg-stone-100 h-56 relative">
-                    <img
-                      loading="lazy"
-                      decoding="async"
-                      src={p.img}
-                      alt={p.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <span className="absolute top-3 right-3 bg-zinc-950/80 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2.5 py-1 rounded-full">
-                      {p.scope}
-                    </span>
-                    {p.isCrawled && (
-                      <span className="absolute bottom-3 left-3 bg-zinc-950/85 backdrop-blur-xs text-white text-[10px] font-oswald uppercase tracking-wider font-bold px-2 py-0.5 rounded-md flex items-center gap-1 border border-white/10 shadow-xs">
-                        <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                        Field Jobsite Photo &bull; {brand.name}
-                      </span>
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 mb-1.5">
-                      {p.title}
-                    </h3>
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-sans mb-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-crimson shrink-0" />
-                      <span>{p.location}</span>
-                    </div>
-                    <p className="text-xs text-zinc-400 font-sans">
-                      Turnkey project certified by {brand.name}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="px-6 pb-5 pt-2 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-emerald-700">
-                  <span className="flex items-center gap-1 font-medium">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Manufacturer Warranty
-                  </span>
-                  <span className="text-zinc-400">Verified Craftsmanship</span>
-                </div>
-              </motion.div>
+                p={p}
+                brandName={brand.name}
+                idx={idx}
+              />
             ))}
           </div>
 
