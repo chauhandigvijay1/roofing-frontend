@@ -345,6 +345,63 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     };
   }, [targetDomain, rawTagline, rawAbout, rawRating, rawReviews, rawYears]);
 
+  // Dynamic SEO, AEO & GEO Structured Schema Injection (Deliverable #3)
+  useEffect(() => {
+    // 1. Dynamic Document Title
+    document.title = `${brand.name} | ${brand.city} Premier Roofing & Commercial Restoration`;
+
+    // 2. Dynamic Meta Description
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement("meta");
+      metaDesc.setAttribute("name", "description");
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute("content", brand.aboutText || `${brand.name} provides certified residential roof replacements, commercial TPO systems, and emergency storm restorations across ${brand.city}.`);
+
+    // 3. Dynamic JSON-LD Schema (Google, Perplexity & ChatGPT Knowledge Graph)
+    let schemaScript = document.getElementById("contractor-schema");
+    if (!schemaScript) {
+      schemaScript = document.createElement("script");
+      schemaScript.id = "contractor-schema";
+      schemaScript.setAttribute("type", "application/ld+json");
+      document.head.appendChild(schemaScript);
+    }
+
+    const schemaData = {
+      "@context": "https://schema.org",
+      "@type": "RoofingContractor",
+      name: brand.name,
+      telephone: brand.phone,
+      email: brand.email,
+      url: brand.domain ? `https://${brand.domain}` : window.location.href,
+      image: brand.logo,
+      priceRange: "$$ - $$$",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: brand.city.split(",")[0].trim(),
+        addressRegion: brand.state,
+        addressCountry: "US",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        addressLocality: brand.city,
+      },
+      areaServed: (brand.serviceAreas || []).map((area) => ({
+        "@type": "City",
+        name: area,
+      })),
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: brand.rating || 4.9,
+        reviewCount: brand.reviewsCount || 42,
+      },
+      knowsAbout: brand.services,
+    };
+
+    schemaScript.textContent = JSON.stringify(schemaData, null, 2);
+  }, [brand]);
+
   return <BrandContext.Provider value={brand}>{children}</BrandContext.Provider>;
 }
 
