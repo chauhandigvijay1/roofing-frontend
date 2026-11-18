@@ -1,37 +1,41 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useBrand } from "../BrandContext";
 import {
   Calendar as CalendarIcon,
-  Clock,
   MapPin,
   Phone,
   User,
-  ShieldCheck,
   CheckCircle2,
   Download,
-  AlertCircle,
   ArrowRight,
   ChevronLeft,
-  Check,
+  Search,
+  Home,
+  ShieldAlert,
+  Building2,
+  Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 
 export default function Book() {
   const brand = useBrand();
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [selectedService, setSelectedService] = useState<string>(
     brand.isCommercial
-      ? "Commercial TPO & Single-Ply Flat Inspection"
+      ? "Commercial Flat / TPO System"
       : brand.state === "FL"
-      ? "Florida Wind Mitigation Inspection (Insurance Form)"
-      : "Free 21-Point Comprehensive Roof Inspection"
+      ? "Florida Wind Mitigation Inspection"
+      : "Free 21-Point Roof Inspection"
   );
+
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
     return d.toISOString().split("T")[0];
   });
-  const [selectedSlot, setSelectedSlot] = useState<string>("Morning (9:00 AM - 11:30 AM)");
+  const [selectedSlot, setSelectedSlot] = useState<string>("Morning (9 AM - 12 PM)");
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [address, setAddress] = useState<string>("");
@@ -41,53 +45,44 @@ export default function Book() {
 
   const services = [
     {
-      id: "full-replace",
-      title: "Full Lifetime Architectural Roof Replacement",
-      subtitle: "50-year non-prorated manufacturer warranty & Class 4 impact rating",
-      badge: "Lifetime Warranty",
+      id: "inspection",
+      title: brand.state === "FL" ? "Florida Wind Mitigation Inspection" : "Free 21-Point Roof Inspection",
+      icon: Search,
+      tag: "100% Free ($0)",
     },
     {
-      id: "drone-inspect",
-      title: "Thermal Drone Roof & Attic Diagnostic Survey",
-      subtitle: "Infrared thermal scan for trapped moisture, insulation leaks & deck decay",
-      badge: "High-Tech Survey",
+      id: "replacement",
+      title: "Full Lifetime Roof Replacement",
+      icon: Home,
+      tag: "Free Written Estimate",
     },
     {
-      id: "comm-tpo",
-      title: "Commercial TPO & Single-Ply Flat Inspection",
-      subtitle: "Core sampling, seam inspection & cool roof energy efficiency audit",
-      badge: "Commercial Grade",
+      id: "repair",
+      title: "Emergency Leak & Storm Repair",
+      icon: ShieldAlert,
+      tag: "Immediate Dispatch",
     },
     {
-      id: "emergency-tarp",
-      title: "24/7 Priority Emergency Storm Leak & Tarping",
-      subtitle: "Rapid on-site dispatch with water-stop seal and adjuster documentation",
-      badge: "24/7 Priority",
+      id: "commercial",
+      title: "Commercial Flat / TPO System",
+      icon: Building2,
+      tag: "Commercial Scope",
     },
   ];
-
-  if (brand.state === "FL") {
-    services.unshift({
-      id: "wind-mit",
-      title: "Florida Wind Mitigation Inspection (Insurance Form)",
-      subtitle: "Official DBPR documentation to qualify for $500–$1,200/yr insurance savings",
-      badge: "DBPR Certified",
-    });
-  }
 
   const dateOptions = Array.from({ length: 7 }).map((_, i) => {
     const d = new Date();
     d.setDate(d.getDate() + i + 1);
     const iso = d.toISOString().split("T")[0];
-    const weekday = d.toLocaleDateString("en-US", { weekday: "short" });
+    const weekday = i === 0 ? "Tomorrow" : d.toLocaleDateString("en-US", { weekday: "short" });
     const monthDay = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
     return { iso, weekday, monthDay };
   });
 
   const slots = [
-    { id: "morning", label: "Morning Window", time: "9:00 AM - 11:30 AM", badge: "High Demand" },
-    { id: "afternoon", label: "Afternoon Window", time: "2:00 PM - 4:30 PM", badge: "Optimal Light" },
-    { id: "urgent", label: "Priority Immediate", time: "First Available Dispatch Window", badge: "Emergency" },
+    { id: "morning", label: "Morning", time: "9 AM - 12 PM" },
+    { id: "afternoon", label: "Afternoon", time: "1 PM - 4 PM" },
+    { id: "urgent", label: "Priority / Any Time", time: "First Available" },
   ];
 
   const handleBookingSubmit = (e: React.FormEvent) => {
@@ -99,8 +94,8 @@ export default function Book() {
       const code = `VIP-${Math.floor(100000 + Math.random() * 900000)}`;
       setConfirmationCode(code);
       setSubmitting(false);
-      setStep(4);
-    }, 600);
+      setStep(3);
+    }, 450);
   };
 
   const handleDownloadCalendar = () => {
@@ -108,7 +103,7 @@ export default function Book() {
     const startTime = "140000Z";
     const endTime = "160000Z";
     const title = `${brand.name} - Roof Inspection (${selectedService})`;
-    const description = `Confirmed Roof Inspection with ${brand.name} for ${name}. Service: ${selectedService}. Address: ${address}. Dispatch Line: ${brand.phone}. Master Code: ${confirmationCode}`;
+    const description = `Confirmed Roof Inspection with ${brand.name} for ${name}.\nService: ${selectedService}\nAddress: ${address}\nPhone: ${brand.phone}\nMaster Code: ${confirmationCode}`;
 
     const icsContent = [
       "BEGIN:VCALENDAR",
@@ -137,274 +132,222 @@ export default function Book() {
     URL.revokeObjectURL(url);
   };
 
-  const inspectionChecklist = [
-    "Full attic moisture, thermal leak & thermodynamic ventilation check",
-    "High-resolution digital drone / physical shingle & valley inspection",
-    "Flashings, plumbing boot collars, drip edges & gutter integrity",
-    "Written forensic condition report with itemized repair / replacement options",
-    "100% Free with zero high-pressure sales obligations",
-  ];
-
   return (
-    <div className="pt-24 pb-20 bg-stone-50 min-h-screen">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 bg-crimson/10 border border-crimson/30 px-3.5 py-1 text-crimson text-xs font-oswald uppercase tracking-widest font-bold mb-3 shadow-xs">
-            <CalendarIcon className="w-3.5 h-3.5" />
-            Official Inspection Reservation Portal
+    <div className="min-h-screen bg-stone-50 py-12 px-4 sm:px-6">
+      <div className="max-w-2xl mx-auto">
+        {/* Minimal Header */}
+        <div className="text-center mb-8">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-xs text-crimson font-oswald uppercase tracking-wider font-bold mb-3 hover:underline"
+          >
+            ← Back to Home
+          </Link>
+          <div className="flex items-center justify-center gap-2 text-xs text-zinc-500 font-oswald uppercase tracking-widest font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-crimson" />
+            <span>Zero Deposit • Free On-Site Inspection</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 leading-tight">
-            Schedule Your Free Roof Inspection with {brand.name}
+          <h1 className="text-3xl sm:text-4xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-1">
+            Schedule with {brand.name}
           </h1>
-          <p className="mt-3 text-sm sm:text-base text-zinc-600 font-serif">
-            Lock in your comprehensive roof evaluation, thermal diagnostic survey, or storm recovery assessment in {brand.city}. Guaranteed on-time arrival and transparent line-item reporting.
+          <p className="text-sm text-zinc-600 font-serif mt-2 max-w-md mx-auto">
+            Book your certified roof evaluation across {brand.city}. A licensed field specialist will inspect your roof and provide transparent written findings.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-8 bg-white border-2 border-stone-300 shadow-xl overflow-hidden rounded-xl">
-            <div className="bg-zinc-950 text-white px-6 py-4 flex items-center justify-between border-b-2 border-crimson">
-              <span className="font-oswald uppercase tracking-wider font-bold text-sm">
-                Live Reservation Dispatch System
-              </span>
-              <span className="text-xs text-zinc-400 font-serif">
-                Direct Line: <strong className="text-white">{brand.phone}</strong>
-              </span>
+        {/* Card Container */}
+        <div className="bg-white rounded-3xl shadow-xl border border-zinc-200/90 overflow-hidden">
+          {/* Minimal 2-Step Bar */}
+          {step < 3 && (
+            <div className="px-6 pt-5 pb-2 flex items-center gap-2">
+              <div
+                className={`flex-1 h-1.5 rounded-full transition-colors ${
+                  step >= 1 ? "bg-crimson" : "bg-zinc-200"
+                }`}
+              />
+              <div
+                className={`flex-1 h-1.5 rounded-full transition-colors ${
+                  step >= 2 ? "bg-crimson" : "bg-zinc-200"
+                }`}
+              />
             </div>
+          )}
 
-            <div className="bg-stone-100 border-b border-stone-200 px-6 py-2.5 flex items-center justify-between text-xs font-oswald uppercase tracking-wider">
-              <span className={step >= 1 ? "text-crimson font-bold" : "text-zinc-400"}>
-                1. Service Scope
-              </span>
-              <span className="text-stone-300">/</span>
-              <span className={step >= 2 ? "text-crimson font-bold" : "text-zinc-400"}>
-                2. Date & Time
-              </span>
-              <span className="text-stone-300">/</span>
-              <span className={step >= 3 ? "text-crimson font-bold" : "text-zinc-400"}>
-                3. Property Intake
-              </span>
-              <span className="text-stone-300">/</span>
-              <span className={step >= 4 ? "text-emerald-600 font-bold" : "text-zinc-400"}>
-                4. Confirmation
-              </span>
-            </div>
-
-            {step === 1 && (
-              <div className="p-6 sm:p-8 space-y-6">
-                <div>
-                  <h2 className="text-xl font-oswald uppercase tracking-wider font-bold text-zinc-900">
-                    Step 1: Choose Your Project Scope
-                  </h2>
-                  <p className="text-xs sm:text-sm text-zinc-600 font-serif mt-1">
-                    Select the service you would like evaluated. All initial inspections are 100% free with zero obligation.
-                  </p>
-                </div>
-
-                <div className="space-y-3">
+          {/* STEP 1: What & When */}
+          {step === 1 && (
+            <div className="p-6 sm:p-8 space-y-6">
+              {/* Service Selection */}
+              <div>
+                <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-2.5">
+                  1. Select Service Needed
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {services.map((s) => {
                     const isSelected = selectedService === s.title;
+                    const Icon = s.icon;
                     return (
                       <button
                         key={s.id}
                         type="button"
                         onClick={() => setSelectedService(s.title)}
-                        className={`w-full text-left p-4 border transition-all flex items-start justify-between gap-3 rounded-md cursor-pointer ${
+                        className={`text-left p-4 rounded-2xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${
                           isSelected
-                            ? "border-crimson bg-crimson/5 shadow-sm"
-                            : "border-stone-200 hover:border-stone-400 bg-white"
+                            ? "border-crimson bg-crimson/5 text-zinc-900 shadow-xs ring-1 ring-crimson"
+                            : "border-zinc-200 hover:border-zinc-300 bg-white text-zinc-700"
                         }`}
                       >
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-oswald uppercase tracking-wider font-bold text-zinc-900 text-sm sm:text-base">
-                              {s.title}
-                            </span>
-                            <span className="text-[10px] font-oswald uppercase font-bold tracking-wider px-2 py-0.5 bg-stone-200 text-zinc-800 rounded-xs">
-                              {s.badge}
-                            </span>
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div
+                            className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                              isSelected ? "bg-crimson text-white" : "bg-stone-100 text-zinc-600"
+                            }`}
+                          >
+                            <Icon className="w-4 h-4" />
                           </div>
-                          <p className="text-xs text-zinc-600 font-serif mt-1">{s.subtitle}</p>
+                          <div className="min-w-0">
+                            <p className="text-xs font-oswald uppercase tracking-wider font-bold truncate">
+                              {s.title}
+                            </p>
+                            <p className="text-[11px] text-zinc-500 font-serif">{s.tag}</p>
+                          </div>
                         </div>
                         <div
-                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 ${
-                            isSelected
-                              ? "border-crimson bg-crimson text-white"
-                              : "border-stone-300 bg-white"
+                          className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                            isSelected ? "border-crimson bg-crimson" : "border-zinc-300"
                           }`}
                         >
-                          {isSelected && <span className="w-2 h-2 bg-white rounded-full" />}
+                          {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                         </div>
                       </button>
                     );
                   })}
                 </div>
+              </div>
 
-                <div className="flex justify-end pt-4 border-t border-stone-200">
-                  <button
-                    type="button"
-                    onClick={() => setStep(2)}
-                    className="inline-flex items-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-7 py-3.5 font-oswald uppercase tracking-wider font-bold text-sm shadow-md transition-all rounded-sm cursor-pointer"
-                  >
-                    Continue to Date & Window <ArrowRight className="w-4 h-4" />
-                  </button>
+              {/* Day Selection */}
+              <div>
+                <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-2.5">
+                  2. Choose Preferred Day
+                </label>
+                <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
+                  {dateOptions.map((d) => {
+                    const isSelected = selectedDate === d.iso;
+                    return (
+                      <button
+                        key={d.iso}
+                        type="button"
+                        onClick={() => setSelectedDate(d.iso)}
+                        className={`py-2.5 px-1 text-center rounded-xl border transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-crimson bg-crimson text-white shadow-xs font-bold"
+                            : "border-zinc-200 bg-white hover:border-zinc-300 text-zinc-700"
+                        }`}
+                      >
+                        <div className="text-[10px] font-oswald uppercase tracking-wider">
+                          {d.weekday}
+                        </div>
+                        <div className="text-xs font-bold font-oswald mt-0.5">{d.monthDay}</div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-            )}
 
-            {step === 2 && (
-              <div className="p-6 sm:p-8 space-y-6">
-                <div>
-                  <h2 className="text-xl font-oswald uppercase tracking-wider font-bold text-zinc-900">
-                    Step 2: Choose Preferred Date & Window
-                  </h2>
-                  <p className="text-xs sm:text-sm text-zinc-600 font-serif mt-1">
-                    Select an arrival window that fits your schedule.
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-2">
-                    1. Inspection Date
-                  </label>
-                  <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
-                    {dateOptions.map((d) => {
-                      const isSelected = selectedDate === d.iso;
-                      return (
-                        <button
-                          key={d.iso}
-                          type="button"
-                          onClick={() => setSelectedDate(d.iso)}
-                          className={`p-3 text-center border rounded transition-all cursor-pointer ${
-                            isSelected
-                              ? "border-crimson bg-crimson text-white shadow-md font-bold"
-                              : "border-stone-200 bg-white hover:border-stone-400 text-zinc-800"
-                          }`}
-                        >
-                          <div className="text-[10px] font-oswald uppercase tracking-wider">
-                            {d.weekday}
-                          </div>
-                          <div className="text-xs font-bold font-oswald mt-0.5">{d.monthDay}</div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-2">
-                    2. Arrival Window
-                  </label>
-                  <div className="space-y-3">
-                    {slots.map((slot) => {
-                      const isSelected = selectedSlot.includes(slot.time);
-                      return (
-                        <button
-                          key={slot.id}
-                          type="button"
-                          onClick={() => setSelectedSlot(`${slot.label} (${slot.time})`)}
-                          className={`w-full text-left p-4 border rounded transition-all flex items-center justify-between cursor-pointer ${
-                            isSelected
-                              ? "border-crimson bg-crimson/5 shadow-sm"
-                              : "border-stone-200 hover:border-stone-400 bg-white"
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <Clock
-                              className={`w-4 h-4 ${isSelected ? "text-crimson" : "text-zinc-500"}`}
-                            />
-                            <div>
-                              <div className="font-oswald uppercase tracking-wider font-bold text-zinc-900 text-sm sm:text-base">
-                                {slot.label}
-                              </div>
-                              <div className="text-xs text-zinc-600 font-serif">{slot.time}</div>
-                            </div>
-                          </div>
-                          <span className="text-[10px] font-oswald uppercase font-bold px-2 py-0.5 bg-stone-100 text-zinc-700 rounded-xs">
-                            {slot.badge}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center pt-4 border-t border-stone-200">
-                  <button
-                    type="button"
-                    onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-1.5 text-zinc-600 hover:text-zinc-900 font-oswald uppercase tracking-wider text-xs font-bold"
-                  >
-                    <ChevronLeft className="w-4 h-4" /> Back to Services
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setStep(3)}
-                    className="inline-flex items-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-7 py-3.5 font-oswald uppercase tracking-wider font-bold text-sm shadow-md transition-all rounded-sm cursor-pointer"
-                  >
-                    Continue to Property Intake <ArrowRight className="w-4 h-4" />
-                  </button>
+              {/* Arrival Window */}
+              <div>
+                <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-2.5">
+                  3. Arrival Window
+                </label>
+                <div className="grid grid-cols-3 gap-2.5">
+                  {slots.map((slot) => {
+                    const isSelected = selectedSlot.includes(slot.label);
+                    return (
+                      <button
+                        key={slot.id}
+                        type="button"
+                        onClick={() => setSelectedSlot(`${slot.label} (${slot.time})`)}
+                        className={`py-3 px-2 text-center rounded-xl border transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-crimson bg-crimson/5 text-crimson font-bold ring-1 ring-crimson"
+                            : "border-zinc-200 bg-white hover:border-zinc-300 text-zinc-700"
+                        }`}
+                      >
+                        <p className="text-xs font-oswald uppercase tracking-wider font-bold">
+                          {slot.label}
+                        </p>
+                        <p className="text-[10px] text-zinc-500 font-serif mt-0.5">{slot.time}</p>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-            )}
 
-            {step === 3 && (
-              <form onSubmit={handleBookingSubmit} className="p-6 sm:p-8 space-y-5">
+              {/* Action */}
+              <div className="pt-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setStep(2)}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-8 py-3.5 rounded-full font-oswald uppercase tracking-wider font-bold text-xs shadow-md transition-all cursor-pointer"
+                >
+                  Continue to Property Details <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2: Where & Contact */}
+          {step === 2 && (
+            <form onSubmit={handleBookingSubmit} className="p-6 sm:p-8 space-y-5">
+              {/* Selected Summary */}
+              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-stone-100/80 border border-stone-200 text-xs">
+                <div className="flex items-center gap-2 truncate">
+                  <CalendarIcon className="w-4 h-4 text-crimson shrink-0" />
+                  <span className="font-oswald uppercase tracking-wider font-bold text-zinc-900 truncate">
+                    {selectedService} • {selectedDate} ({selectedSlot})
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setStep(1)}
+                  className="text-crimson font-oswald uppercase font-bold text-[11px] hover:underline shrink-0 ml-2 cursor-pointer"
+                >
+                  Edit
+                </button>
+              </div>
+
+              {/* Form Inputs */}
+              <div className="space-y-3.5">
                 <div>
-                  <h2 className="text-xl font-oswald uppercase tracking-wider font-bold text-zinc-900">
-                    Step 3: Property Details & SMS Dispatch Intake
-                  </h2>
-                  <p className="text-xs sm:text-sm text-zinc-600 font-serif mt-1">
-                    Provide the physical address where our roofing lead will conduct the on-site inspection.
-                  </p>
-                </div>
-
-                <div className="bg-stone-50 border border-stone-200 p-3.5 text-xs flex flex-wrap items-center justify-between gap-2 rounded">
-                  <div>
-                    <span className="text-zinc-500 font-serif">Scope:</span>{" "}
-                    <strong className="text-zinc-900 font-oswald">{selectedService}</strong>
-                  </div>
-                  <div>
-                    <span className="text-zinc-500 font-serif">Window:</span>{" "}
-                    <strong className="text-crimson font-oswald">
-                      {selectedDate} • {selectedSlot}
-                    </strong>
+                  <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-1">
+                    Your Full Name *
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3.5" />
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g. Michael Miller"
+                      className="w-full pl-10 pr-3 py-3 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
+                    />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-1">
-                      Full Name *
-                    </label>
-                    <div className="relative">
-                      <User className="w-4 h-4 text-zinc-400 absolute left-3 top-3.5" />
-                      <input
-                        type="text"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="e.g. John Anderson"
-                        className="w-full pl-9 pr-3 py-2.5 bg-white border border-stone-300 text-sm font-serif text-zinc-900 focus:border-crimson focus:outline-none rounded-xs"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-1">
-                      Mobile Phone (SMS Notifications) *
-                    </label>
-                    <div className="relative">
-                      <Phone className="w-4 h-4 text-zinc-400 absolute left-3 top-3.5" />
-                      <input
-                        type="tel"
-                        required
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="(800) 555-0199"
-                        className="w-full pl-9 pr-3 py-2.5 bg-white border border-stone-300 text-sm font-serif text-zinc-900 focus:border-crimson focus:outline-none rounded-xs"
-                      />
-                    </div>
+                <div>
+                  <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-1">
+                    Mobile Phone (For SMS Tracking & Arrival Updates) *
+                  </label>
+                  <div className="relative">
+                    <Phone className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3.5" />
+                    <input
+                      type="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="(555) 000-0000"
+                      className="w-full pl-10 pr-3 py-3 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
+                    />
                   </div>
                 </div>
 
@@ -413,170 +356,121 @@ export default function Book() {
                     Property Address in {brand.city} *
                   </label>
                   <div className="relative">
-                    <MapPin className="w-4 h-4 text-zinc-400 absolute left-3 top-3.5" />
+                    <MapPin className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3.5" />
                     <input
                       type="text"
                       required
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      placeholder="Street Address, City, Zip Code"
-                      className="w-full pl-9 pr-3 py-2.5 bg-white border border-stone-300 text-sm font-serif text-zinc-900 focus:border-crimson focus:outline-none rounded-xs"
+                      placeholder="Street address, City, ZIP code"
+                      className="w-full pl-10 pr-3 py-3 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-1">
-                    Special Roof Notes (Active leak, roof age, insurance adjuster date)
+                    Special Notes or Roof Symptoms (Optional)
                   </label>
-                  <textarea
-                    rows={3}
+                  <input
+                    type="text"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Provide any details that will help our inspector prepare..."
-                    className="w-full p-2.5 bg-white border border-stone-300 text-sm font-serif text-zinc-900 focus:border-crimson focus:outline-none rounded-xs"
+                    placeholder="e.g. Ceiling drip in garage, storm claim, 2-story steep roof..."
+                    className="w-full px-3.5 py-3 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
                   />
                 </div>
+              </div>
 
-                <div className="flex items-center gap-2 text-xs text-zinc-600 bg-amber-50 border border-amber-200 p-3 rounded">
-                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>
-                    100% Free Inspection. No credit card or advance fee required for scheduling.
-                  </span>
-                </div>
+              <div className="text-[11px] text-zinc-500 font-serif text-center pt-1 flex items-center justify-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>Zero obligation • 100% Free diagnostic review • Guaranteed no sales pressure</span>
+              </div>
 
-                <div className="flex justify-between items-center pt-4 border-t border-stone-200">
-                  <button
-                    type="button"
-                    onClick={() => setStep(2)}
-                    className="inline-flex items-center gap-1.5 text-zinc-600 hover:text-zinc-900 font-oswald uppercase tracking-wider text-xs font-bold"
-                  >
-                    <ChevronLeft className="w-4 h-4" /> Back to Date & Window
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="inline-flex items-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-8 py-3.5 font-oswald uppercase tracking-wider font-bold text-sm shadow-lg disabled:opacity-50 transition-all rounded-sm cursor-pointer"
-                  >
-                    {submitting ? "Reserving Slot..." : "Confirm & Lock My Inspection Slot"}
-                  </button>
-                </div>
-              </form>
-            )}
+              {/* Actions */}
+              <div className="flex items-center justify-between pt-2">
+                <button
+                  type="button"
+                  onClick={() => setStep(1)}
+                  className="inline-flex items-center gap-1 text-zinc-500 hover:text-zinc-800 text-xs font-oswald uppercase tracking-wider font-bold cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4" /> Back
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-8 py-3.5 rounded-full font-oswald uppercase tracking-wider font-bold text-xs shadow-md transition-all cursor-pointer disabled:opacity-50"
+                >
+                  {submitting ? "Locking Slot..." : "Lock Free Inspection ($0 Due)"}
+                </button>
+              </div>
+            </form>
+          )}
 
-            {step === 4 && (
-              <div className="p-8 sm:p-12 text-center space-y-6">
-                <div className="w-20 h-20 bg-emerald-100 border-2 border-emerald-500 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-md">
-                  <CheckCircle2 className="w-12 h-12" />
-                </div>
+          {/* STEP 3: Confirmation */}
+          {step === 3 && (
+            <div className="p-8 sm:p-10 text-center space-y-6">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-sm">
+                <CheckCircle2 className="w-9 h-9" />
+              </div>
 
-                <div>
-                  <span className="text-xs font-oswald uppercase tracking-widest text-emerald-700 font-bold bg-emerald-50 px-3.5 py-1 border border-emerald-200 rounded-xs">
-                    Inspection Confirmed & Reserved
-                  </span>
-                  <h2 className="text-2xl sm:text-4xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-3">
-                    Your Inspection is Dispatched to {brand.name}
-                  </h2>
-                  <p className="text-sm text-zinc-500 font-mono mt-1">
-                    Master Reservation Code:{" "}
-                    <strong className="text-zinc-900 text-base">{confirmationCode}</strong>
-                  </p>
-                </div>
-
-                <div className="bg-stone-50 border border-stone-200 p-5 max-w-lg mx-auto text-left space-y-2.5 text-xs sm:text-sm rounded">
-                  <div className="flex justify-between border-b border-stone-200 pb-2">
-                    <span className="text-zinc-500 font-serif">Contractor:</span>
-                    <span className="font-bold text-zinc-900 font-oswald">{brand.name}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-stone-200 pb-2">
-                    <span className="text-zinc-500 font-serif">Selected Scope:</span>
-                    <span className="font-bold text-zinc-900 font-oswald">{selectedService}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-stone-200 pb-2">
-                    <span className="text-zinc-500 font-serif">Inspection Window:</span>
-                    <span className="font-bold text-crimson font-oswald">
-                      {selectedDate} • {selectedSlot}
-                    </span>
-                  </div>
-                  <div className="flex justify-between border-b border-stone-200 pb-2">
-                    <span className="text-zinc-500 font-serif">Property Location:</span>
-                    <span className="font-bold text-zinc-900 font-oswald">{address}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-500 font-serif">Direct Dispatch Line:</span>
-                    <span className="font-bold text-zinc-900 font-oswald">{brand.phone}</span>
-                  </div>
-                </div>
-
-                <p className="text-xs sm:text-sm text-zinc-600 font-serif max-w-md mx-auto">
-                  We have queued automated SMS arrival updates for{" "}
-                  <strong className="text-zinc-900">{phone}</strong>. Our lead inspector will give you
-                  a courtesy call prior to dispatch.
+              <div>
+                <span className="text-[10px] font-oswald uppercase tracking-widest text-emerald-700 font-bold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                  Confirmed & Dispatched
+                </span>
+                <h2 className="text-2xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-2">
+                  Inspection Reserved with {brand.name}
+                </h2>
+                <p className="text-xs text-zinc-500 font-mono mt-1">
+                  Master Code: <strong className="text-zinc-900">{confirmationCode}</strong>
                 </p>
+              </div>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-3">
-                  <button
-                    type="button"
-                    onClick={handleDownloadCalendar}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-stone-900 hover:bg-black text-white px-6 py-3 font-oswald uppercase tracking-wider font-bold text-xs shadow-md rounded-xs cursor-pointer"
-                  >
-                    <Download className="w-4 h-4" /> Download .ICS Calendar Invite
-                  </button>
-                  <a
-                    href={`tel:${brand.phone}`}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-6 py-3 font-oswald uppercase tracking-wider font-bold text-xs shadow-md rounded-xs"
-                  >
-                    <Phone className="w-4 h-4" /> Call Dispatch: {brand.phone}
-                  </a>
+              <div className="bg-stone-50 border border-stone-200 rounded-2xl p-5 text-xs space-y-2.5 text-left max-w-sm mx-auto">
+                <div className="flex justify-between">
+                  <span className="text-zinc-500 font-serif">Scope:</span>
+                  <strong className="text-zinc-900 font-oswald">{selectedService}</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-500 font-serif">Arrival:</span>
+                  <strong className="text-crimson font-oswald">
+                    {selectedDate} • {selectedSlot}
+                  </strong>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-500 font-serif">Property:</span>
+                  <strong className="text-zinc-900 font-oswald truncate max-w-[200px]">
+                    {address}
+                  </strong>
                 </div>
               </div>
-            )}
-          </div>
 
-          <div className="lg:col-span-4 space-y-6">
-            <div className="bg-white border-2 border-stone-300 p-6 shadow-md rounded-xl">
-              <div className="flex items-center gap-2 text-crimson font-oswald uppercase tracking-wider font-bold text-sm mb-3">
-                <ShieldCheck className="w-5 h-5 text-crimson" />
-                The {brand.name} Standard
-              </div>
-              <p className="text-xs text-zinc-600 font-serif leading-relaxed mb-4">
-                {brand.aboutText ||
-                  `Dedicated to certified excellence across ${brand.city}. Precision diagnostic photo reports, licensed oversight, and upfront line-item pricing.`}
-              </p>
-
-              <div className="border-t border-stone-200 pt-4 space-y-2.5">
-                <h3 className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900">
-                  Included In Every Free Inspection:
-                </h3>
-                {inspectionChecklist.map((item, i) => (
-                  <div key={i} className="flex items-start gap-2 text-xs text-zinc-700 font-serif">
-                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-zinc-950 text-white p-6 border-t-4 border-t-crimson shadow-md rounded-xl">
-              <span className="text-[10px] font-oswald uppercase tracking-widest text-crimson font-bold">
-                Active Leak Emergency?
-              </span>
-              <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-white mt-1">
-                24/7 Rapid Tarping Dispatch
-              </h3>
-              <p className="text-xs text-zinc-400 font-serif mt-2 leading-relaxed">
-                If your roof is actively leaking or has sustained severe storm damage, call our direct line immediately for emergency triage.
-              </p>
-              <div className="mt-4 pt-4 border-t border-zinc-800">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleDownloadCalendar}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-3 rounded-full bg-zinc-900 hover:bg-black text-white text-xs font-oswald uppercase tracking-wider font-bold transition-all shadow-xs cursor-pointer"
+                >
+                  <Download className="w-4 h-4" /> Add to Calendar (.ics)
+                </button>
                 <a
                   href={`tel:${brand.phone}`}
-                  className="w-full inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-4 py-2.5 font-oswald uppercase tracking-wider font-bold text-xs rounded-xs"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-3 rounded-full border border-stone-300 hover:border-stone-400 bg-white text-zinc-800 text-xs font-oswald uppercase tracking-wider font-bold transition-all"
                 >
-                  <Phone className="w-4 h-4" /> Direct Line: {brand.phone}
+                  <Phone className="w-4 h-4 text-crimson" /> Call Dispatch
                 </a>
               </div>
+
+              <div>
+                <Link
+                  to="/"
+                  className="text-xs text-zinc-500 hover:text-zinc-900 font-serif underline"
+                >
+                  Return to Home
+                </Link>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

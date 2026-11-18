@@ -16,6 +16,7 @@ export interface Brand {
   licenseNumber?: string;
   rating?: number;
   reviewsCount?: number;
+  yearsInBusiness?: number;
   services?: string[];
   isCommercial?: boolean;
 }
@@ -52,6 +53,7 @@ const defaultBrand: Brand = {
   aboutText: "Providing certified residential replacements, commercial TPO installations, and 24/7 storm restorations backed by lifetime manufacturer warranties.",
   rating: 4.9,
   reviewsCount: 48,
+  yearsInBusiness: 20,
   services: [
     "Commercial TPO & Single-Ply Flat Systems",
     "Architectural Shingle Lifetime Systems",
@@ -80,6 +82,10 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   const rawPhoto = params.get("photo") || "";
   const rawLicense = params.get("license") || "";
   const rawCommercial = params.get("commercial");
+  const rawRating = params.get("rating");
+  const rawReviews = params.get("reviews") || params.get("reviewsCount");
+  const rawYears = params.get("years") || params.get("yearsInBusiness");
+  const rawAbout = params.get("about") || params.get("aboutText") || "";
 
   const resolvedState = (rawState || extractState(rawCity) || "TX").toUpperCase();
   const targetDomain = extractDomain(rawEmail, rawDomain);
@@ -91,6 +97,10 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       rawCommercial !== null
         ? rawCommercial === "true" || rawCommercial === "1"
         : Boolean(name.toLowerCase().includes("commercial") || name.toLowerCase().includes("tpo"));
+
+    const parsedRating = rawRating ? Math.min(5.0, Math.max(3.0, parseFloat(rawRating))) : 4.9;
+    const parsedReviews = rawReviews ? parseInt(rawReviews, 10) : 48;
+    const parsedYears = rawYears ? parseInt(rawYears, 10) : 20;
 
     return {
       name,
@@ -107,13 +117,17 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           : resolvedState === "FL"
           ? "Hurricane-Engineered Roof Replacement & Florida Wind Mitigation Authority"
           : "Promises Made. Promises Kept. Commercial & Residential Roofing Authority."),
+      aboutText:
+        rawAbout ||
+        `Providing certified residential replacements, commercial TPO installations, and 24/7 storm restorations backed by lifetime manufacturer warranties across ${city}.`,
       founderName: rawFounder || undefined,
       founderTitle: rawTitle || (rawFounder ? "Founder & Certified Roofing Master" : undefined),
       founderPhoto: rawPhoto || undefined,
       licenseNumber:
         rawLicense || (resolvedState === "FL" ? "Florida DBPR Certified Contractor" : "Licensed, Bonded & Fully Insured"),
-      rating: 4.9,
-      reviewsCount: 48,
+      rating: parsedRating,
+      reviewsCount: parsedReviews,
+      yearsInBusiness: parsedYears,
       services: isCommercial
         ? [
             "Commercial TPO & Single-Ply Flat Systems",
@@ -148,6 +162,10 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     rawPhoto,
     rawLicense,
     rawCommercial,
+    rawRating,
+    rawReviews,
+    rawYears,
+    rawAbout,
     resolvedState,
     targetDomain,
   ]);
@@ -170,9 +188,10 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           ...prev,
           logo: prev.logo || data.logo,
           tagline: rawTagline || data.tagline || prev.tagline,
-          aboutText: data.aboutText || prev.aboutText,
-          rating: data.rating || prev.rating,
-          reviewsCount: data.reviewsCount || prev.reviewsCount,
+          aboutText: rawAbout || data.aboutText || prev.aboutText,
+          rating: rawRating ? prev.rating : data.rating || prev.rating,
+          reviewsCount: rawReviews ? prev.reviewsCount : data.reviewsCount || prev.reviewsCount,
+          yearsInBusiness: rawYears ? prev.yearsInBusiness : data.yearsInBusiness || prev.yearsInBusiness,
           services: data.services && data.services.length > 0 ? data.services : prev.services,
           isCommercial: prev.isCommercial || Boolean(data.isCommercial),
         }));
@@ -185,7 +204,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     return () => {
       isMounted = false;
     };
-  }, [targetDomain, rawTagline]);
+  }, [targetDomain, rawTagline, rawAbout, rawRating, rawReviews, rawYears]);
 
   return <BrandContext.Provider value={brand}>{children}</BrandContext.Provider>;
 }

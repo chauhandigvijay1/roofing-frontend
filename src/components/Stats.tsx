@@ -40,7 +40,7 @@ export default function Stats() {
 
   const statsList = [
     { value: brand.reviewsCount || 48, suffix: "+", label: "Verified 5-Star Reviews" },
-    { value: 20, suffix: "+", label: `Years Serving ${brand.city}` },
+    { value: brand.yearsInBusiness || 20, suffix: "+", label: `Years Serving ${brand.city}` },
     { value: brand.rating || 4.9, suffix: "", label: "Google Customer Rating", decimals: 1 },
     { value: 100, suffix: "%", label: "Licensed & Guaranteed" },
   ];
