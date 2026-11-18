@@ -18,10 +18,79 @@ export interface Brand {
   reviewsCount?: number;
   yearsInBusiness?: number;
   services?: string[];
+  serviceAreas?: string[];
   isCommercial?: boolean;
 }
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://roofing-backend-n688.onrender.com";
+
+export function getRegionalSuburbs(city: string, state: string): string[] {
+  const normCity = (city || "").toLowerCase();
+
+  // Known major metropolitan clusters
+  if (normCity.includes("austin")) {
+    return ["Round Rock", "Cedar Park", "Georgetown", "Pflugerville", "Lakeway", "Buda", "Kyle", "Leander"];
+  }
+  if (normCity.includes("dallas") || normCity.includes("fort worth") || normCity.includes("dfw") || normCity.includes("plano") || normCity.includes("frisco")) {
+    return ["Plano", "Frisco", "McKinney", "Arlington", "Irving", "Garland", "Richardson", "Carrollton"];
+  }
+  if (normCity.includes("houston")) {
+    return ["The Woodlands", "Sugar Land", "Katy", "Pearland", "Cypress", "Spring", "Pasadena", "Conroe"];
+  }
+  if (normCity.includes("san antonio")) {
+    return ["New Braunfels", "Schertz", "Boerne", "Cibolo", "Converse", "Universal City", "Alamo Heights", "Seguin"];
+  }
+  if (normCity.includes("jacksonville")) {
+    return ["St. Augustine", "Orange Park", "Ponte Vedra Beach", "Fleming Island", "Atlantic Beach", "Jacksonville Beach", "Nocatee", "Yulee"];
+  }
+  if (normCity.includes("tampa") || normCity.includes("st. petersburg") || normCity.includes("clearwater")) {
+    return ["St. Petersburg", "Clearwater", "Brandon", "Riverview", "Largo", "Dunedin", "Wesley Chapel", "Palm Harbor"];
+  }
+  if (normCity.includes("orlando")) {
+    return ["Winter Park", "Kissimmee", "Sanford", "Altamonte Springs", "Oviedo", "Winter Garden", "Clermont", "Lake Mary"];
+  }
+  if (normCity.includes("miami") || normCity.includes("fort lauderdale")) {
+    return ["Fort Lauderdale", "Coral Gables", "Hialeah", "Pembroke Pines", "Hollywood", "Miramar", "Boca Raton", "Doral"];
+  }
+  if (normCity.includes("denver")) {
+    return ["Aurora", "Lakewood", "Littleton", "Centennial", "Boulder", "Thornton", "Arvada", "Highlands Ranch"];
+  }
+  if (normCity.includes("phoenix") || normCity.includes("scottsdale")) {
+    return ["Scottsdale", "Mesa", "Chandler", "Gilbert", "Glendale", "Tempe", "Peoria", "Surprise"];
+  }
+  if (normCity.includes("atlanta")) {
+    return ["Alpharetta", "Marietta", "Roswell", "Sandy Springs", "Duluth", "Smyrna", "Johns Creek", "Dunwoody"];
+  }
+  if (normCity.includes("charlotte")) {
+    return ["Concord", "Gastonia", "Huntersville", "Matthews", "Mooresville", "Mint Hill", "Cornelius", "Pineville"];
+  }
+  if (normCity.includes("nashville")) {
+    return ["Franklin", "Murfreesboro", "Hendersonville", "Brentwood", "Gallatin", "Mt. Juliet", "Lebanon", "Smyrna"];
+  }
+  if (normCity.includes("indianapolis")) {
+    return ["Carmel", "Fishers", "Noblesville", "Greenwood", "Westfield", "Plainfield", "Zionsville", "Avon"];
+  }
+  if (normCity.includes("columbus")) {
+    return ["Dublin", "Westerville", "Grove City", "Reynoldsburg", "Hilliard", "Gahanna", "Upper Arlington", "Pickerington"];
+  }
+  if (normCity.includes("chicago")) {
+    return ["Naperville", "Schaumburg", "Evanston", "Arlington Heights", "Oak Lawn", "Skokie", "Des Plaines", "Wheaton"];
+  }
+
+  // Dynamic regional generator for any arbitrary US city
+  const baseName = (city || "Metro").split(",")[0].trim();
+  const st = state ? ` ${state}` : "";
+  return [
+    `${baseName} Central${st}`,
+    `North ${baseName}`,
+    `South ${baseName}`,
+    `East ${baseName}`,
+    `West ${baseName}`,
+    `Greater ${baseName} Area`,
+    `${baseName} Heights`,
+    `${baseName} Valley`,
+  ];
+}
 
 function extractState(cityStr: string): string {
   if (!cityStr) return "";
@@ -61,12 +130,27 @@ const defaultBrand: Brand = {
     "24/7 Emergency Storm Damage & Leak Tarping",
     "Thermal Drone Roof & Attic Diagnostic Survey",
   ],
+  serviceAreas: [
+    "Plano",
+    "Frisco",
+    "McKinney",
+    "Arlington",
+    "Irving",
+    "Garland",
+    "Richardson",
+    "Carrollton",
+  ],
   isCommercial: false,
 };
 
 const BrandContext = createContext<Brand>(defaultBrand);
 
 export function BrandProvider({ children }: { children: ReactNode }) {
+  // Pre-warm backend Render instance on initial load
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/health`, { method: "GET", mode: "cors" }).catch(() => {});
+  }, []);
+
   const params = useMemo(() => new URLSearchParams(window.location.search), []);
 
   const rawName = params.get("name") || "";
@@ -86,6 +170,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   const rawReviews = params.get("reviews") || params.get("reviewsCount");
   const rawYears = params.get("years") || params.get("yearsInBusiness");
   const rawAbout = params.get("about") || params.get("aboutText") || "";
+  const rawAreas = params.get("areas") || params.get("serviceAreas") || "";
 
   const resolvedState = (rawState || extractState(rawCity) || "TX").toUpperCase();
   const targetDomain = extractDomain(rawEmail, rawDomain);
@@ -101,6 +186,10 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     const parsedRating = rawRating ? Math.min(5.0, Math.max(3.0, parseFloat(rawRating))) : 4.9;
     const parsedReviews = rawReviews ? parseInt(rawReviews, 10) : 48;
     const parsedYears = rawYears ? parseInt(rawYears, 10) : 20;
+
+    const parsedAreas = rawAreas
+      ? rawAreas.split(",").map((s) => s.trim()).filter(Boolean)
+      : getRegionalSuburbs(city, resolvedState);
 
     return {
       name,
@@ -147,6 +236,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
             "Commercial TPO & Flat Roof Systems",
             "24/7 Emergency Storm Damage & Leak Tarping",
           ],
+      serviceAreas: parsedAreas,
       isCommercial,
     };
   }, [
@@ -165,6 +255,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     rawReviews,
     rawYears,
     rawAbout,
+    rawAreas,
     resolvedState,
     targetDomain,
   ]);
@@ -192,6 +283,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           reviewsCount: rawReviews ? prev.reviewsCount : data.reviewsCount || prev.reviewsCount,
           yearsInBusiness: rawYears ? prev.yearsInBusiness : data.yearsInBusiness || prev.yearsInBusiness,
           services: data.services && data.services.length > 0 ? data.services : prev.services,
+          serviceAreas: data.serviceAreas && data.serviceAreas.length > 0 ? data.serviceAreas : prev.serviceAreas,
           isCommercial: prev.isCommercial || Boolean(data.isCommercial),
         }));
       } catch (err) {
