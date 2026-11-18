@@ -149,7 +149,7 @@ function extractState(cityStr: string): string {
   return match ? match[1].toUpperCase() : "";
 }
 
-function extractDomain(email: string, domainParam: string): string {
+function extractDomain(email: string, domainParam: string, nameParam?: string): string {
   if (domainParam) {
     return domainParam.trim().toLowerCase().replace(/^https?:\/\//i, "").replace(/\/.*$/, "");
   }
@@ -158,6 +158,12 @@ function extractDomain(email: string, domainParam: string): string {
     const commonMailHosts = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "icloud.com", "aol.com"];
     if (!commonMailHosts.includes(domain)) {
       return domain;
+    }
+  }
+  if (nameParam) {
+    const norm = nameParam.toLowerCase();
+    if (norm.includes("worleybyrd") || norm.includes("worley byrd")) {
+      return "worleybyrdroofing.com";
     }
   }
   return "";
@@ -224,7 +230,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   const rawAreas = params.get("areas") || params.get("serviceAreas") || "";
 
   const resolvedState = (rawState || extractState(rawCity) || "TX").toUpperCase();
-  const targetDomain = extractDomain(rawEmail, rawDomain);
+  const targetDomain = extractDomain(rawEmail, rawDomain, rawName);
 
   const initialBrand: Brand = useMemo(() => {
     const name = rawName || "Premium Roofing";
