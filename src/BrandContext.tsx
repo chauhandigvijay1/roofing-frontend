@@ -39,6 +39,22 @@ export interface Brand {
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://roofing-backend-n688.onrender.com";
 
+export function decodeHtmlEntities(str?: string | null): string {
+  if (!str) return "";
+  return str
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#039;/gi, "'")
+    .replace(/&#39;/gi, "'")
+    .replace(/&apos;/gi, "'")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(Number(dec)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    .trim();
+}
+
 export function formatLocation(loc: string, state: string): string {
   if (!loc) return "";
   let clean = loc.trim();
@@ -227,25 +243,27 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       : getRegionalSuburbs(city, resolvedState);
 
     return {
-      name,
+      name: decodeHtmlEntities(name),
       phone: rawPhone || "(800) 555-ROOF",
       email: rawEmail || `contact@${targetDomain || "roofingcontractor.com"}`,
-      city,
+      city: decodeHtmlEntities(city),
       state: resolvedState,
       domain: targetDomain || undefined,
       logo: rawLogo || (targetDomain ? `https://www.google.com/s2/favicons?domain=${targetDomain}&sz=128` : undefined),
-      tagline:
+      tagline: decodeHtmlEntities(
         rawTagline ||
         (isCommercial
           ? "Commercial Flat Roofing, TPO Systems & Energy Efficiency Specialists"
           : resolvedState === "FL"
           ? "Hurricane-Engineered Roof Replacement & Florida Wind Mitigation Authority"
-          : "Promises Made. Promises Kept. Commercial & Residential Roofing Authority."),
-      aboutText:
+          : "Promises Made. Promises Kept. Commercial & Residential Roofing Authority.")
+      ),
+      aboutText: decodeHtmlEntities(
         rawAbout ||
-        `Providing certified residential replacements, commercial TPO installations, and 24/7 storm restorations backed by lifetime manufacturer warranties across ${city}.`,
-      founderName: rawFounder || undefined,
-      founderTitle: rawTitle || (rawFounder ? "Founder & Certified Roofing Master" : undefined),
+        `Providing certified residential replacements, commercial TPO installations, and 24/7 storm restorations backed by lifetime manufacturer warranties across ${city}.`
+      ),
+      founderName: decodeHtmlEntities(rawFounder) || undefined,
+      founderTitle: decodeHtmlEntities(rawTitle) || (rawFounder ? "Founder & Managing Partner" : undefined),
       founderPhoto: rawPhoto || undefined,
       licenseNumber: rawLicense ? rawLicense.trim() : undefined,
       rating: parsedRating,
@@ -311,27 +329,36 @@ export function BrandProvider({ children }: { children: ReactNode }) {
 
         setBrand((prev) => ({
           ...prev,
+          name: decodeHtmlEntities(prev.name),
           logo: prev.logo || data.logo,
           founderPhoto: rawPhoto || data.founderPhoto || prev.founderPhoto,
-          tagline: rawTagline || data.tagline || prev.tagline,
-          aboutText: rawAbout || data.aboutText || prev.aboutText,
+          tagline: decodeHtmlEntities(rawTagline || data.tagline || prev.tagline),
+          aboutText: decodeHtmlEntities(rawAbout || data.aboutText || prev.aboutText),
           rating: rawRating ? prev.rating : data.rating || prev.rating,
           reviewsCount: rawReviews ? prev.reviewsCount : data.reviewsCount || prev.reviewsCount,
           yearsInBusiness: rawYears ? prev.yearsInBusiness : data.yearsInBusiness || prev.yearsInBusiness,
-          services: data.services && data.services.length > 0 ? data.services : prev.services,
+          services: data.services && data.services.length > 0 ? data.services.map((s: string) => decodeHtmlEntities(s)) : prev.services,
           serviceAreas:
             data.serviceAreas && data.serviceAreas.length > 0
-              ? data.serviceAreas.map((a: string) => formatLocation(a, prev.state))
+              ? data.serviceAreas.map((a: string) => decodeHtmlEntities(formatLocation(a, prev.state)))
               : prev.serviceAreas,
           reviews:
             data.reviews && data.reviews.length > 0
               ? data.reviews.map((r: any) => ({
                   ...r,
-                  location: r.location ? formatLocation(r.location, prev.state) : undefined,
+                  author: decodeHtmlEntities(r.author),
+                  text: decodeHtmlEntities(r.text),
+                  location: r.location ? decodeHtmlEntities(formatLocation(r.location, prev.state)) : undefined,
                 }))
               : prev.reviews,
           galleryImages: data.galleryImages && data.galleryImages.length > 0 ? data.galleryImages : prev.galleryImages,
-          structuredServices: data.structuredServices && data.structuredServices.length > 0 ? data.structuredServices : prev.structuredServices,
+          structuredServices: data.structuredServices && data.structuredServices.length > 0
+            ? data.structuredServices.map((ss: any) => ({
+                ...ss,
+                title: decodeHtmlEntities(ss.title),
+                desc: decodeHtmlEntities(ss.desc),
+              }))
+            : prev.structuredServices,
           isCommercial: prev.isCommercial || Boolean(data.isCommercial),
         }));
       } catch (err) {

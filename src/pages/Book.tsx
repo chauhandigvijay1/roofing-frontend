@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useBrand } from "../BrandContext";
+import AppleCalendarPicker from "../components/AppleCalendarPicker";
 import {
   Calendar as CalendarIcon,
   MapPin,
@@ -95,22 +96,6 @@ export default function Book() {
       ? "Florida Wind Mitigation Inspection (Insurance Form)"
       : "Comprehensive 21-Point Roof & Attic Inspection";
   });
-
-  // Apple-Style Clean 10-Day Rapid Date Selector
-  const rapidDateOptions = useMemo(() => {
-    const options = [];
-    const base = new Date();
-    for (let i = 1; i <= 10; i++) {
-      const d = new Date(base);
-      d.setDate(base.getDate() + i);
-      const iso = d.toISOString().split("T")[0];
-      const weekday = i === 1 ? "Tomorrow" : d.toLocaleDateString("en-US", { weekday: "short" });
-      const monthName = d.toLocaleDateString("en-US", { month: "short" });
-      const dayNum = d.getDate();
-      options.push({ iso, weekday, monthName, dayNum });
-    }
-    return options;
-  }, []);
 
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     const d = new Date();
@@ -311,7 +296,7 @@ export default function Book() {
 
               {/* Apple-Style Clean Date Selector */}
               <div>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-2">
                   <div>
                     <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900 block">
                       2. Choose Inspection Date
@@ -320,54 +305,12 @@ export default function Book() {
                       Selected: <strong className="text-crimson font-sans">{formattedSelectedDate}</strong>
                     </p>
                   </div>
-
-                  <div className="relative">
-                    <label className="inline-flex items-center gap-1.5 text-xs text-crimson font-oswald uppercase font-bold hover:underline cursor-pointer">
-                      <CalendarIcon className="w-3.5 h-3.5" />
-                      <span>Pick Any Date</span>
-                      <input
-                        type="date"
-                        value={selectedDate}
-                        min={new Date().toISOString().split("T")[0]}
-                        onChange={(e) => {
-                          if (e.target.value) {
-                            setSelectedDate(e.target.value);
-                          }
-                        }}
-                        className="opacity-0 absolute inset-0 cursor-pointer w-full"
-                      />
-                    </label>
-                  </div>
                 </div>
 
-                {/* Horizontal Rapid Date Strip */}
-                <div className="flex items-center gap-2.5 overflow-x-auto pb-2 pt-1 no-scrollbar">
-                  {rapidDateOptions.map((opt) => {
-                    const isSelected = selectedDate === opt.iso;
-                    return (
-                      <button
-                        key={opt.iso}
-                        type="button"
-                        onClick={() => setSelectedDate(opt.iso)}
-                        className={`py-3 px-3.5 rounded-2xl border text-center transition-all cursor-pointer min-w-[82px] flex flex-col items-center shrink-0 ${
-                          isSelected
-                            ? "border-crimson bg-crimson text-white shadow-sm ring-1 ring-crimson font-bold scale-102"
-                            : "border-stone-200 bg-stone-50/70 hover:bg-stone-100 text-zinc-700"
-                        }`}
-                      >
-                        <span className={`text-[10px] font-oswald uppercase tracking-wider block ${isSelected ? "text-white/80" : "text-zinc-500"}`}>
-                          {opt.weekday}
-                        </span>
-                        <span className="text-xl font-bold font-oswald mt-0.5 block">
-                          {opt.dayNum}
-                        </span>
-                        <span className={`text-[10px] font-sans mt-0.5 block ${isSelected ? "text-white/90" : "text-zinc-400"}`}>
-                          {opt.monthName}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
+                <AppleCalendarPicker
+                  selectedDate={selectedDate}
+                  onSelectDate={(iso) => setSelectedDate(iso)}
+                />
               </div>
 
               {/* Apple-Style Arrival Window */}

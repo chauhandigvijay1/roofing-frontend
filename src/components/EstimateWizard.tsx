@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { useBrand } from "../BrandContext";
+import { useBrand, decodeHtmlEntities } from "../BrandContext";
 import {
   Calendar,
   Building2,
@@ -336,75 +336,234 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
 
   // Executive Printable / PDF Takeoff Scope Generator (SOW Deliverable #1)
   const handleDownloadPdfBrief = () => {
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
+    const cleanName = decodeHtmlEntities(brand.name);
+    const cleanCity = decodeHtmlEntities(brand.city);
+    const docId = `SCOPE-${brand.state}-${Date.now().toString().slice(-6)}`;
+    const compiledDate = new Date().toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
 
     const htmlContent = `
       <!DOCTYPE html>
       <html>
         <head>
-          <title>${brand.name} - Preliminary Project Scope Brief</title>
+          <meta charset="utf-8" />
+          <title>${cleanName} - Executive Takeoff Scope Brief (${docId})</title>
           <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #18181b; padding: 40px; margin: 0; line-height: 1.5; }
-            .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #8B0000; padding-bottom: 18px; margin-bottom: 24px; }
-            .title { font-size: 24px; font-weight: bold; text-transform: uppercase; color: #18181b; margin: 0; }
-            .subtitle { font-size: 13px; color: #71717a; margin-top: 4px; }
-            .badge { display: inline-block; background: #ecfdf5; color: #065f46; font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 9999px; border: 1px solid #a7f3d0; text-transform: uppercase; margin-bottom: 8px; }
-            .section { margin-bottom: 24px; }
-            .section-title { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #8B0000; margin-bottom: 12px; }
-            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-            .card { background: #f4f4f5; border-radius: 12px; padding: 16px; border: 1px solid #e4e4e7; }
-            .card-label { font-size: 11px; color: #71717a; text-transform: uppercase; }
-            .card-value { font-size: 18px; font-weight: bold; color: #18181b; margin-top: 4px; }
-            .price-box { background: #fafaf9; border: 2px solid #8B0000; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 24px; }
-            .price-title { font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; color: #8B0000; }
-            .price-val { font-size: 32px; font-weight: bold; color: #18181b; margin: 8px 0; }
-            .price-sub { font-size: 12px; color: #059669; font-weight: bold; }
-            .inclusions { list-style: none; padding: 0; margin: 0; }
-            .inclusions li { font-size: 13px; padding: 6px 0; border-bottom: 1px solid #f4f4f5; display: flex; align-items: center; }
-            .inclusions li::before { content: "✓ "; color: #8B0000; font-weight: bold; margin-right: 8px; }
-            .footer { border-top: 1px solid #e4e4e7; padding-top: 20px; font-size: 11px; color: #71717a; text-align: center; margin-top: 32px; }
-            @media print { body { padding: 20px; } }
+            @page { size: letter; margin: 12mm 15mm; }
+            * { box-sizing: border-box; }
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+              color: #0f172a;
+              background: #ffffff;
+              padding: 24px;
+              margin: 0;
+              line-height: 1.45;
+              font-size: 13px;
+            }
+            .header {
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              border-bottom: 2px solid #8B0000;
+              padding-bottom: 16px;
+              margin-bottom: 20px;
+            }
+            .badge {
+              display: inline-block;
+              background: #fef2f2;
+              color: #8B0000;
+              font-size: 10px;
+              font-weight: 700;
+              padding: 3px 8px;
+              border-radius: 9999px;
+              border: 1px solid #fecaca;
+              text-transform: uppercase;
+              letter-spacing: 0.05em;
+              margin-bottom: 6px;
+            }
+            .title {
+              font-size: 22px;
+              font-weight: 800;
+              text-transform: uppercase;
+              letter-spacing: 0.02em;
+              color: #0f172a;
+              margin: 0;
+            }
+            .subtitle {
+              font-size: 12px;
+              color: #64748b;
+              margin-top: 3px;
+            }
+            .meta-box {
+              text-align: right;
+            }
+            .meta-label {
+              font-size: 9px;
+              font-weight: 700;
+              text-transform: uppercase;
+              color: #94a3b8;
+              letter-spacing: 0.05em;
+            }
+            .meta-val {
+              font-size: 13px;
+              font-weight: 700;
+              color: #0f172a;
+            }
+            .sla-pill {
+              display: inline-block;
+              background: #ecfdf5;
+              color: #065f46;
+              font-size: 10px;
+              font-weight: 700;
+              padding: 2px 7px;
+              border-radius: 9999px;
+              border: 1px solid #a7f3d0;
+              margin-top: 4px;
+            }
+            .price-card {
+              background: #fafaf9;
+              border: 2px solid #8B0000;
+              border-radius: 12px;
+              padding: 18px;
+              text-align: center;
+              margin-bottom: 20px;
+            }
+            .price-label {
+              font-size: 11px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 0.08em;
+              color: #8B0000;
+            }
+            .price-amount {
+              font-size: 28px;
+              font-weight: 800;
+              color: #0f172a;
+              margin: 4px 0;
+            }
+            .price-details {
+              font-size: 11px;
+              color: #059669;
+              font-weight: 600;
+            }
+            .section {
+              margin-bottom: 18px;
+            }
+            .section-title {
+              font-size: 11px;
+              font-weight: 800;
+              text-transform: uppercase;
+              letter-spacing: 0.06em;
+              color: #8B0000;
+              margin-bottom: 10px;
+              border-bottom: 1px solid #e2e8f0;
+              padding-bottom: 4px;
+            }
+            .grid {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 10px;
+            }
+            .spec-card {
+              background: #f8fafc;
+              border: 1px solid #e2e8f0;
+              border-radius: 8px;
+              padding: 10px 12px;
+            }
+            .spec-label {
+              font-size: 9.5px;
+              font-weight: 700;
+              text-transform: uppercase;
+              color: #64748b;
+              letter-spacing: 0.04em;
+            }
+            .spec-val {
+              font-size: 13px;
+              font-weight: 700;
+              color: #0f172a;
+              margin-top: 2px;
+            }
+            .inclusions {
+              list-style: none;
+              padding: 0;
+              margin: 0;
+            }
+            .inclusions li {
+              font-size: 11.5px;
+              padding: 5px 0;
+              border-bottom: 1px solid #f1f5f9;
+              display: flex;
+              align-items: center;
+              color: #334155;
+            }
+            .inclusions li::before {
+              content: "✓";
+              color: #8B0000;
+              font-weight: 800;
+              margin-right: 8px;
+            }
+            .footer {
+              border-top: 1px solid #e2e8f0;
+              padding-top: 14px;
+              font-size: 10.5px;
+              color: #64748b;
+              text-align: center;
+              margin-top: 24px;
+              line-height: 1.4;
+            }
+            @media print {
+              body { padding: 0; }
+              .header { margin-bottom: 16px; }
+            }
           </style>
         </head>
         <body>
           <div class="header">
             <div>
               <div class="badge">Official Preliminary Takeoff Scope</div>
-              <h1 class="title">${brand.name}</h1>
-              <div class="subtitle">${brand.city} • Direct Dispatch: ${brand.phone} • ${brand.email || "service@" + (brand.domain || "contractor.com")}</div>
+              <h1 class="title">${cleanName}</h1>
+              <div class="subtitle">
+                ${cleanCity} &bull; Direct Dispatch: ${brand.phone} &bull; ${brand.email || "dispatch@" + (brand.domain || "contractor.com")}
+              </div>
             </div>
-            <div style="text-align: right;">
-              <div style="font-size: 11px; color: #71717a;">DATE COMPILED</div>
-              <div style="font-size: 14px; font-weight: bold;">${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>
-              <div style="font-size: 11px; color: #059669; margin-top: 4px;">4–5 Day Rapid Deployment SLA</div>
+            <div class="meta-box">
+              <div class="meta-label">DOCUMENT REF</div>
+              <div class="meta-val">${docId}</div>
+              <div class="meta-label" style="margin-top: 3px;">DATE COMPILED</div>
+              <div class="meta-val">${compiledDate}</div>
+              <div class="sla-pill">4–5 Day Rapid Deployment SLA</div>
             </div>
           </div>
 
-          <div class="price-box">
-            <div class="price-title">Estimated Investment Planning Bracket</div>
-            <div class="price-val">$${calculation.low.toLocaleString()} &ndash; $${calculation.high.toLocaleString()}</div>
-            <div class="price-sub">As Low As $${calculation.monthly}/mo with Qualified Financing &bull; Includes $${calculation.incentiveAmount.toLocaleString()} Local Incentive Credit</div>
+          <div class="price-card">
+            <div class="price-label">Estimated Investment Planning Bracket</div>
+            <div class="price-amount">$${calculation.low.toLocaleString()} &ndash; $${calculation.high.toLocaleString()}</div>
+            <div class="price-details">
+              As Low As $${calculation.monthly}/mo with Qualified Financing &bull; Includes $${calculation.incentiveAmount.toLocaleString()} Local Incentive Credit
+            </div>
           </div>
 
           <div class="section">
-            <div class="section-title">Project Specifications</div>
+            <div class="section-title">Architectural Project Specifications</div>
             <div class="grid">
-              <div class="card">
-                <div class="card-label">Selected System Scope</div>
-                <div class="card-value" style="font-size: 15px;">${selectedScope}</div>
+              <div class="spec-card">
+                <div class="spec-label">Selected System Scope</div>
+                <div class="spec-val" style="color: #8B0000;">${selectedScope}</div>
               </div>
-              <div class="card">
-                <div class="card-label">Surface Area / Footprint</div>
-                <div class="card-value">${calculation.sqFt.toLocaleString()} sq ft (${calculation.squares} Squares)</div>
+              <div class="spec-card">
+                <div class="spec-label">Surface Area / Footprint</div>
+                <div class="spec-val">${calculation.sqFt.toLocaleString()} sq ft (${calculation.squares} Squares)</div>
               </div>
-              <div class="card">
-                <div class="card-label">Market Calibration</div>
-                <div class="card-value" style="font-size: 15px;">${brand.city}, ${brand.state}</div>
+              <div class="spec-card">
+                <div class="spec-label">Service Territory Calibration</div>
+                <div class="spec-val">${cleanCity}, ${brand.state}</div>
               </div>
-              <div class="card">
-                <div class="card-label">Warranty Protection</div>
-                <div class="card-value" style="font-size: 15px; color: #8B0000;">${calculation.activeScope.warranty} Non-Prorated</div>
+              <div class="spec-card">
+                <div class="spec-label">Manufacturer Warranty Coverage</div>
+                <div class="spec-val" style="color: #059669;">${calculation.activeScope.warranty} Non-Prorated Coverage</div>
               </div>
             </div>
           </div>
@@ -412,27 +571,60 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
           <div class="section">
             <div class="section-title">Standard Turnkey Inclusions & Compliance</div>
             <ul class="inclusions">
-              <li>Complete tear-off, forensic structural deck inspection & municipal code compliance</li>
-              <li>Synthetic moisture-barrier underlayment, ice/water shield & neoprene pipe-boot flashings</li>
-              <li>Non-prorated manufacturer warranty & triple-sweep magnetic nail cleanup certification</li>
-              <li>${brand.state === "FL" ? "Florida OIR-B1-1802 Wind Mitigation Inspection certification" : brand.state === "TX" ? "Texas HB 2102 statutory deductible compliance and adjuster scoping" : "Full manufacturer certified installation and storm resilience standards"}</li>
+              <li>Complete tear-off, structural decking laser inspection & municipal code compliance</li>
+              <li>Synthetic moisture-barrier underlayment, ice/water barrier shield & neoprene flashings</li>
+              <li>Non-prorated manufacturer warranty & triple-sweep magnetic nail safety cleanup certification</li>
+              <li>${
+                brand.state === "FL"
+                  ? "Florida OIR-B1-1802 Wind Mitigation Inspection certification for insurance premium discounts"
+                  : brand.state === "TX"
+                  ? "Texas HB 2102 statutory deductible compliance and commercial insurance adjuster scoping"
+                  : "Full manufacturer certified installation and regional storm resilience standards"
+              }</li>
             </ul>
           </div>
 
           <div class="footer">
-            Zero deposit required &bull; Complimentary on-site diagnostic survey confirms final firm proposal &bull; ${brand.name}
+            <strong>Zero Upfront Deposit Required.</strong> Complimentary on-site diagnostic survey confirms final architectural proposal.<br />
+            ${cleanName} &bull; ${cleanCity} &bull; Call: ${brand.phone}
           </div>
 
           <script>
-            window.onload = function() { window.print(); };
+            window.onload = function() {
+              window.print();
+            };
           </script>
         </body>
       </html>
     `;
 
-    printWindow.document.open();
-    printWindow.document.write(htmlContent);
-    printWindow.document.close();
+    // Attempt direct window open; fall back to hidden iframe if popups are blocked
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      printWindow.document.open();
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+    } else {
+      const iframe = document.createElement("iframe");
+      iframe.style.position = "fixed";
+      iframe.style.right = "0";
+      iframe.style.bottom = "0";
+      iframe.style.width = "0";
+      iframe.style.height = "0";
+      iframe.style.border = "none";
+      document.body.appendChild(iframe);
+      const doc = iframe.contentWindow?.document;
+      if (doc) {
+        doc.open();
+        doc.write(htmlContent);
+        doc.close();
+        setTimeout(() => {
+          iframe.contentWindow?.focus();
+          iframe.contentWindow?.print();
+          document.body.removeChild(iframe);
+        }, 500);
+      }
+    }
   };
 
   return (
