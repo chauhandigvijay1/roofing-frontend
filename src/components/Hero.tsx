@@ -36,18 +36,19 @@ export default function Hero() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="bg-crimson text-white py-1 px-4 text-sm font-oswald font-bold tracking-widest inline-block mb-6 shadow-md"
+          className="bg-crimson text-white py-1.5 px-4 text-xs sm:text-sm font-oswald font-bold tracking-widest inline-flex items-center gap-2 mb-6 shadow-md"
         >
-          {ribbonText}
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>{name.toUpperCase()} &bull; {ribbonText}</span>
         </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-5xl md:text-7xl font-oswald uppercase tracking-wider font-bold text-white leading-tight max-w-4xl"
+          className="text-4xl sm:text-6xl md:text-7xl font-oswald uppercase tracking-wider font-bold text-white leading-tight max-w-4xl"
         >
-          Expert Roofing Solutions by {name}
+          {brand.city.toUpperCase()}&rsquo;S PREMIER ROOFING & RESTORATION AUTHORITY
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 30 }}

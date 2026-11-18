@@ -19,24 +19,15 @@ const values = [
   },
 ];
 
-function getInitials(name: string): string {
-  if (!name) return "RC";
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
 export default function LocalExperts() {
   const brand = useBrand();
-  const { city, name, founderPhoto, logo, founderName, founderTitle, aboutText, licenseNumber, rating } = brand;
+  const { city, name, founderPhoto, founderName, founderTitle, aboutText, licenseNumber, rating } = brand;
 
   const displayFounderName = founderName || `${name} Project Leadership`;
   const displayFounderTitle = founderTitle || (founderName ? "Founder & Master Roofer" : "Certified Field Direction & Master Craftsmen");
   const displayAbout =
     aboutText ||
     `Founded on honest craftsmanship and dedicated service across ${city}. Our master roofing crews specialize in hurricane-engineered residential replacements, commercial TPO flat systems, and emergency storm restorations backed by comprehensive manufacturer warranties.`;
-
-  const initials = getInitials(displayFounderName);
 
   return (
     <section className="py-24 px-4 sm:px-6 bg-white">
@@ -65,27 +56,17 @@ export default function LocalExperts() {
                   alt={displayFounderName}
                   className="w-44 h-44 sm:w-52 sm:h-52 object-cover object-top rounded-3xl border-4 border-white shadow-xl"
                 />
-              ) : logo ? (
-                <div className="w-44 h-44 sm:w-52 sm:h-52 bg-white rounded-3xl border border-stone-200 shadow-md flex flex-col items-center justify-center p-6 text-center">
-                  <img src={logo} alt={name} className="max-h-20 max-w-[140px] object-contain mb-3" />
-                  <span className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900">
-                    {city}
-                  </span>
-                  <span className="text-[10px] text-crimson font-oswald uppercase tracking-widest font-bold mt-1">
-                    Certified Specialist
-                  </span>
-                </div>
               ) : (
-                /* Apple-Grade Executive Monogram Badge */
-                <div className="w-44 h-44 sm:w-52 sm:h-52 bg-gradient-to-br from-zinc-900 via-zinc-850 to-zinc-950 rounded-3xl flex flex-col items-center justify-center border-4 border-white shadow-2xl p-4 text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-crimson/20 border border-crimson/50 text-white flex items-center justify-center text-2xl font-oswald font-bold tracking-wider mb-2">
-                    {initials}
-                  </div>
-                  <span className="text-xs font-oswald uppercase tracking-wider font-bold text-white block">
-                    {displayFounderName}
-                  </span>
-                  <span className="text-xs text-zinc-400 font-sans block mt-0.5">
-                    {city} Master Authority
+                /* Distinguished Master Craftsman & Field Director Portrait */
+                <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-3xl overflow-hidden border-4 border-white shadow-xl bg-zinc-900">
+                  <img
+                    src="https://images.unsplash.com/photo-1541888946425-d0fbb186156f?auto=format&fit=crop&w=600&q=80"
+                    alt={displayFounderName}
+                    className="w-full h-full object-cover object-top"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent" />
+                  <span className="absolute bottom-2.5 left-2.5 right-2.5 text-center text-[10px] font-oswald uppercase tracking-wider text-white font-bold bg-zinc-950/70 backdrop-blur-xs py-1 rounded-md">
+                    Master Field Director &bull; {city}
                   </span>
                 </div>
               )}

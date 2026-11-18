@@ -320,10 +320,12 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                   <div className="flex flex-wrap items-center justify-between gap-1">
                     <strong className="text-emerald-950 font-oswald uppercase tracking-wider text-xs sm:text-sm font-bold">
                       {brand.state === "FL"
-                        ? "Apply Florida Wind Mitigation Insurance Deduction"
+                        ? "Apply Florida Statutory Wind Mitigation Credit (Up to 45%)"
                         : tradeMode === "commercial"
-                        ? "Apply Commercial Cool Roof Energy Efficiency Credit"
-                        : "Apply Impact-Resistant Class 4 Insurance Deduction"}
+                        ? "Apply Commercial Energy Star Rebate & Section 179 Deduction"
+                        : brand.state === "TX"
+                        ? "Apply Texas TDI Class 4 Hail Insurance Discount (Up to 28%)"
+                        : "Apply High-Wind & Impact Manufacturer Warranty Rebate"}
                     </strong>
                     <span
                       className={`text-[10px] font-oswald uppercase tracking-wider px-2 py-0.5 rounded font-bold ${
@@ -339,10 +341,12 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                   </div>
                   <span className="text-xs text-zinc-600 font-sans leading-relaxed block mt-0.5">
                     {brand.state === "FL"
-                      ? "Qualifies property for statutory hurricane tie-down and secondary water barrier insurance discounts."
+                      ? "Official OIR-B1-1802 certificate verifying hurricane clips and secondary water barrier (SWR) underlayment."
                       : tradeMode === "commercial"
-                      ? "Reflective cool roof solar coatings qualify for commercial energy rebates and reduce cooling loads."
-                      : "Impact-resistant Class 4 shingles qualify for permanent homeowner insurance policy discounts up to 28%."}
+                      ? "Reflective cool roof TPO membranes qualify for commercial utility rebates and immediate operating expense write-offs."
+                      : brand.state === "TX"
+                      ? "Underwriters provide annual premium discounts up to 28% for certified UL 2218 impact-resistant shingle systems across Texas."
+                      : "Qualifies your property for non-prorated lifetime manufacturer coverage and regional storm resilience incentives."}
                   </span>
                 </label>
               </div>

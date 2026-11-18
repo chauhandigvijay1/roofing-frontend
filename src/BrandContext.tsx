@@ -312,6 +312,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         setBrand((prev) => ({
           ...prev,
           logo: prev.logo || data.logo,
+          founderPhoto: rawPhoto || data.founderPhoto || prev.founderPhoto,
           tagline: rawTagline || data.tagline || prev.tagline,
           aboutText: rawAbout || data.aboutText || prev.aboutText,
           rating: rawRating ? prev.rating : data.rating || prev.rating,
