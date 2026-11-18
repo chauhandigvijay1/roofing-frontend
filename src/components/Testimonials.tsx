@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, CheckCircle2, ShieldCheck, Award, ChevronDown, ChevronUp } from "lucide-react";
-import { useBrand } from "../BrandContext";
+import { useBrand, formatLocation } from "../BrandContext";
 
 interface ReviewCard {
   author: string;
@@ -36,7 +36,7 @@ export default function Testimonials() {
       {
         author: "Chris Griffin",
         initials: "CG",
-        location: serviceAreas[0] ? `${serviceAreas[0]}, ${brand.state}` : brand.city,
+        location: serviceAreas[0] ? formatLocation(serviceAreas[0], brand.state) : brand.city,
         project: "Emergency Leak & Repair",
         category: "repair",
         text: `${brand.name} was great to work with after high winds damaged our roof. The quote process was fast and fully itemized. The repair crew arrived on schedule, matched our existing shingles perfectly, and left zero debris. Would definitely call them again!`,
@@ -46,7 +46,7 @@ export default function Testimonials() {
       {
         author: "Jennifer McCashland",
         initials: "JM",
-        location: serviceAreas[1] ? `${serviceAreas[1]}, ${brand.state}` : brand.city,
+        location: serviceAreas[1] ? formatLocation(serviceAreas[1], brand.state) : brand.city,
         project: "Full Lifetime Re-Roof",
         category: "replacement",
         text: `We loved dealing with ${brand.name} and their crew. They were completely honest with us upfront, explained every line item, and completed the job exactly like they promised. Clean, professional, and respectful of our landscaping.`,
@@ -56,7 +56,7 @@ export default function Testimonials() {
       {
         author: "Joshua Corsi",
         initials: "JC",
-        location: serviceAreas[2] ? `${serviceAreas[2]}, ${brand.state}` : brand.city,
+        location: serviceAreas[2] ? formatLocation(serviceAreas[2], brand.state) : brand.city,
         project: "Storm Damage Insurance Claim",
         category: "storm",
         text: `From start to finish, ${brand.name} made the process of replacing our hail-damaged roof easy and worry-free. Very professional, punctual, and made dealing with insurance adjuster meetings simple. Zero deductible games.`,
@@ -66,7 +66,7 @@ export default function Testimonials() {
       {
         author: "Adam Rose",
         initials: "AR",
-        location: serviceAreas[3] ? `${serviceAreas[3]}, ${brand.state}` : brand.city,
+        location: serviceAreas[3] ? formatLocation(serviceAreas[3], brand.state) : brand.city,
         project: "Active Ceiling Leak Tarp & Fix",
         category: "repair",
         text: `We had an active leak coming through into our ceiling during heavy rain and needed emergency help fast. ${brand.name} dispatched a truck within 2 hours, tarped the valley, and completed the permanent architectural fix the next morning. If you want people who actually care, call them.`,
@@ -76,7 +76,7 @@ export default function Testimonials() {
       {
         author: "Michael Mikeska",
         initials: "MM",
-        location: serviceAreas[4] ? `${serviceAreas[4]}, ${brand.state}` : brand.city,
+        location: serviceAreas[4] ? formatLocation(serviceAreas[4], brand.state) : brand.city,
         project: "Class 4 Hail Defense Replacement",
         category: "storm",
         text: `Most professional and courteous roofing contractor in ${brand.city}. Communication was on point from drone inspection to final magnetic nail sweep. The new Class 4 impact shingles look extraordinary.`,
@@ -101,7 +101,7 @@ export default function Testimonials() {
         return {
           author: r.author,
           initials,
-          location: r.location || (serviceAreas[i % serviceAreas.length] ? `${serviceAreas[i % serviceAreas.length]}, ${brand.state}` : brand.city),
+          location: r.location ? formatLocation(r.location, brand.state) : (serviceAreas[i % serviceAreas.length] ? formatLocation(serviceAreas[i % serviceAreas.length], brand.state) : brand.city),
           project: r.project || (cat === "repair" ? "Emergency Leak & Repair" : cat === "storm" ? "Storm Damage & Insurance Claim" : "Full Roof Replacement"),
           category: cat,
           text: r.text,
@@ -182,7 +182,7 @@ export default function Testimonials() {
                   : "bg-white text-zinc-600 border-stone-200 hover:border-zinc-300"
               }`}
             >
-              All Reviews ({allReviews.length})
+              Featured Reviews
             </button>
             <button
               type="button"
@@ -292,11 +292,11 @@ export default function Testimonials() {
             >
               {showAll ? (
                 <>
-                  Show Fewer Reviews <ChevronUp className="w-4 h-4" />
+                  Show Featured Reviews <ChevronUp className="w-4 h-4" />
                 </>
               ) : (
                 <>
-                  View All {filteredReviews.length} Verified Reviews <ChevronDown className="w-4 h-4" />
+                  Show More Verified Client Reviews ({brand.reviewsCount || 42}+ on Google Profile) <ChevronDown className="w-4 h-4" />
                 </>
               )}
             </button>

@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Calendar, ChevronDown, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import { useBrand } from "../BrandContext";
 import BookingModal from "./BookingModal";
 
-const services = [
+const defaultServices = [
   { label: "Residential Replacement", path: "/services/residential" },
   { label: "Emergency Repair", path: "/services/repair" },
   { label: "Storm Damage", path: "/services/storm-damage" },
@@ -21,10 +21,21 @@ const company = [
 ];
 
 export default function Navbar() {
-  const { name, phone, logo } = useBrand();
+  const brand = useBrand();
+  const { name, phone, logo } = brand;
   const { pathname, search } = useLocation();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+
+  const dynamicNavServices = useMemo(() => {
+    if (brand.structuredServices && brand.structuredServices.length > 0) {
+      return brand.structuredServices.map((s) => ({
+        label: s.title,
+        path: `/services/${s.slug}`,
+      }));
+    }
+    return defaultServices;
+  }, [brand.structuredServices]);
 
   const isActive = (path: string) => pathname === path || pathname.startsWith(path + "/");
 
@@ -64,7 +75,7 @@ export default function Navbar() {
               </button>
               {openDropdown === "services" && (
                 <div className="absolute top-full left-0 mt-1 w-64 bg-white shadow-xl shadow-stone-200/50 border border-stone-100 py-3 z-50">
-                  {services.map((s) => (
+                  {dynamicNavServices.map((s) => (
                     <Link
                       key={s.path}
                       to={{ pathname: s.path, search }}

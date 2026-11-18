@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Phone, ShieldCheck, Clock, CheckCircle } from "lucide-react";
-import { useBrand, getRegionalSuburbs } from "../BrandContext";
+import { useBrand, getRegionalSuburbs, formatLocation } from "../BrandContext";
 
 export default function Location() {
   const brand = useBrand();
@@ -53,7 +53,7 @@ export default function Location() {
                     className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-stone-200 text-xs font-oswald uppercase tracking-wider font-bold text-zinc-700 shadow-2xs hover:border-crimson hover:text-crimson transition-colors"
                   >
                     <MapPin className="w-3 h-3 text-crimson shrink-0" />
-                    {area}
+                    {formatLocation(area, brand.state)}
                   </span>
                 ))}
               </div>
@@ -70,7 +70,7 @@ export default function Location() {
               <div className="flex items-center gap-2.5 bg-white p-3 rounded-2xl border border-stone-200 shadow-2xs">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span className="text-xs font-serif text-zinc-700 font-medium leading-tight">
-                  Permit & Code Compliant
+                  Fully Licensed & Insured
                 </span>
               </div>
             </div>

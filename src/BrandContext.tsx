@@ -39,6 +39,26 @@ export interface Brand {
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://roofing-backend-n688.onrender.com";
 
+export function formatLocation(loc: string, state: string): string {
+  if (!loc) return "";
+  let clean = loc.trim();
+  // Strip duplicate trailing state (e.g., ", TX, TX", " TX, TX", ", TX TX")
+  if (state) {
+    clean = clean.replace(new RegExp(`,\\s*${state}\\s*,\\s*${state}$`, "i"), `, ${state}`);
+    clean = clean.replace(new RegExp(`\\s+${state}\\s*,\\s*${state}$`, "i"), `, ${state}`);
+    // If it already ends with ", <state>"
+    if (new RegExp(`,\\s*${state}$`, "i").test(clean)) {
+      return clean;
+    }
+    // If it already contains the full state name or state code
+    if (clean.toLowerCase().includes(state.toLowerCase())) {
+      return clean;
+    }
+    return `${clean}, ${state}`;
+  }
+  return clean;
+}
+
 export function getRegionalSuburbs(city: string, state: string): string[] {
   const normCity = (city || "").toLowerCase();
 
@@ -298,8 +318,17 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           reviewsCount: rawReviews ? prev.reviewsCount : data.reviewsCount || prev.reviewsCount,
           yearsInBusiness: rawYears ? prev.yearsInBusiness : data.yearsInBusiness || prev.yearsInBusiness,
           services: data.services && data.services.length > 0 ? data.services : prev.services,
-          serviceAreas: data.serviceAreas && data.serviceAreas.length > 0 ? data.serviceAreas : prev.serviceAreas,
-          reviews: data.reviews && data.reviews.length > 0 ? data.reviews : prev.reviews,
+          serviceAreas:
+            data.serviceAreas && data.serviceAreas.length > 0
+              ? data.serviceAreas.map((a: string) => formatLocation(a, prev.state))
+              : prev.serviceAreas,
+          reviews:
+            data.reviews && data.reviews.length > 0
+              ? data.reviews.map((r: any) => ({
+                  ...r,
+                  location: r.location ? formatLocation(r.location, prev.state) : undefined,
+                }))
+              : prev.reviews,
           galleryImages: data.galleryImages && data.galleryImages.length > 0 ? data.galleryImages : prev.galleryImages,
           structuredServices: data.structuredServices && data.structuredServices.length > 0 ? data.structuredServices : prev.structuredServices,
           isCommercial: prev.isCommercial || Boolean(data.isCommercial),

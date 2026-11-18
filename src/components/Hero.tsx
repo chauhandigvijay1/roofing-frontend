@@ -8,7 +8,7 @@ export default function Hero() {
   const ribbonText = brand.licenseNumber
     ? `${brand.licenseNumber.toUpperCase()} • FULLY LICENSED & INSURED`
     : brand.state === "FL"
-    ? "FLORIDA BUILDING CODE CERTIFIED • 140+ MPH WIND RATED"
+    ? "FLORIDA HURRICANE SHIELD CERTIFIED • 140+ MPH WIND RATED"
     : brand.state === "TX"
     ? "TEXAS WINDSTORM CERTIFIED • IMPACT RESISTANT"
     : "BBB ACCREDITED • FULLY LICENSED & INSURED";

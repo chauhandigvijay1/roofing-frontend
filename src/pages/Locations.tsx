@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { MapPin, Phone, ShieldCheck, Clock } from "lucide-react";
-import { useBrand, getRegionalSuburbs } from "../BrandContext";
+import { useBrand, getRegionalSuburbs, formatLocation } from "../BrandContext";
 
 export default function Locations() {
   const brand = useBrand();
@@ -45,7 +45,7 @@ export default function Locations() {
                     <MapPin className="w-5 h-5 text-crimson" />
                   </div>
                   <h3 className="text-lg font-oswald uppercase tracking-wider font-bold text-zinc-900 leading-snug">
-                    {area}
+                    {formatLocation(area, brand.state)}
                   </h3>
                 </div>
 

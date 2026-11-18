@@ -164,7 +164,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
             <p className="text-zinc-600 text-sm sm:text-base max-w-2xl mx-auto font-serif leading-relaxed">
               {tradeMode === "commercial"
                 ? `Commercial flat roof & single-ply TPO replacement modeling calibrated to facilities across ${brand.city}.`
-                : `Transparent line-item roof replacement modeling calibrated to ${brand.city} municipal building codes.`}
+                : `Transparent line-item roof replacement modeling calibrated to local ${brand.city} material & labor rates.`}
             </p>
 
             {/* Apple-Style Segmented Trade Pill */}
@@ -236,13 +236,13 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                               {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                             </span>
                           </div>
-                          <p className="text-xs text-zinc-600 font-sans leading-normal mt-1 line-clamp-2">
+                          <p className="text-xs text-zinc-600 font-serif leading-relaxed mt-1 line-clamp-2">
                             {scope.subtitle}
                           </p>
                         </div>
 
-                        <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between gap-2 text-xs font-sans">
-                          <span className="text-zinc-500 whitespace-nowrap">
+                        <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between gap-2 text-xs">
+                          <span className="text-zinc-500 font-serif whitespace-nowrap">
                             Warranty: <strong className="font-sans font-semibold text-zinc-700">{scope.warranty}</strong>
                           </span>
                           <span className="font-oswald font-bold text-crimson text-xs whitespace-nowrap shrink-0">

@@ -1,8 +1,10 @@
+import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { CheckCircle, ArrowLeft, ShieldCheck, Award } from "lucide-react";
+import { CheckCircle, ArrowLeft, ShieldCheck, Award, Phone, Calendar } from "lucide-react";
 import { useBrand } from "../BrandContext";
 import EstimateWizard from "../components/EstimateWizard";
+import BookingModal from "../components/BookingModal";
 
 interface ServicePayload {
   title: string;
@@ -282,6 +284,44 @@ export default function ServiceDetail() {
     };
   })();
 
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+
+  const pricingGuidance = useMemo(() => {
+    if (rawSlug.includes("repair") || rawSlug.includes("leak")) {
+      return {
+        range: "$350 – $1,250",
+        label: "Localized Leak Repair Scope",
+        sub: "Forensic leak stop, pipe boot replacement, or valley flashing rebuild.",
+      };
+    }
+    if (rawSlug.includes("metal")) {
+      return {
+        range: "$7.80 – $9.50 / sq ft",
+        label: "Architectural Standing Seam Metal",
+        sub: "24-gauge concealed-fastener panels with lifetime 50+ year resilience.",
+      };
+    }
+    if (rawSlug.includes("commercial") || rawSlug.includes("tpo")) {
+      return {
+        range: "$5.20 – $7.50 / sq ft",
+        label: "Commercial TPO & Single-Ply Flat",
+        sub: "Heat-welded 60-mil cool roof membrane with 20-30 year NDL warranty.",
+      };
+    }
+    if (rawSlug.includes("gutter")) {
+      return {
+        range: "$11 – $18 / linear ft",
+        label: "Seamless Heavy-Gauge Aluminum Gutters",
+        sub: "Continuous on-site extrusion with micro-mesh leaf protection guards.",
+      };
+    }
+    return {
+      range: "$4.80 – $6.20 / sq ft",
+      label: "Lifetime Architectural Shingle Replacement",
+      sub: "GAF Timberline HDZ / Owens Corning Duration with full tear-off included.",
+    };
+  }, [rawSlug]);
+
   return (
     <>
       {/* Hero */}
@@ -318,10 +358,10 @@ export default function ServiceDetail() {
         </div>
       </section>
 
-      {/* Split Content + Interactive Studio Sidebar */}
+      {/* Split Content + High-Converting Priority Scheduling Sidebar */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 bg-white border-b border-stone-200">
         <div className="flex flex-col lg:flex-row gap-10 max-w-7xl mx-auto">
-          {/* Left Column — Content & Scope */}
+          {/* Left Column — Deep Service Scope & Step-by-Step Execution */}
           <div className="lg:w-2/3 space-y-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -341,12 +381,80 @@ export default function ServiceDetail() {
               </p>
             </motion.div>
 
-            {/* Turnkey Inclusions Box */}
+            {/* 4-Step Precision Workflow */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
+              className="space-y-4"
+            >
+              <div>
+                <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold">
+                  Turnkey Engineering Standard
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-1">
+                  Our 4-Step Installation & Diagnostic Protocol
+                </h3>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4 pt-1">
+                <div className="bg-stone-50 p-5 rounded-2xl border border-stone-200/80">
+                  <div className="w-8 h-8 rounded-full bg-crimson text-white font-oswald font-bold flex items-center justify-center text-xs mb-3">
+                    01
+                  </div>
+                  <h4 className="font-oswald uppercase tracking-wider font-bold text-zinc-900 text-sm mb-1.5">
+                    21-Point Drone & Attic Survey
+                  </h4>
+                  <p className="text-xs text-zinc-600 font-serif leading-relaxed">
+                    Thermal infrared leak detection and high-definition aerial shingle mapping to pinpoint hidden moisture.
+                  </p>
+                </div>
+
+                <div className="bg-stone-50 p-5 rounded-2xl border border-stone-200/80">
+                  <div className="w-8 h-8 rounded-full bg-crimson text-white font-oswald font-bold flex items-center justify-center text-xs mb-3">
+                    02
+                  </div>
+                  <h4 className="font-oswald uppercase tracking-wider font-bold text-zinc-900 text-sm mb-1.5">
+                    Deck Prep & Synthetic Barrier
+                  </h4>
+                  <p className="text-xs text-zinc-600 font-serif leading-relaxed">
+                    Complete surface prep, damaged wood replacement, and high-tensile water barriers installed across valleys and eaves.
+                  </p>
+                </div>
+
+                <div className="bg-stone-50 p-5 rounded-2xl border border-stone-200/80">
+                  <div className="w-8 h-8 rounded-full bg-crimson text-white font-oswald font-bold flex items-center justify-center text-xs mb-3">
+                    03
+                  </div>
+                  <h4 className="font-oswald uppercase tracking-wider font-bold text-zinc-900 text-sm mb-1.5">
+                    Certified Master Installation
+                  </h4>
+                  <p className="text-xs text-zinc-600 font-serif leading-relaxed">
+                    Precision installation exceeding strict manufacturer specifications, certified for 130+ MPH wind defense and lifetime warranties.
+                  </p>
+                </div>
+
+                <div className="bg-stone-50 p-5 rounded-2xl border border-stone-200/80">
+                  <div className="w-8 h-8 rounded-full bg-crimson text-white font-oswald font-bold flex items-center justify-center text-xs mb-3">
+                    04
+                  </div>
+                  <h4 className="font-oswald uppercase tracking-wider font-bold text-zinc-900 text-sm mb-1.5">
+                    Triple Magnetic Sweep & Sign-Off
+                  </h4>
+                  <p className="text-xs text-zinc-600 font-serif leading-relaxed">
+                    Thorough magnetic roller sweeps to capture every stray nail, full property cleanup, and final customer walk-through certification.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Turnkey Inclusions Box */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.15 }}
               className="bg-stone-50 p-6 sm:p-8 rounded-3xl border border-stone-200 shadow-2xs"
             >
               <div className="flex items-center gap-2 mb-5">
@@ -365,7 +473,7 @@ export default function ServiceDetail() {
               </div>
             </motion.div>
 
-            {/* Local Code & Technical FAQs */}
+            {/* Local Technical FAQs */}
             <div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -375,7 +483,7 @@ export default function ServiceDetail() {
                 className="mb-6"
               >
                 <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold">
-                  Code & Warranty Clarity
+                  Warranty & Installation Details
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-1">
                   Frequently Asked Questions
@@ -410,14 +518,111 @@ export default function ServiceDetail() {
             </div>
           </div>
 
-          {/* Right Column: Sticky Precision Estimator */}
+          {/* Right Column: Clean Dedicated Priority Scheduling Card */}
           <div className="lg:w-1/3">
-            <div className="sticky top-24">
-              <EstimateWizard variant="sidebar" />
+            <div className="sticky top-24 space-y-6">
+              <div className="bg-white rounded-3xl p-6 sm:p-7 shadow-xl border border-stone-200/90 relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-crimson via-crimson-light to-amber-500" />
+
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                  <span className="text-xs font-oswald uppercase tracking-wider font-bold text-emerald-800">
+                    Priority Dispatch Active &bull; {brand.city}
+                  </span>
+                </div>
+
+                <h3 className="text-2xl font-oswald uppercase tracking-wider font-bold text-zinc-950 leading-tight">
+                  Schedule Free 21-Point Inspection
+                </h3>
+                <p className="text-xs text-zinc-600 font-serif leading-relaxed mt-1.5">
+                  Complimentary on-site drone scan, structural attic survey, and itemized scope with {brand.name}. Zero deposit required.
+                </p>
+
+                {/* Pricing Reference Box */}
+                <div className="my-5 p-4 rounded-2xl bg-stone-50 border border-stone-200/80">
+                  <span className="text-[10px] font-oswald uppercase tracking-widest text-crimson font-bold block mb-1">
+                    {pricingGuidance.label}
+                  </span>
+                  <div className="text-2xl font-oswald font-bold text-zinc-900">
+                    {pricingGuidance.range}
+                  </div>
+                  <p className="text-[11px] text-zinc-500 font-serif mt-1">
+                    {pricingGuidance.sub}
+                  </p>
+                </div>
+
+                {/* Turnkey Inclusions Checklist */}
+                <div className="space-y-2.5 mb-6 text-xs font-serif text-zinc-700">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Drone roof scan & infrared moisture detection</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Itemized written quote with zero out-of-pocket games</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Certified non-prorated manufacturer warranty</span>
+                  </div>
+                </div>
+
+                {/* Primary Booking Button */}
+                <button
+                  type="button"
+                  onClick={() => setIsBookingOpen(true)}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white py-3.5 px-5 rounded-full font-oswald uppercase tracking-wider font-bold text-sm shadow-md transition-all hover:scale-101 active:scale-98 cursor-pointer"
+                >
+                  <Calendar className="w-4 h-4" /> Book Free Inspection Window
+                </button>
+
+                {/* Secondary Direct Call Button */}
+                <a
+                  href={`tel:${brand.phone}`}
+                  className="w-full mt-2.5 inline-flex items-center justify-center gap-2 bg-stone-100 hover:bg-stone-200 text-zinc-900 py-3 px-5 rounded-full font-oswald uppercase tracking-wider font-bold text-xs border border-stone-200 transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5 text-crimson" /> Call Dispatch: {brand.phone}
+                </a>
+
+                {/* Link to Bottom Calculator */}
+                <div className="mt-4 pt-3 border-t border-stone-100 text-center">
+                  <a
+                    href="#service-calculator"
+                    className="text-[11px] font-oswald uppercase tracking-wider font-bold text-zinc-500 hover:text-crimson transition-colors inline-flex items-center gap-1"
+                  >
+                    Custom Square Footage Calculator ↓
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Full-Width Bottom Interactive Cost Calculator */}
+      <section id="service-calculator" className="py-16 sm:py-20 px-4 sm:px-6 bg-stone-100 border-t border-stone-200">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-10">
+            <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold">
+              Precision Cost Modeling &bull; {brand.city}
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-1">
+              Interactive Investment Estimator
+            </h2>
+            <p className="text-zinc-600 text-base sm:text-lg max-w-xl mx-auto font-serif mt-2">
+              Model your estimated surface area and compare certified systems installed by {brand.name}.
+            </p>
+          </div>
+          <EstimateWizard />
+        </div>
+      </section>
+
+      {/* Synchronized Inspection Booking Modal */}
+      <BookingModal
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+        initialService={serviceData.title}
+      />
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { MapPin, ShieldCheck } from "lucide-react";
-import { useBrand, getRegionalSuburbs } from "../BrandContext";
+import { useBrand, getRegionalSuburbs, formatLocation } from "../BrandContext";
 
 export default function Portfolio() {
   const brand = useBrand();
@@ -13,37 +13,37 @@ export default function Portfolio() {
     {
       title: "Architectural Shingle Replacement",
       location: brand.city,
-      img: "/after-roof.jpg",
+      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
       scope: "50-Yr GAF Timberline HDZ",
     },
     {
       title: "Severe Storm Recovery & Replacement",
-      location: serviceAreas[0] ? `${serviceAreas[0]}, ${brand.state}` : brand.city,
-      img: "/before-roof.jpg",
+      location: serviceAreas[0] ? formatLocation(serviceAreas[0], brand.state) : brand.city,
+      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
       scope: "Full Decking & Synthetic Barrier",
     },
     {
       title: brand.isCommercial ? "Industrial TPO Flat System" : "Commercial Single-Ply Flat Roof",
-      location: serviceAreas[1] ? `${serviceAreas[1]}, ${brand.state}` : brand.city,
-      img: "/service-commercial.jpg",
+      location: serviceAreas[1] ? formatLocation(serviceAreas[1], brand.state) : brand.city,
+      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2467902073-1920w.jpg",
       scope: "60-Mil Heat-Welded Membrane",
     },
     {
       title: "Custom Standing Seam Metal",
-      location: serviceAreas[2] ? `${serviceAreas[2]}, ${brand.state}` : brand.city,
-      img: "/service-metal.jpg",
+      location: serviceAreas[2] ? formatLocation(serviceAreas[2], brand.state) : brand.city,
+      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2447926003-1920w.jpg",
       scope: "24-Gauge Concealed Fastener",
     },
     {
       title: "Emergency Leak & Valley Restoration",
-      location: serviceAreas[3] ? `${serviceAreas[3]}, ${brand.state}` : brand.city,
-      img: "/service-storm.jpg",
+      location: serviceAreas[3] ? formatLocation(serviceAreas[3], brand.state) : brand.city,
+      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1202910862-1920w.jpg",
       scope: "Rapid Tarping & Lifetime Repair",
     },
     {
       title: "Class 4 Impact Hail Defense",
-      location: serviceAreas[4] ? `${serviceAreas[4]}, ${brand.state}` : brand.city,
-      img: "/service-shingle.jpg",
+      location: serviceAreas[4] ? formatLocation(serviceAreas[4], brand.state) : brand.city,
+      img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
       scope: "UL 2218 Insurance Qualified",
     },
   ];
@@ -127,7 +127,7 @@ export default function Portfolio() {
                 <span className="flex items-center gap-1 font-medium">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Manufacturer Warranty
                 </span>
-                <span className="text-zinc-400">100% Passed Inspection</span>
+                <span className="text-zinc-400">Verified Craftsmanship</span>
               </div>
             </motion.div>
           ))}

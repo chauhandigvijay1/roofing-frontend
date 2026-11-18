@@ -1,4 +1,4 @@
-import { useBrand, getRegionalSuburbs } from "../BrandContext";
+import { useBrand, getRegionalSuburbs, formatLocation } from "../BrandContext";
 import { ShieldCheck, MapPin } from "lucide-react";
 
 export default function Gallery() {
@@ -19,19 +19,19 @@ export default function Gallery() {
       img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_1231407160-1920w.jpg",
       title: "Complete Precision Tear-Off & Shingle System",
       tag: "50-Year Warranty",
-      location: serviceAreas[0] ? `${serviceAreas[0]}, ${brand.state}` : brand.city,
+      location: serviceAreas[0] ? formatLocation(serviceAreas[0], brand.state) : brand.city,
     },
     {
       img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2447926003-1920w.jpg",
       title: "Standing Seam Architectural Metal",
       tag: "High-Tensile Metal",
-      location: serviceAreas[1] ? `${serviceAreas[1]}, ${brand.state}` : brand.city,
+      location: serviceAreas[1] ? formatLocation(serviceAreas[1], brand.state) : brand.city,
     },
     {
       img: "https://irp.cdn-website.com/960cfd5a/dms3rep/multi/opt/shutterstock_2467902073-1920w.jpg",
       title: brand.isCommercial ? "Commercial Single-Ply TPO Installation" : "Commercial & Residential Flat Roof",
       tag: "Cool Roof TPO",
-      location: serviceAreas[2] ? `${serviceAreas[2]}, ${brand.state}` : brand.city,
+      location: serviceAreas[2] ? formatLocation(serviceAreas[2], brand.state) : brand.city,
     },
   ];
 
@@ -58,7 +58,7 @@ export default function Gallery() {
           </h2>
           <div className="w-14 h-1 bg-crimson mx-auto mt-3 mb-5"></div>
           <p className="text-zinc-600 text-base sm:text-lg max-w-2xl mx-auto font-serif leading-relaxed">
-            Authentic craftsmanship and verified transformations across {brand.city} and surrounding communities. Every installation is backed by certified manufacturer warranties and passes municipal code inspection.
+            Authentic craftsmanship and verified transformations across {brand.city} and surrounding communities. Every installation is backed by certified manufacturer warranties and lifetime leak-free craftsmanship.
           </p>
         </div>
 
@@ -113,7 +113,7 @@ export default function Gallery() {
               {/* Card Footer */}
               <div className="px-4 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-xs font-sans text-zinc-500">
                 <span>Verified Installation</span>
-                <span className="text-emerald-700 font-medium">100% Passed Code</span>
+                <span className="text-emerald-700 font-medium">Lifetime Warranty</span>
               </div>
             </div>
           ))}
