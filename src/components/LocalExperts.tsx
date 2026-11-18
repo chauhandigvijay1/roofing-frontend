@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Shield, HardHat, Award, CheckCircle2, UserCheck, ShieldCheck, Building2 } from "lucide-react";
+import { Shield, HardHat, Award, CheckCircle2, UserCheck, ShieldCheck, Building2, User } from "lucide-react";
 import { useBrand, decodeHtmlEntities } from "../BrandContext";
 
 const values = [
@@ -49,12 +49,12 @@ export default function LocalExperts() {
     return `Founded on honest craftsmanship and dedicated service across ${cleanCity}. Our master roofing crews specialize in hurricane-engineered residential replacements, commercial TPO flat systems, and emergency storm restorations backed by comprehensive manufacturer warranties.`;
   }, [aboutText, cleanCity]);
 
-  // Generate clean 2-letter monogram for fallback crest (e.g., "WB", "NW")
+  // Generate clean 2-letter monogram for fallback crest (e.g., "RW", "NW", "JM")
   const monogram = useMemo(() => {
     const target = hasFounder && founderName ? founderName : cleanName;
     const parts = target.replace(/[^a-zA-Z\s]/g, "").trim().split(/\s+/);
     if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+      return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
     }
     return target.slice(0, 2).toUpperCase();
   }, [hasFounder, founderName, cleanName]);
@@ -81,7 +81,7 @@ export default function LocalExperts() {
             {/* Visual Portrait / Verified Brand Logo / Executive Monogram */}
             <div className="relative shrink-0">
               {founderPhoto && !photoFailed ? (
-                /* 1. Verified Founder Portrait */
+                /* 1. Verified Founder Portrait (When explicit valid photo is provided) */
                 <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-3xl overflow-hidden border-4 border-white shadow-xl bg-stone-100">
                   <img
                     src={founderPhoto}
@@ -94,8 +94,26 @@ export default function LocalExperts() {
                     {hasFounder ? `Executive Lead • ${cleanCity}` : `Field Direction • ${cleanCity}`}
                   </span>
                 </div>
+              ) : hasFounder ? (
+                /* 2. Bespoke Luxury Executive Monogram Crest (Zero Broken Images, 100% Reliable) */
+                <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-3xl overflow-hidden border-4 border-white shadow-xl bg-gradient-to-br from-zinc-900 via-stone-900 to-zinc-950 flex flex-col items-center justify-center text-center p-5">
+                  <div className="w-16 h-16 rounded-2xl bg-crimson/20 border border-crimson/40 text-white flex items-center justify-center text-2xl font-oswald font-bold tracking-wider mb-2 shadow-inner">
+                    {monogram}
+                  </div>
+                  <span className="text-sm font-oswald font-bold tracking-wider text-white uppercase truncate max-w-[150px] block">
+                    {displayFounderName}
+                  </span>
+                  <span className="text-[10px] font-oswald uppercase tracking-widest text-stone-300 mt-0.5 block">
+                    Certified Master
+                  </span>
+                  <div className="absolute inset-x-0 bottom-0 bg-zinc-950/90 backdrop-blur-xs py-1.5 px-2 text-center">
+                    <span className="text-[10px] font-oswald uppercase tracking-wider text-stone-300 font-bold block">
+                      {cleanCity} Leadership
+                    </span>
+                  </div>
+                </div>
               ) : logo && !logoFailed ? (
-                /* 2. Official Verified Brand Logo Card */
+                /* 3. Official Verified Brand Logo Card */
                 <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-3xl overflow-hidden border-4 border-white shadow-xl bg-white flex flex-col items-center justify-center p-6 text-center">
                   <div className="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
                     <img
@@ -107,12 +125,12 @@ export default function LocalExperts() {
                   </div>
                   <div className="absolute inset-x-0 bottom-0 bg-stone-900/90 backdrop-blur-xs py-1.5 px-2 text-center">
                     <span className="text-[10px] font-oswald uppercase tracking-wider text-stone-200 font-bold block">
-                      {hasFounder ? `Executive Office • ${cleanCity}` : `Certified Team • ${cleanCity}`}
+                      Certified Team • {cleanCity}
                     </span>
                   </div>
                 </div>
               ) : (
-                /* 3. Luxury Architectural Monogram Crest */
+                /* 4. Company Architectural Crest Fallback */
                 <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-3xl overflow-hidden border-4 border-white shadow-xl bg-gradient-to-br from-stone-900 via-zinc-900 to-stone-950 flex flex-col items-center justify-center text-center p-4">
                   <div className="w-16 h-16 rounded-2xl bg-crimson/20 border border-crimson/40 text-white flex items-center justify-center mb-2 shadow-inner">
                     <Building2 className="w-8 h-8 text-white" />
@@ -163,7 +181,7 @@ export default function LocalExperts() {
                   </span>
                 )}
                 <span className="text-xs text-zinc-500 font-serif">
-                  Serving {cleanCity} & Surrounding Counties
+                  Serving {cleanCity} &amp; Surrounding Counties
                 </span>
               </div>
             </div>
