@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBrand } from "../BrandContext";
 import {
@@ -112,6 +112,19 @@ export default function BookingModal({
       ? "Florida Wind Mitigation Inspection (Insurance Form)"
       : "Comprehensive 21-Point Roof & Attic Inspection";
   });
+
+  // Keep modal state synchronized whenever opened or props update
+  useEffect(() => {
+    if (isOpen) {
+      setStep(1);
+      if (initialService) {
+        setSelectedService(initialService);
+      }
+      if (initialAddress) {
+        setAddress(initialAddress);
+      }
+    }
+  }, [isOpen, initialService, initialAddress]);
 
   // Apple-Style Clean 10-Day Rapid Date Selector
   const rapidDateOptions = useMemo(() => {
