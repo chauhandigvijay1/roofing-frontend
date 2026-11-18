@@ -1,19 +1,18 @@
 import { useState, useMemo, useEffect } from "react";
 import { useBrand } from "../BrandContext";
 import {
-  Calculator,
-  ArrowRight,
   Calendar,
   Building2,
   Home,
-  ShieldCheck,
+  CheckCircle,
+  ArrowRight,
 } from "lucide-react";
 import BookingModal from "./BookingModal";
 
 interface ScopeOption {
   title: string;
   subtitle: string;
-  rate: number; // price per sq ft
+  rate: number;
   warranty: string;
 }
 
@@ -31,7 +30,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
     }
   }, [brand.isCommercial]);
 
-  // Authentic, Real-World Trade Systems
+  // Authentic Systems with Harmonized Typography Copy
   const residentialScopes: ScopeOption[] = [
     {
       title: "Architectural Shingles (50-Yr)",
@@ -52,7 +51,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
       warranty: "50+ Year Lifetime",
     },
     {
-      title: brand.state === "FL" ? "Florida Tile / Wind Engineered" : "Designer Shake & Tile System",
+      title: brand.state === "FL" ? "Florida Tile / Hurricane Engineered" : "Designer Shake & Tile System",
       subtitle: brand.state === "FL" ? "140+ MPH hurricane fastened Spanish clay or concrete tile" : "High-definition composite cedar shake & slate replacement",
       rate: 9.2,
       warranty: "Lifetime Premium",
@@ -88,19 +87,17 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
 
   const currentScopes = tradeMode === "commercial" ? commercialScopes : residentialScopes;
   const [selectedScope, setSelectedScope] = useState<string>(currentScopes[0].title);
-  const [resSqFt, setResSqFt] = useState<number>(2400); // 1,200 to 5,500 sq ft
-  const [commSqFt, setCommSqFt] = useState<number>(12000); // 5,000 to 50,000 sq ft
+  const [resSqFt, setResSqFt] = useState<number>(2400);
+  const [commSqFt, setCommSqFt] = useState<number>(12000);
   const [includeIncentive, setIncludeIncentive] = useState<boolean>(true);
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
-  // Synchronize scope selection when changing trade
   const handleTradeModeChange = (mode: "residential" | "commercial") => {
     setTradeMode(mode);
     setSelectedScope(mode === "commercial" ? commercialScopes[0].title : residentialScopes[0].title);
   };
 
-  // Real-Time Apple-Grade Dynamic Calculation
   const calculation = useMemo(() => {
     const isComm = tradeMode === "commercial";
     const sqFt = isComm ? commSqFt : resSqFt;
@@ -113,15 +110,15 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
     let incentiveAmount = 0;
     if (includeIncentive) {
       if (brand.state === "FL") {
-        incentiveAmount = 850; // Florida Wind Mitigation statutory premium discount
+        incentiveAmount = 850;
       } else if (isComm) {
-        incentiveAmount = Math.round(sqFt * 0.35); // Cool Roof Commercial Energy Rebate
+        incentiveAmount = Math.round(sqFt * 0.35);
       } else {
-        incentiveAmount = 620; // Texas / Midwest Class 4 Hail Premium Credit
+        incentiveAmount = 620;
       }
     }
 
-    const monthly = Math.round(low / 84); // 84-month 0% down financing estimate
+    const monthly = Math.round(low / 84);
     return {
       low,
       high,
@@ -133,10 +130,6 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
     };
   }, [tradeMode, selectedScope, resSqFt, commSqFt, includeIncentive, brand.state, currentScopes]);
 
-  const handleOpenBooking = () => {
-    setIsBookingOpen(true);
-  };
-
   return (
     <>
       <section
@@ -144,33 +137,33 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
         className={
           isSidebar
             ? "py-8 px-4 bg-stone-50"
-            : "py-24 px-4 sm:px-6 bg-gradient-to-b from-stone-100 to-white border-y border-stone-200"
+            : "py-20 px-4 sm:px-6 bg-stone-100 border-y border-stone-200"
         }
       >
-        <div className={isSidebar ? "w-full" : "max-w-4xl mx-auto"}>
-          {/* Header */}
+        <div className={isSidebar ? "w-full" : "max-w-7xl mx-auto"}>
+          {/* Section Header with Consistent Typography */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-crimson/10 border border-crimson/25 text-crimson text-xs font-oswald uppercase tracking-widest font-bold mb-3 shadow-xs">
-              <Calculator className="w-3.5 h-3.5" />
-              <span>Apple-Grade Precision Roof Estimator</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900">
+            <span className="text-xs font-oswald uppercase tracking-widest text-crimson font-bold">
+              Precision Cost Modeling
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-2">
               Instant Roof Cost Calculator
             </h2>
-            <p className="text-zinc-600 text-sm sm:text-base max-w-2xl mx-auto mt-2 font-serif">
+            <div className="w-16 h-1 bg-crimson mx-auto mt-4 mb-4"></div>
+            <p className="text-zinc-600 text-sm sm:text-base max-w-2xl mx-auto font-serif">
               {tradeMode === "commercial"
                 ? `Commercial flat roof & single-ply TPO replacement modeling calibrated to facilities across ${brand.city}.`
                 : `Transparent line-item roof replacement modeling calibrated to ${brand.city} municipal building codes.`}
             </p>
 
             {/* Apple-Style Segmented Trade Pill */}
-            <div className="inline-flex items-center p-1 bg-stone-200/90 rounded-full mt-6 shadow-inner border border-stone-300/60">
+            <div className="inline-flex items-center p-1 bg-stone-200/90 rounded-full mt-4 shadow-inner border border-stone-300/60">
               <button
                 type="button"
                 onClick={() => handleTradeModeChange("residential")}
                 className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all cursor-pointer ${
                   tradeMode === "residential"
-                    ? "bg-white text-zinc-900 shadow-md ring-1 ring-black/5"
+                    ? "bg-white text-zinc-900 shadow-sm ring-1 ring-black/5"
                     : "text-zinc-600 hover:text-zinc-900"
                 }`}
               >
@@ -181,7 +174,7 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
                 onClick={() => handleTradeModeChange("commercial")}
                 className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-oswald uppercase tracking-wider font-bold transition-all cursor-pointer ${
                   tradeMode === "commercial"
-                    ? "bg-white text-zinc-900 shadow-md ring-1 ring-black/5"
+                    ? "bg-white text-zinc-900 shadow-sm ring-1 ring-black/5"
                     : "text-zinc-600 hover:text-zinc-900"
                 }`}
               >
@@ -190,175 +183,200 @@ export default function EstimateWizard({ variant = "full" }: { variant?: "full" 
             </div>
           </div>
 
-          {/* Calculator Card Container with Apple-Grade Curves */}
-          <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-zinc-200/80 space-y-8">
-            {/* Step 1: Scope Grid */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-xs sm:text-sm font-oswald uppercase tracking-wider font-bold text-zinc-900">
-                  1. Choose System Material
-                </label>
-                <span className="text-xs text-zinc-500 font-serif">
-                  {tradeMode === "commercial" ? "Commercial Membrane" : "Residential Shingle & Metal"}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {currentScopes.map((scope) => {
-                  const isSelected = selectedScope === scope.title;
-                  return (
-                    <button
-                      key={scope.title}
-                      type="button"
-                      onClick={() => setSelectedScope(scope.title)}
-                      className={`text-left p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
-                        isSelected
-                          ? "border-crimson bg-crimson/5 shadow-xs ring-2 ring-crimson/80"
-                          : "border-zinc-200 hover:border-zinc-300 bg-stone-50/50"
-                      }`}
-                    >
-                      <div>
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="font-oswald uppercase tracking-wider font-bold text-sm text-zinc-900">
-                            {scope.title}
-                          </span>
-                          <span
-                            className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                              isSelected ? "border-crimson bg-crimson" : "border-zinc-300 bg-white"
-                            }`}
-                          >
-                            {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
-                          </span>
-                        </div>
-                        <p className="text-xs text-zinc-500 font-serif mt-1">{scope.subtitle}</p>
-                      </div>
-
-                      <div className="mt-3 pt-2.5 border-t border-zinc-100 flex items-center justify-between text-[11px]">
-                        <span className="text-zinc-500 font-serif">Warranty: {scope.warranty}</span>
-                        <span className="font-oswald font-bold text-crimson">~${scope.rate.toFixed(2)}/sq ft</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Step 2: Apple-Style Smooth Slider */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="text-xs sm:text-sm font-oswald uppercase tracking-wider font-bold text-zinc-900 block">
-                    2. Approximate Roof Area
+          {/* 2-COLUMN SINGLE-VIEWPORT INTERACTIVE STUDIO */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+            {/* LEFT COLUMN: Controls & System Scope (7 Columns) */}
+            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-zinc-200/80 space-y-6">
+              {/* Material Selection Grid */}
+              <div>
+                <div className="flex items-center justify-between mb-2.5">
+                  <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900">
+                    1. Choose Roof System Material
                   </label>
-                  <span className="text-xs text-zinc-500 font-serif">
-                    Drag the slider to match your property's footprint
+                  <span className="text-[11px] text-zinc-500 font-serif">
+                    {tradeMode === "commercial" ? "Commercial Scope" : "Residential Scope"}
                   </span>
                 </div>
-                <div className="text-right">
-                  <div className="text-2xl sm:text-3xl font-oswald font-bold text-crimson">
-                    {calculation.sqFt.toLocaleString()} sq ft
-                  </div>
-                  <span className="text-xs text-zinc-400 font-serif block">
-                    ~{calculation.squares} Roofing Squares
-                  </span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {currentScopes.map((scope) => {
+                    const isSelected = selectedScope === scope.title;
+                    return (
+                      <button
+                        key={scope.title}
+                        type="button"
+                        onClick={() => setSelectedScope(scope.title)}
+                        className={`text-left p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                          isSelected
+                            ? "border-crimson bg-crimson/5 shadow-xs ring-1 ring-crimson"
+                            : "border-zinc-200 hover:border-zinc-300 bg-stone-50/50"
+                        }`}
+                      >
+                        <div>
+                          <div className="flex items-center justify-between gap-1.5">
+                            <span className="font-oswald uppercase tracking-wider font-bold text-xs sm:text-sm text-zinc-900 truncate">
+                              {scope.title}
+                            </span>
+                            <span
+                              className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
+                                isSelected ? "border-crimson bg-crimson" : "border-zinc-300 bg-white"
+                              }`}
+                            >
+                              {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-zinc-600 font-serif mt-1 leading-snug">
+                            {scope.subtitle}
+                          </p>
+                        </div>
+
+                        <div className="mt-2.5 pt-2 border-t border-zinc-100 flex items-center justify-between text-[10px]">
+                          <span className="text-zinc-500 font-serif">Warranty: {scope.warranty}</span>
+                          <span className="font-oswald font-bold text-crimson">~${scope.rate.toFixed(2)}/sq ft</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Slider with Apple Curves & Accent */}
-              <div className="pt-2">
+              {/* Smooth Area Slider */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900 block">
+                      2. Approximate Roof Footprint
+                    </label>
+                    <span className="text-[11px] text-zinc-500 font-serif">
+                      Slide to match estimated surface area
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xl sm:text-2xl font-oswald font-bold text-crimson">
+                      {calculation.sqFt.toLocaleString()} sq ft
+                    </span>
+                    <span className="text-[10px] text-zinc-400 font-serif block">
+                      ~{calculation.squares} Squares
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-1">
+                  <input
+                    type="range"
+                    min={tradeMode === "commercial" ? 5000 : 1200}
+                    max={tradeMode === "commercial" ? 50000 : 5500}
+                    step={tradeMode === "commercial" ? 500 : 50}
+                    value={tradeMode === "commercial" ? commSqFt : resSqFt}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      if (tradeMode === "commercial") {
+                        setCommSqFt(val);
+                      } else {
+                        setResSqFt(val);
+                      }
+                    }}
+                    className="w-full h-2 bg-stone-200 rounded-full appearance-none cursor-pointer accent-crimson focus:outline-none"
+                  />
+                  <div className="flex justify-between text-[10px] font-oswald uppercase tracking-wider text-zinc-400 mt-1 font-mono">
+                    <span>{tradeMode === "commercial" ? "5,000 sq ft" : "1,200 sq ft (Cottage)"}</span>
+                    <span>{tradeMode === "commercial" ? "25,000 sq ft" : "3,200 sq ft (Average)"}</span>
+                    <span>{tradeMode === "commercial" ? "50,000 sq ft" : "5,500 sq ft (Estate)"}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Incentive Credit Box */}
+              <div className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200/90 flex items-start gap-2.5">
                 <input
-                  type="range"
-                  min={tradeMode === "commercial" ? 5000 : 1200}
-                  max={tradeMode === "commercial" ? 50000 : 5500}
-                  step={tradeMode === "commercial" ? 500 : 50}
-                  value={tradeMode === "commercial" ? commSqFt : resSqFt}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    if (tradeMode === "commercial") {
-                      setCommSqFt(val);
-                    } else {
-                      setResSqFt(val);
-                    }
-                  }}
-                  className="w-full h-2.5 bg-stone-200 rounded-full appearance-none cursor-pointer accent-crimson focus:outline-none"
+                  type="checkbox"
+                  id="incentiveCredit"
+                  checked={includeIncentive}
+                  onChange={(e) => setIncludeIncentive(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 text-emerald-600 border-zinc-300 rounded focus:ring-emerald-500 cursor-pointer"
                 />
-                <div className="flex justify-between text-[11px] font-oswald uppercase tracking-wider text-zinc-400 mt-2 font-mono">
-                  <span>{tradeMode === "commercial" ? "5,000 sq ft" : "1,200 sq ft (Cottage)"}</span>
-                  <span>{tradeMode === "commercial" ? "25,000 sq ft" : "3,200 sq ft (Avg Home)"}</span>
-                  <span>{tradeMode === "commercial" ? "50,000 sq ft" : "5,500 sq ft (Estate)"}</span>
-                </div>
+                <label htmlFor="incentiveCredit" className="text-xs text-zinc-700 font-serif cursor-pointer">
+                  <strong className="text-emerald-950 block font-oswald uppercase tracking-wider text-xs">
+                    {brand.state === "FL"
+                      ? "Apply Florida Wind Mitigation Insurance Deduction (-$850/yr)"
+                      : tradeMode === "commercial"
+                      ? "Apply Commercial Cool Roof Energy Efficiency Credit"
+                      : "Apply Impact-Resistant Class 4 Insurance Deduction (Up to 28%)"}
+                  </strong>
+                  <span className="text-[11px] text-zinc-600">
+                    {brand.state === "FL"
+                      ? "Qualifies property for statutory hurricane tie-down and secondary water barrier insurance discounts."
+                      : tradeMode === "commercial"
+                      ? "Reflective cool roof solar coatings qualify for commercial energy rebates and reduce cooling loads."
+                      : "Impact-resistant shingles qualify for verified homeowner insurance premium discounts."}
+                  </span>
+                </label>
               </div>
             </div>
 
-            {/* Step 3: Incentive Credit Toggle */}
-            <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/90 flex items-start gap-3">
-              <input
-                type="checkbox"
-                id="incentiveCredit"
-                checked={includeIncentive}
-                onChange={(e) => setIncludeIncentive(e.target.checked)}
-                className="mt-1 w-4 h-4 text-emerald-600 border-zinc-300 rounded-sm focus:ring-emerald-500 cursor-pointer"
-              />
-              <label htmlFor="incentiveCredit" className="text-xs text-zinc-700 font-serif cursor-pointer">
-                <strong className="text-emerald-950 block font-oswald uppercase tracking-wider text-sm">
-                  {brand.state === "FL"
-                    ? "Apply Florida Wind Mitigation Insurance Discount (-$850/yr)"
-                    : tradeMode === "commercial"
-                    ? "Apply Commercial Cool Roof Energy Efficiency Credit"
-                    : "Apply Impact-Resistant Class 4 Insurance Discount (Up to 28%)"}
-                </strong>
-                <span>
-                  {brand.state === "FL"
-                    ? "Secondary water barrier & hurricane fastener documentation qualify your property for statutory insurance deductions."
-                    : tradeMode === "commercial"
-                    ? "Solar-reflective white membranes reduce HVAC load and qualify for commercial utility rebates."
-                    : "High-impact shingles qualify for verified homeowner insurance premium discounts."}
+            {/* RIGHT COLUMN: Live Sticky Calculation & Booking Studio (5 Columns) */}
+            <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 shadow-xl border border-zinc-200/90 space-y-5 lg:sticky lg:top-24">
+              <div>
+                <span className="text-[10px] font-oswald uppercase tracking-widest text-crimson font-bold block">
+                  Live Estimated Investment
                 </span>
-              </label>
-            </div>
-
-            {/* Apple-Style Live Estimated Price Banner (Curved rounded-3xl) */}
-            <div className="bg-zinc-950 text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-zinc-800">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                <div>
-                  <span className="text-[10px] font-oswald uppercase tracking-widest text-crimson font-bold block">
-                    Calculated Project Investment
-                  </span>
-                  <div className="text-3xl sm:text-5xl font-oswald font-bold text-white mt-1">
-                    ${calculation.low.toLocaleString()} &ndash; ${calculation.high.toLocaleString()}
-                  </div>
-                  <p className="text-xs text-zinc-400 font-serif mt-1">
-                    Includes tear-off, synthetic underlayment, drip edge, flashing, certified labor & cleanup.
-                  </p>
+                <div className="text-3xl sm:text-4xl font-oswald font-bold text-zinc-950 mt-1">
+                  ${calculation.low.toLocaleString()} &ndash; ${calculation.high.toLocaleString()}
                 </div>
-
-                <div className="sm:text-right border-t sm:border-t-0 sm:border-l border-zinc-800 pt-4 sm:pt-0 sm:pl-6 shrink-0">
-                  <span className="text-[10px] font-oswald uppercase tracking-wider text-zinc-400 block">
-                    As Low As
-                  </span>
-                  <div className="text-2xl sm:text-3xl font-oswald font-bold text-emerald-400">
-                    ${calculation.monthly}/mo
-                  </div>
-                  <span className="text-[11px] text-zinc-400 font-serif block">
-                    0% Down • Flexible Financing
-                  </span>
+                <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-oswald uppercase tracking-wider font-bold">
+                  <span>As Low As ${calculation.monthly}/mo</span>
+                  <span className="text-emerald-600 font-serif normal-case font-normal text-[11px]">(0% Down Available)</span>
                 </div>
               </div>
 
-              {/* Conversion CTA Button */}
-              <div className="pt-6 mt-6 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="text-xs text-zinc-400 font-serif flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Free on-site drone & attic verification confirms exact line-item quote</span>
+              {/* Selected Scope Summary */}
+              <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200/80 text-xs space-y-1.5 font-serif">
+                <div className="flex justify-between">
+                  <span className="text-zinc-500">System Scope:</span>
+                  <strong className="text-zinc-900 font-oswald uppercase truncate max-w-[180px]">{selectedScope}</strong>
                 </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-500">Surface Footprint:</span>
+                  <strong className="text-zinc-900 font-oswald">{calculation.sqFt.toLocaleString()} sq ft ({calculation.squares} Squares)</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-500">Service Territory:</span>
+                  <strong className="text-zinc-900 font-oswald">{brand.city}</strong>
+                </div>
+              </div>
 
+              {/* Inclusions (Matching Why Choose Us Editorial Font) */}
+              <div className="space-y-2 border-t border-zinc-100 pt-3">
+                <div className="flex items-center gap-2 text-xs text-zinc-700 font-serif">
+                  <CheckCircle className="w-4 h-4 text-crimson shrink-0" />
+                  <span>Full tear-off & structural deck inspection</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-zinc-700 font-serif">
+                  <CheckCircle className="w-4 h-4 text-crimson shrink-0" />
+                  <span>Synthetic underlayment & ice/water shield</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-zinc-700 font-serif">
+                  <CheckCircle className="w-4 h-4 text-crimson shrink-0" />
+                  <span>Non-prorated manufacturer warranty</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-zinc-700 font-serif">
+                  <CheckCircle className="w-4 h-4 text-crimson shrink-0" />
+                  <span>Magnetic nail sweep & clean-up guarantee</span>
+                </div>
+              </div>
+
+              {/* 1-Click Booking Action */}
+              <div className="pt-2">
                 <button
                   type="button"
-                  onClick={handleOpenBooking}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-7 py-3.5 rounded-full font-oswald uppercase tracking-wider font-bold text-xs shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                  onClick={() => setIsBookingOpen(true)}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white py-3.5 px-6 rounded-full font-oswald uppercase tracking-wider font-bold text-xs shadow-md transition-all hover:scale-102 active:scale-98 cursor-pointer"
                 >
                   <Calendar className="w-4 h-4" /> Book Inspection for This Estimate <ArrowRight className="w-4 h-4" />
                 </button>
+                <p className="text-[11px] text-zinc-400 font-serif text-center mt-2">
+                  Zero deposit required • On-site verification confirms final quote
+                </p>
               </div>
             </div>
           </div>
