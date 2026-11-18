@@ -16,7 +16,7 @@ export default function EmergencyBanner() {
 
         <div className="flex items-center gap-3 sm:gap-4 text-xs font-oswald uppercase tracking-wider">
           <span className="hidden md:inline-flex items-center gap-1.5 text-zinc-400 font-serif normal-case text-xs">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Zero Deposit &bull; Complimentary Drone Survey
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Complimentary On-Site Inspection &bull; Certified Lifetime Warranties
           </span>
           <a
             href={`tel:${phone}`}
