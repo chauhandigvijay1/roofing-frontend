@@ -11,7 +11,6 @@ import {
   Download,
   ArrowRight,
   ChevronLeft,
-  ChevronRight,
   Search,
   Home,
   ShieldAlert,
@@ -27,6 +26,7 @@ interface BookingModalProps {
   onClose: () => void;
   initialService?: string;
   initialAddress?: string;
+  initialEstimate?: string;
 }
 
 export default function BookingModal({
@@ -34,27 +34,19 @@ export default function BookingModal({
   onClose,
   initialService,
   initialAddress,
+  initialEstimate,
 }: BookingModalProps) {
   const brand = useBrand();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  const isFromEstimator = Boolean(initialService);
 
-  // Dynamic services compilation from brand
+  // Dynamic services compilation from brand for general booking
   const dynamicServicesList = useMemo(() => {
     const list: Array<{ id: string; title: string; tag: string; icon: any }> = [];
 
-    // Add initialService at top if it was passed from wizard or service detail
-    if (initialService) {
-      list.push({
-        id: "initial-custom",
-        title: initialService,
-        tag: "Selected Scope",
-        icon: Sparkles,
-      });
-    }
-
-    // Default primary inspection option
-    const primaryInspection = {
+    // Primary inspection option
+    list.push({
       id: "inspection",
       title:
         brand.state === "FL"
@@ -62,21 +54,10 @@ export default function BookingModal({
           : "Comprehensive 21-Point Roof & Attic Inspection",
       tag: "Free ($0)",
       icon: Search,
-    };
-    if (!initialService || !initialService.toLowerCase().includes("inspection")) {
-      list.push(primaryInspection);
-    }
+    });
 
-    // Pull from brand.structuredServices or brand.services if available
     if (brand.structuredServices && brand.structuredServices.length > 0) {
       brand.structuredServices.forEach((s, idx) => {
-        // Skip duplicate of initialService or primary inspection
-        if (
-          initialService &&
-          s.title.toLowerCase().trim() === initialService.toLowerCase().trim()
-        ) {
-          return;
-        }
         let icon = Home;
         let tag = "Free Estimate";
         const titleLower = s.title.toLowerCase();
@@ -99,33 +80,7 @@ export default function BookingModal({
           icon,
         });
       });
-    } else if (brand.services && brand.services.length > 0) {
-      brand.services.forEach((s, idx) => {
-        if (
-          initialService &&
-          s.toLowerCase().trim() === initialService.toLowerCase().trim()
-        ) {
-          return;
-        }
-        let icon = Home;
-        let tag = "Free Estimate";
-        const titleLower = s.toLowerCase();
-        if (titleLower.includes("commercial") || titleLower.includes("tpo")) {
-          icon = Building2;
-          tag = "Commercial";
-        } else if (titleLower.includes("repair") || titleLower.includes("leak")) {
-          icon = ShieldAlert;
-          tag = "Rapid Dispatch";
-        }
-        list.push({
-          id: `service-${idx}`,
-          title: s,
-          tag,
-          icon,
-        });
-      });
     } else {
-      // Clean fallback
       list.push(
         {
           id: "replacement",
@@ -148,9 +103,8 @@ export default function BookingModal({
       );
     }
 
-    // Limit to max 6 clean options so modal stays elegant
-    return list.slice(0, 6);
-  }, [brand, initialService]);
+    return list.slice(0, 4);
+  }, [brand]);
 
   const [selectedService, setSelectedService] = useState<string>(() => {
     if (initialService) return initialService;
@@ -159,22 +113,23 @@ export default function BookingModal({
       : "Comprehensive 21-Point Roof & Attic Inspection";
   });
 
-  // Apple Calendar Date-Picker State
-  const today = useMemo(() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
+  // Apple-Style Clean 10-Day Rapid Date Selector
+  const rapidDateOptions = useMemo(() => {
+    const options = [];
+    const base = new Date();
+    // Generate next 10 business/calendar days starting tomorrow
+    for (let i = 1; i <= 10; i++) {
+      const d = new Date(base);
+      d.setDate(base.getDate() + i);
+      const iso = d.toISOString().split("T")[0];
+      const weekday = i === 1 ? "Tomorrow" : d.toLocaleDateString("en-US", { weekday: "short" });
+      const monthName = d.toLocaleDateString("en-US", { month: "short" });
+      const dayNum = d.getDate();
+      options.push({ iso, weekday, monthName, dayNum });
+    }
+    return options;
   }, []);
 
-  // Currently viewed month (starts at current month)
-  const [viewMonthDate, setViewMonthDate] = useState<Date>(() => {
-    const d = new Date();
-    d.setDate(1);
-    d.setHours(0, 0, 0, 0);
-    return d;
-  });
-
-  // Selected date ISO string (default: tomorrow)
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
@@ -188,93 +143,6 @@ export default function BookingModal({
   const [notes, setNotes] = useState<string>("");
   const [confirmationCode, setConfirmationCode] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
-
-  // Month navigation handlers
-  const handlePrevMonth = () => {
-    setViewMonthDate((prev) => {
-      const next = new Date(prev.getFullYear(), prev.getMonth() - 1, 1);
-      const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-      if (next < currentMonthStart) return prev;
-      return next;
-    });
-  };
-
-  const handleNextMonth = () => {
-    setViewMonthDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
-  };
-
-  const isCurrentMonth = useMemo(() => {
-    return (
-      viewMonthDate.getFullYear() === today.getFullYear() &&
-      viewMonthDate.getMonth() === today.getMonth()
-    );
-  }, [viewMonthDate, today]);
-
-  // Calendar matrix calculation
-  const calendarDays = useMemo(() => {
-    const year = viewMonthDate.getFullYear();
-    const month = viewMonthDate.getMonth();
-
-    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 (Sun) to 6 (Sat)
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const daysInPrevMonth = new Date(year, month, 0).getDate();
-
-    const cells: Array<{
-      dayNum: number;
-      dateStr: string;
-      isCurrentMonth: boolean;
-      isPast: boolean;
-      isToday: boolean;
-    }> = [];
-
-    // Trailing days from previous month
-    for (let i = firstDayIndex - 1; i >= 0; i--) {
-      const dayNum = daysInPrevMonth - i;
-      const prevDate = new Date(year, month - 1, dayNum);
-      const iso = prevDate.toISOString().split("T")[0];
-      cells.push({
-        dayNum,
-        dateStr: iso,
-        isCurrentMonth: false,
-        isPast: true,
-        isToday: false,
-      });
-    }
-
-    // Days of current view month
-    for (let d = 1; d <= daysInMonth; d++) {
-      const currentCellDate = new Date(year, month, d);
-      currentCellDate.setHours(0, 0, 0, 0);
-      const iso = currentCellDate.toISOString().split("T")[0];
-      const isPast = currentCellDate < today;
-      const isTodayCell = currentCellDate.getTime() === today.getTime();
-
-      cells.push({
-        dayNum: d,
-        dateStr: iso,
-        isCurrentMonth: true,
-        isPast,
-        isToday: isTodayCell,
-      });
-    }
-
-    // Fill remaining days of last week from next month to reach full rows
-    const totalCells = Math.ceil(cells.length / 7) * 7;
-    const remaining = totalCells - cells.length;
-    for (let i = 1; i <= remaining; i++) {
-      const nextDate = new Date(year, month + 1, i);
-      const iso = nextDate.toISOString().split("T")[0];
-      cells.push({
-        dayNum: i,
-        dateStr: iso,
-        isCurrentMonth: false,
-        isPast: false,
-        isToday: false,
-      });
-    }
-
-    return cells;
-  }, [viewMonthDate, today]);
 
   // Formatted date string for human display
   const formattedSelectedDate = useMemo(() => {
@@ -295,25 +163,25 @@ export default function BookingModal({
       id: "morning",
       label: "Morning",
       time: "8:00 AM – 11:00 AM",
-      desc: "First inspection of the day",
+      desc: "First inspection slot",
     },
     {
       id: "midday",
       label: "Midday",
       time: "11:00 AM – 2:00 PM",
-      desc: "Peak daylight diagnostic",
+      desc: "Peak daylight survey",
     },
     {
       id: "afternoon",
       label: "Afternoon",
       time: "2:00 PM – 5:00 PM",
-      desc: "Convenient late afternoon",
+      desc: "Late afternoon slot",
     },
     {
       id: "priority",
       label: "Priority Dispatch",
       time: "First Available Window",
-      desc: "Urgent response window",
+      desc: "Urgent response",
     },
   ];
 
@@ -390,7 +258,7 @@ export default function BookingModal({
           <div className="px-6 py-5 flex items-center justify-between border-b border-zinc-100 bg-stone-50/70 shrink-0">
             <div>
               <p className="text-xs text-zinc-500 font-sans tracking-tight">
-                {step === 1 && "Step 1 of 2: Scope & Date Selection"}
+                {step === 1 && (isFromEstimator ? "Step 1 of 2: Select Inspection Date & Time" : "Step 1 of 2: Scope & Schedule")}
                 {step === 2 && "Step 2 of 2: Property & Contact Details"}
                 {step === 3 && "Inspection Confirmed"}
               </p>
@@ -407,7 +275,7 @@ export default function BookingModal({
             </button>
           </div>
 
-          {/* Stepper Line */}
+          {/* Stepper Progress Line */}
           {step < 3 && (
             <div className="px-6 pt-3 pb-1 flex items-center gap-2 shrink-0">
               <div
@@ -425,208 +293,168 @@ export default function BookingModal({
 
           {/* Scrollable Content Body */}
           <div className="overflow-y-auto flex-1">
-            {/* STEP 1: Service & Apple Calendar */}
+            {/* STEP 1 */}
             {step === 1 && (
               <div className="p-6 space-y-6">
-                {/* 1. Dynamic Services Selection */}
-                <div>
-                  <div className="flex items-center justify-between mb-2.5">
-                    <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900">
-                      1. Select Service Needed
-                    </label>
-                    <span className="text-[11px] text-zinc-500 font-serif">
-                      100% Free written diagnostic
-                    </span>
+                {/* A. If coming from the Estimator: Show Locked Scope Banner (DO NOT ASK TO PICK SERVICE AGAIN!) */}
+                {isFromEstimator ? (
+                  <div className="p-4 rounded-2xl bg-stone-100/90 border border-stone-200/80 flex items-start sm:items-center justify-between gap-3">
+                    <div className="flex items-start sm:items-center gap-3 min-w-0">
+                      <div className="w-10 h-10 rounded-xl bg-crimson text-white flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 shadow-2xs">
+                        <Sparkles className="w-5 h-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-[10px] font-oswald uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">
+                            Locked Scope & Estimate
+                          </span>
+                          {initialEstimate && (
+                            <span className="text-xs font-oswald font-bold text-zinc-900">
+                              {initialEstimate}
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="text-sm sm:text-base font-oswald uppercase tracking-wider font-bold text-zinc-900 mt-1 leading-snug">
+                          {selectedService}
+                        </h4>
+                        <p className="text-xs text-zinc-500 font-serif mt-0.5">
+                          Free on-site diagnostic survey across {brand.city} confirms final proposal
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {dynamicServicesList.map((s) => {
-                      const isSelected = selectedService === s.title;
-                      const Icon = s.icon;
-                      return (
-                        <button
-                          key={s.id}
-                          type="button"
-                          onClick={() => setSelectedService(s.title)}
-                          className={`text-left p-3.5 rounded-2xl border transition-all flex items-start justify-between gap-3 cursor-pointer ${
-                            isSelected
-                              ? "border-crimson bg-crimson/5 text-zinc-900 shadow-xs ring-1 ring-crimson"
-                              : "border-zinc-200 hover:border-zinc-300 bg-white text-zinc-700"
-                          }`}
-                        >
-                          <div className="flex items-start gap-2.5 min-w-0 flex-1">
-                            <div
-                              className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
-                                isSelected ? "bg-crimson text-white" : "bg-stone-100 text-zinc-600"
-                              }`}
-                            >
-                              <Icon className="w-4 h-4" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-xs sm:text-sm font-oswald uppercase tracking-wider font-bold leading-snug">
-                                {s.title}
-                              </p>
-                              <p className="text-[11px] text-zinc-500 font-sans mt-0.5">
-                                {s.tag}
-                              </p>
-                            </div>
-                          </div>
-                          <div
-                            className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 mt-1 ${
-                              isSelected ? "border-crimson bg-crimson" : "border-zinc-300"
+                ) : (
+                  /* B. If opened from "Book Now" without an estimate: Let them choose service */
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900">
+                        1. Select Service Needed
+                      </label>
+                      <span className="text-xs text-zinc-500 font-serif">
+                        100% Free written diagnostic
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {dynamicServicesList.map((s) => {
+                        const isSelected = selectedService === s.title;
+                        const Icon = s.icon;
+                        return (
+                          <button
+                            key={s.id}
+                            type="button"
+                            onClick={() => setSelectedService(s.title)}
+                            className={`text-left p-3.5 rounded-2xl border transition-all flex items-start justify-between gap-3 cursor-pointer ${
+                              isSelected
+                                ? "border-crimson bg-crimson/5 text-zinc-900 shadow-xs ring-1 ring-crimson"
+                                : "border-stone-200 hover:border-stone-300 bg-white text-zinc-700"
                             }`}
                           >
-                            {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                          </div>
-                        </button>
-                      );
-                    })}
+                            <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                              <div
+                                className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
+                                  isSelected ? "bg-crimson text-white" : "bg-stone-100 text-zinc-600"
+                                }`}
+                              >
+                                <Icon className="w-4 h-4" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs sm:text-sm font-oswald uppercase tracking-wider font-bold leading-snug">
+                                  {s.title}
+                                </p>
+                                <p className="text-[11px] text-zinc-500 font-sans mt-0.5">
+                                  {s.tag}
+                                </p>
+                              </div>
+                            </div>
+                            <div
+                              className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 mt-1 ${
+                                isSelected ? "border-crimson bg-crimson" : "border-zinc-300"
+                              }`}
+                            >
+                              {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                {/* 2. Apple-Style Calendar Date-Picker */}
-                <div className="bg-stone-50/70 p-4 sm:p-5 rounded-2xl border border-stone-200/80">
-                  <div className="flex items-center justify-between mb-4">
+                {/* Apple-Style Clean Inspection Date Selector */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
                     <div>
                       <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900 block">
-                        2. Choose Preferred Inspection Date
+                        {isFromEstimator ? "1. Choose Inspection Date" : "2. Choose Inspection Date"}
                       </label>
                       <p className="text-xs text-zinc-500 font-serif mt-0.5">
-                        {formattedSelectedDate ? formattedSelectedDate : "Select any available date"}
+                        Selected: <strong className="text-crimson font-sans">{formattedSelectedDate}</strong>
                       </p>
                     </div>
 
-                    {/* Month Navigation */}
-                    <div className="flex items-center gap-1 bg-white border border-stone-200 rounded-full p-1 shadow-2xs">
-                      <button
-                        type="button"
-                        onClick={handlePrevMonth}
-                        disabled={isCurrentMonth}
-                        className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
-                          isCurrentMonth
-                            ? "text-zinc-300 cursor-not-allowed"
-                            : "text-zinc-700 hover:bg-stone-100 cursor-pointer"
-                        }`}
-                        title="Previous Month"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
-                      <span className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900 px-2 min-w-[100px] text-center">
-                        {viewMonthDate.toLocaleDateString("en-US", {
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={handleNextMonth}
-                        className="w-7 h-7 rounded-full flex items-center justify-center text-zinc-700 hover:bg-stone-100 transition-colors cursor-pointer"
-                        title="Next Month"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
+                    {/* Custom Date Toggle for Next Month / Custom Future Date */}
+                    <div className="relative">
+                      <label className="inline-flex items-center gap-1.5 text-xs text-crimson font-oswald uppercase font-bold hover:underline cursor-pointer">
+                        <CalendarIcon className="w-3.5 h-3.5" />
+                        <span>Pick Any Date</span>
+                        <input
+                          type="date"
+                          value={selectedDate}
+                          min={new Date().toISOString().split("T")[0]}
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              setSelectedDate(e.target.value);
+                            }
+                          }}
+                          className="opacity-0 absolute inset-0 cursor-pointer w-full"
+                        />
+                      </label>
                     </div>
                   </div>
 
-                  {/* Day of Week Headers */}
-                  <div className="grid grid-cols-7 gap-1 text-center mb-1">
-                    {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
-                      <div
-                        key={d}
-                        className="text-[11px] font-sans font-semibold text-zinc-400 py-1"
-                      >
-                        {d}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Calendar Days Matrix */}
-                  <div className="grid grid-cols-7 gap-1">
-                    {calendarDays.map((cell, idx) => {
-                      const isSelected = selectedDate === cell.dateStr;
-                      const isDisabled = cell.isPast || !cell.isCurrentMonth;
-
+                  {/* Horizontal Scrollable Apple-Style Date Strip */}
+                  <div className="flex items-center gap-2 overflow-x-auto pb-2 pt-1 no-scrollbar">
+                    {rapidDateOptions.map((opt) => {
+                      const isSelected = selectedDate === opt.iso;
                       return (
                         <button
-                          key={`${cell.dateStr}-${idx}`}
+                          key={opt.iso}
                           type="button"
-                          disabled={isDisabled}
-                          onClick={() => !isDisabled && setSelectedDate(cell.dateStr)}
-                          className={`relative h-9 sm:h-10 rounded-xl text-xs sm:text-sm font-sans flex flex-col items-center justify-center transition-all ${
-                            isDisabled
-                              ? "text-zinc-300 cursor-not-allowed bg-transparent"
-                              : isSelected
-                              ? "bg-crimson text-white font-bold shadow-sm"
-                              : cell.isToday
-                              ? "bg-stone-200/80 text-zinc-900 font-bold hover:bg-stone-300/80 cursor-pointer"
-                              : "bg-white text-zinc-800 hover:bg-stone-200/60 border border-stone-200/50 cursor-pointer"
+                          onClick={() => {
+                            setSelectedDate(opt.iso);
+                          }}
+                          className={`py-3 px-3 rounded-2xl border text-center transition-all cursor-pointer min-w-[78px] flex flex-col items-center shrink-0 ${
+                            isSelected
+                              ? "border-crimson bg-crimson text-white shadow-sm ring-1 ring-crimson font-bold scale-102"
+                              : "border-stone-200 bg-stone-50/70 hover:bg-stone-100 text-zinc-700"
                           }`}
                         >
-                          <span>{cell.dayNum}</span>
-                          {cell.isToday && !isSelected && (
-                            <span className="w-1 h-1 rounded-full bg-crimson absolute bottom-1" />
-                          )}
+                          <span className={`text-[10px] font-oswald uppercase tracking-wider block ${isSelected ? "text-white/80" : "text-zinc-500"}`}>
+                            {opt.weekday}
+                          </span>
+                          <span className="text-lg font-bold font-oswald mt-0.5 block">
+                            {opt.dayNum}
+                          </span>
+                          <span className={`text-[10px] font-sans mt-0.5 block ${isSelected ? "text-white/90" : "text-zinc-400"}`}>
+                            {opt.monthName}
+                          </span>
                         </button>
                       );
                     })}
                   </div>
-
-                  {/* Fast Selector Shortcut */}
-                  <div className="mt-3 pt-3 border-t border-stone-200/70 flex items-center justify-between text-xs">
-                    <span className="text-zinc-500 font-serif">Quick options:</span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const d = new Date();
-                          d.setDate(d.getDate() + 1);
-                          setSelectedDate(d.toISOString().split("T")[0]);
-                          setViewMonthDate(new Date(d.getFullYear(), d.getMonth(), 1));
-                        }}
-                        className="text-crimson font-oswald uppercase font-bold text-[11px] hover:underline cursor-pointer"
-                      >
-                        Tomorrow
-                      </button>
-                      <span className="text-zinc-300">•</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const d = new Date();
-                          d.setDate(d.getDate() + 2);
-                          setSelectedDate(d.toISOString().split("T")[0]);
-                          setViewMonthDate(new Date(d.getFullYear(), d.getMonth(), 1));
-                        }}
-                        className="text-crimson font-oswald uppercase font-bold text-[11px] hover:underline cursor-pointer"
-                      >
-                        In 2 Days
-                      </button>
-                      <span className="text-zinc-300">•</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const d = new Date();
-                          d.setDate(d.getDate() + 7);
-                          setSelectedDate(d.toISOString().split("T")[0]);
-                          setViewMonthDate(new Date(d.getFullYear(), d.getMonth(), 1));
-                        }}
-                        className="text-crimson font-oswald uppercase font-bold text-[11px] hover:underline cursor-pointer"
-                      >
-                        Next Week
-                      </button>
-                    </div>
-                  </div>
                 </div>
 
-                {/* 3. Apple-Style Arrival Window */}
+                {/* Clean Apple Arrival Window Selector */}
                 <div>
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-2.5">
                     <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900">
-                      3. Preferred Arrival Window
+                      {isFromEstimator ? "2. Preferred Arrival Window" : "3. Preferred Arrival Window"}
                     </label>
                     <span className="text-xs text-zinc-500 font-serif">
-                      Technician contacts 30 mins prior
+                      Field technician calls 30 mins prior
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                     {arrivalSlots.map((slot) => {
                       const isSelected = selectedSlot.includes(slot.label);
                       return (
@@ -637,7 +465,7 @@ export default function BookingModal({
                           className={`p-3 text-left rounded-2xl border transition-all cursor-pointer ${
                             isSelected
                               ? "border-crimson bg-crimson/5 text-zinc-900 shadow-2xs ring-1 ring-crimson"
-                              : "border-zinc-200 bg-white hover:border-zinc-300 text-zinc-700"
+                              : "border-stone-200 bg-white hover:border-stone-300 text-zinc-700"
                           }`}
                         >
                           <div className="flex items-center justify-between">
@@ -663,7 +491,7 @@ export default function BookingModal({
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-7 py-3 rounded-full font-oswald uppercase tracking-wider font-bold text-xs shadow-md transition-all cursor-pointer"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-8 py-3.5 rounded-full font-oswald uppercase tracking-wider font-bold text-xs shadow-md transition-all cursor-pointer"
                   >
                     Continue to Property Details <ArrowRight className="w-4 h-4" />
                   </button>
@@ -675,14 +503,14 @@ export default function BookingModal({
             {step === 2 && (
               <form onSubmit={handleBookingSubmit} className="p-6 space-y-4">
                 {/* Selected Summary Pill */}
-                <div className="flex items-center justify-between p-3.5 rounded-2xl bg-stone-100/90 border border-stone-200 text-xs">
-                  <div className="flex items-center gap-2 min-w-0">
+                <div className="flex items-center justify-between p-4 rounded-2xl bg-stone-100/90 border border-stone-200 text-xs">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <CalendarIcon className="w-4 h-4 text-crimson shrink-0" />
                     <div className="truncate">
                       <p className="font-oswald uppercase tracking-wider font-bold text-zinc-900 truncate">
                         {selectedService}
                       </p>
-                      <p className="text-zinc-600 font-sans text-[11px]">
+                      <p className="text-zinc-600 font-sans text-xs">
                         {formattedSelectedDate} • {selectedSlot}
                       </p>
                     </div>
@@ -690,27 +518,27 @@ export default function BookingModal({
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="text-crimson font-oswald uppercase font-bold text-[11px] hover:underline shrink-0 ml-3 cursor-pointer"
+                    className="text-crimson font-oswald uppercase font-bold text-xs hover:underline shrink-0 ml-3 cursor-pointer"
                   >
                     Change
                   </button>
                 </div>
 
                 {/* Apple-Style Form Fields */}
-                <div className="space-y-3">
+                <div className="space-y-3.5">
                   <div>
                     <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-zinc-800 mb-1">
                       Full Name *
                     </label>
                     <div className="relative">
-                      <User className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3" />
+                      <User className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3.5" />
                       <input
                         type="text"
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. David Miller"
-                        className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
+                        className="w-full pl-10 pr-3 py-3 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -720,14 +548,14 @@ export default function BookingModal({
                       Mobile Phone (For Arrival Text & Written Report) *
                     </label>
                     <div className="relative">
-                      <Phone className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3" />
+                      <Phone className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3.5" />
                       <input
                         type="tel"
                         required
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="(555) 000-0000"
-                        className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
+                        className="w-full pl-10 pr-3 py-3 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -737,14 +565,14 @@ export default function BookingModal({
                       Property Address in {brand.city} *
                     </label>
                     <div className="relative">
-                      <MapPin className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3" />
+                      <MapPin className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3.5" />
                       <input
                         type="text"
                         required
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder="Street address, City, ZIP code"
-                        className="w-full pl-10 pr-3 py-2.5 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
+                        className="w-full pl-10 pr-3 py-3 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -757,8 +585,8 @@ export default function BookingModal({
                       type="text"
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      placeholder="e.g. Active ceiling drip, storm claim, two-story roof..."
-                      className="w-full px-3 py-2.5 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
+                      placeholder="e.g. Ceiling drip, hail insurance claim, 2-story roof..."
+                      className="w-full px-3.5 py-3 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -780,7 +608,7 @@ export default function BookingModal({
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-7 py-3 rounded-full font-oswald uppercase tracking-wider font-bold text-xs shadow-md transition-all cursor-pointer disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-2 bg-crimson hover:bg-crimson-dark text-white px-8 py-3.5 rounded-full font-oswald uppercase tracking-wider font-bold text-xs shadow-md transition-all cursor-pointer disabled:opacity-50"
                   >
                     {submitting ? "Confirming Appointment..." : "Lock Free Inspection ($0 Due)"}
                   </button>

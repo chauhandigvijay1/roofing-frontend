@@ -10,7 +10,6 @@ import {
   Download,
   ArrowRight,
   ChevronLeft,
-  ChevronRight,
   Search,
   Home,
   ShieldAlert,
@@ -65,25 +64,6 @@ export default function Book() {
           icon,
         });
       });
-    } else if (brand.services && brand.services.length > 0) {
-      brand.services.forEach((s, idx) => {
-        let icon = Home;
-        let tag = "Free Estimate";
-        const titleLower = s.toLowerCase();
-        if (titleLower.includes("commercial") || titleLower.includes("tpo")) {
-          icon = Building2;
-          tag = "Commercial";
-        } else if (titleLower.includes("repair") || titleLower.includes("leak")) {
-          icon = ShieldAlert;
-          tag = "Rapid Dispatch";
-        }
-        list.push({
-          id: `service-${idx}`,
-          title: s,
-          tag,
-          icon,
-        });
-      });
     } else {
       list.push(
         {
@@ -107,7 +87,7 @@ export default function Book() {
       );
     }
 
-    return list.slice(0, 6);
+    return list.slice(0, 4);
   }, [brand]);
 
   const [selectedService, setSelectedService] = useState<string>(() => {
@@ -116,19 +96,21 @@ export default function Book() {
       : "Comprehensive 21-Point Roof & Attic Inspection";
   });
 
-  // Apple Calendar Date-Picker State
-  const today = useMemo(() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
+  // Apple-Style Clean 10-Day Rapid Date Selector
+  const rapidDateOptions = useMemo(() => {
+    const options = [];
+    const base = new Date();
+    for (let i = 1; i <= 10; i++) {
+      const d = new Date(base);
+      d.setDate(base.getDate() + i);
+      const iso = d.toISOString().split("T")[0];
+      const weekday = i === 1 ? "Tomorrow" : d.toLocaleDateString("en-US", { weekday: "short" });
+      const monthName = d.toLocaleDateString("en-US", { month: "short" });
+      const dayNum = d.getDate();
+      options.push({ iso, weekday, monthName, dayNum });
+    }
+    return options;
   }, []);
-
-  const [viewMonthDate, setViewMonthDate] = useState<Date>(() => {
-    const d = new Date();
-    d.setDate(1);
-    d.setHours(0, 0, 0, 0);
-    return d;
-  });
 
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     const d = new Date();
@@ -143,89 +125,6 @@ export default function Book() {
   const [notes, setNotes] = useState<string>("");
   const [confirmationCode, setConfirmationCode] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
-
-  const handlePrevMonth = () => {
-    setViewMonthDate((prev) => {
-      const next = new Date(prev.getFullYear(), prev.getMonth() - 1, 1);
-      const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-      if (next < currentMonthStart) return prev;
-      return next;
-    });
-  };
-
-  const handleNextMonth = () => {
-    setViewMonthDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
-  };
-
-  const isCurrentMonth = useMemo(() => {
-    return (
-      viewMonthDate.getFullYear() === today.getFullYear() &&
-      viewMonthDate.getMonth() === today.getMonth()
-    );
-  }, [viewMonthDate, today]);
-
-  // Calendar matrix
-  const calendarDays = useMemo(() => {
-    const year = viewMonthDate.getFullYear();
-    const month = viewMonthDate.getMonth();
-
-    const firstDayIndex = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const daysInPrevMonth = new Date(year, month, 0).getDate();
-
-    const cells: Array<{
-      dayNum: number;
-      dateStr: string;
-      isCurrentMonth: boolean;
-      isPast: boolean;
-      isToday: boolean;
-    }> = [];
-
-    for (let i = firstDayIndex - 1; i >= 0; i--) {
-      const dayNum = daysInPrevMonth - i;
-      const prevDate = new Date(year, month - 1, dayNum);
-      const iso = prevDate.toISOString().split("T")[0];
-      cells.push({
-        dayNum,
-        dateStr: iso,
-        isCurrentMonth: false,
-        isPast: true,
-        isToday: false,
-      });
-    }
-
-    for (let d = 1; d <= daysInMonth; d++) {
-      const currentCellDate = new Date(year, month, d);
-      currentCellDate.setHours(0, 0, 0, 0);
-      const iso = currentCellDate.toISOString().split("T")[0];
-      const isPast = currentCellDate < today;
-      const isTodayCell = currentCellDate.getTime() === today.getTime();
-
-      cells.push({
-        dayNum: d,
-        dateStr: iso,
-        isCurrentMonth: true,
-        isPast,
-        isToday: isTodayCell,
-      });
-    }
-
-    const totalCells = Math.ceil(cells.length / 7) * 7;
-    const remaining = totalCells - cells.length;
-    for (let i = 1; i <= remaining; i++) {
-      const nextDate = new Date(year, month + 1, i);
-      const iso = nextDate.toISOString().split("T")[0];
-      cells.push({
-        dayNum: i,
-        dateStr: iso,
-        isCurrentMonth: false,
-        isPast: false,
-        isToday: false,
-      });
-    }
-
-    return cells;
-  }, [viewMonthDate, today]);
 
   const formattedSelectedDate = useMemo(() => {
     if (!selectedDate) return "";
@@ -338,7 +237,7 @@ export default function Book() {
 
         {/* Card Container */}
         <div className="bg-white rounded-3xl shadow-xl border border-zinc-200/90 overflow-hidden">
-          {/* Minimal 2-Step Bar */}
+          {/* Stepper Line */}
           {step < 3 && (
             <div className="px-6 pt-5 pb-2 flex items-center gap-2">
               <div
@@ -359,11 +258,11 @@ export default function Book() {
             <div className="p-6 sm:p-8 space-y-6">
               {/* Dynamic Service Selection */}
               <div>
-                <div className="flex items-center justify-between mb-2.5">
+                <div className="flex items-center justify-between mb-3">
                   <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900">
                     1. Select Service Needed
                   </label>
-                  <span className="text-[11px] text-zinc-500 font-serif">
+                  <span className="text-xs text-zinc-500 font-serif">
                     100% Free written diagnostic
                   </span>
                 </div>
@@ -379,7 +278,7 @@ export default function Book() {
                         className={`text-left p-4 rounded-2xl border transition-all flex items-start justify-between gap-3 cursor-pointer ${
                           isSelected
                             ? "border-crimson bg-crimson/5 text-zinc-900 shadow-xs ring-1 ring-crimson"
-                            : "border-zinc-200 hover:border-zinc-300 bg-white text-zinc-700"
+                            : "border-stone-200 hover:border-stone-300 bg-white text-zinc-700"
                         }`}
                       >
                         <div className="flex items-start gap-3 min-w-0 flex-1">
@@ -399,7 +298,7 @@ export default function Book() {
                         </div>
                         <div
                           className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 mt-1 ${
-                            isSelected ? "border-crimson bg-crimson" : "border-zinc-300"
+                            isSelected ? "border-crimson bg-crimson" : "border-stone-300"
                           }`}
                         >
                           {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
@@ -410,142 +309,70 @@ export default function Book() {
                 </div>
               </div>
 
-              {/* Apple-Style Calendar Date-Picker */}
-              <div className="bg-stone-50/70 p-5 rounded-2xl border border-stone-200/80">
-                <div className="flex items-center justify-between mb-4">
+              {/* Apple-Style Clean Date Selector */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
                   <div>
                     <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900 block">
-                      2. Choose Preferred Inspection Date
+                      2. Choose Inspection Date
                     </label>
                     <p className="text-xs text-zinc-500 font-serif mt-0.5">
-                      {formattedSelectedDate ? formattedSelectedDate : "Select any available date"}
+                      Selected: <strong className="text-crimson font-sans">{formattedSelectedDate}</strong>
                     </p>
                   </div>
 
-                  {/* Month Navigation */}
-                  <div className="flex items-center gap-1 bg-white border border-stone-200 rounded-full p-1 shadow-2xs">
-                    <button
-                      type="button"
-                      onClick={handlePrevMonth}
-                      disabled={isCurrentMonth}
-                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                        isCurrentMonth
-                          ? "text-zinc-300 cursor-not-allowed"
-                          : "text-zinc-700 hover:bg-stone-100 cursor-pointer"
-                      }`}
-                      title="Previous Month"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                    </button>
-                    <span className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900 px-3 min-w-[110px] text-center">
-                      {viewMonthDate.toLocaleDateString("en-US", {
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleNextMonth}
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-700 hover:bg-stone-100 transition-colors cursor-pointer"
-                      title="Next Month"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
+                  <div className="relative">
+                    <label className="inline-flex items-center gap-1.5 text-xs text-crimson font-oswald uppercase font-bold hover:underline cursor-pointer">
+                      <CalendarIcon className="w-3.5 h-3.5" />
+                      <span>Pick Any Date</span>
+                      <input
+                        type="date"
+                        value={selectedDate}
+                        min={new Date().toISOString().split("T")[0]}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            setSelectedDate(e.target.value);
+                          }
+                        }}
+                        className="opacity-0 absolute inset-0 cursor-pointer w-full"
+                      />
+                    </label>
                   </div>
                 </div>
 
-                {/* Day of Week Headers */}
-                <div className="grid grid-cols-7 gap-1 text-center mb-1">
-                  {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
-                    <div
-                      key={d}
-                      className="text-xs font-sans font-semibold text-zinc-400 py-1"
-                    >
-                      {d}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Calendar Days Matrix */}
-                <div className="grid grid-cols-7 gap-1.5">
-                  {calendarDays.map((cell, idx) => {
-                    const isSelected = selectedDate === cell.dateStr;
-                    const isDisabled = cell.isPast || !cell.isCurrentMonth;
-
+                {/* Horizontal Rapid Date Strip */}
+                <div className="flex items-center gap-2.5 overflow-x-auto pb-2 pt-1 no-scrollbar">
+                  {rapidDateOptions.map((opt) => {
+                    const isSelected = selectedDate === opt.iso;
                     return (
                       <button
-                        key={`${cell.dateStr}-${idx}`}
+                        key={opt.iso}
                         type="button"
-                        disabled={isDisabled}
-                        onClick={() => !isDisabled && setSelectedDate(cell.dateStr)}
-                        className={`relative h-10 sm:h-11 rounded-xl text-xs sm:text-sm font-sans flex flex-col items-center justify-center transition-all ${
-                          isDisabled
-                            ? "text-zinc-300 cursor-not-allowed bg-transparent"
-                            : isSelected
-                            ? "bg-crimson text-white font-bold shadow-sm"
-                            : cell.isToday
-                            ? "bg-stone-200/80 text-zinc-900 font-bold hover:bg-stone-300/80 cursor-pointer"
-                            : "bg-white text-zinc-800 hover:bg-stone-200/60 border border-stone-200/50 cursor-pointer"
+                        onClick={() => setSelectedDate(opt.iso)}
+                        className={`py-3 px-3.5 rounded-2xl border text-center transition-all cursor-pointer min-w-[82px] flex flex-col items-center shrink-0 ${
+                          isSelected
+                            ? "border-crimson bg-crimson text-white shadow-sm ring-1 ring-crimson font-bold scale-102"
+                            : "border-stone-200 bg-stone-50/70 hover:bg-stone-100 text-zinc-700"
                         }`}
                       >
-                        <span>{cell.dayNum}</span>
-                        {cell.isToday && !isSelected && (
-                          <span className="w-1 h-1 rounded-full bg-crimson absolute bottom-1" />
-                        )}
+                        <span className={`text-[10px] font-oswald uppercase tracking-wider block ${isSelected ? "text-white/80" : "text-zinc-500"}`}>
+                          {opt.weekday}
+                        </span>
+                        <span className="text-xl font-bold font-oswald mt-0.5 block">
+                          {opt.dayNum}
+                        </span>
+                        <span className={`text-[10px] font-sans mt-0.5 block ${isSelected ? "text-white/90" : "text-zinc-400"}`}>
+                          {opt.monthName}
+                        </span>
                       </button>
                     );
                   })}
-                </div>
-
-                {/* Fast Selector Shortcut */}
-                <div className="mt-3 pt-3 border-t border-stone-200/70 flex items-center justify-between text-xs">
-                  <span className="text-zinc-500 font-serif">Quick options:</span>
-                  <div className="flex items-center gap-2.5">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const d = new Date();
-                        d.setDate(d.getDate() + 1);
-                        setSelectedDate(d.toISOString().split("T")[0]);
-                        setViewMonthDate(new Date(d.getFullYear(), d.getMonth(), 1));
-                      }}
-                      className="text-crimson font-oswald uppercase font-bold text-xs hover:underline cursor-pointer"
-                    >
-                      Tomorrow
-                    </button>
-                    <span className="text-zinc-300">•</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const d = new Date();
-                        d.setDate(d.getDate() + 2);
-                        setSelectedDate(d.toISOString().split("T")[0]);
-                        setViewMonthDate(new Date(d.getFullYear(), d.getMonth(), 1));
-                      }}
-                      className="text-crimson font-oswald uppercase font-bold text-xs hover:underline cursor-pointer"
-                    >
-                      In 2 Days
-                    </button>
-                    <span className="text-zinc-300">•</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const d = new Date();
-                        d.setDate(d.getDate() + 7);
-                        setSelectedDate(d.toISOString().split("T")[0]);
-                        setViewMonthDate(new Date(d.getFullYear(), d.getMonth(), 1));
-                      }}
-                      className="text-crimson font-oswald uppercase font-bold text-xs hover:underline cursor-pointer"
-                    >
-                      Next Week
-                    </button>
-                  </div>
                 </div>
               </div>
 
               {/* Apple-Style Arrival Window */}
               <div>
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-2.5">
                   <label className="text-xs font-oswald uppercase tracking-wider font-bold text-zinc-900">
                     3. Preferred Arrival Window
                   </label>
@@ -561,10 +388,10 @@ export default function Book() {
                         key={slot.id}
                         type="button"
                         onClick={() => setSelectedSlot(`${slot.label} (${slot.time})`)}
-                        className={`p-3 text-left rounded-2xl border transition-all cursor-pointer ${
+                        className={`p-3.5 text-left rounded-2xl border transition-all cursor-pointer ${
                           isSelected
                             ? "border-crimson bg-crimson/5 text-zinc-900 shadow-2xs ring-1 ring-crimson"
-                            : "border-zinc-200 bg-white hover:border-zinc-300 text-zinc-700"
+                            : "border-stone-200 bg-white hover:border-stone-300 text-zinc-700"
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -684,7 +511,7 @@ export default function Book() {
                     type="text"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="e.g. Ceiling drip in garage, storm claim, 2-story steep roof..."
+                    placeholder="e.g. Ceiling drip, hail damage claim, 2-story roof..."
                     className="w-full px-3.5 py-3 bg-stone-50 border border-zinc-200 rounded-xl text-sm font-serif text-zinc-900 focus:bg-white focus:border-crimson focus:outline-none transition-all"
                   />
                 </div>
